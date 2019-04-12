@@ -1,1 +1,1 @@
-Courier webApp
+courier-webApp
