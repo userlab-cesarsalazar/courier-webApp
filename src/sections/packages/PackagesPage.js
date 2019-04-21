@@ -1,5 +1,6 @@
 //Libs
 import React, { Component } from 'react';
+import { withUserDefaults } from '../../commons/components/UserDefaults';
 
 //Api
 
@@ -20,13 +21,16 @@ class PackagesPage extends Component {
   }
 
   render() {
+    const {
+      getWord
+    } = this.props.userDefaults;
     return (
       <div>
-        <h2>Packages</h2>
+        <h2>{getWord('PACKAGES')}</h2>
 
       </div>
     );
   }
 }
 
-export default PackagesPage
+export default withUserDefaults(PackagesPage)

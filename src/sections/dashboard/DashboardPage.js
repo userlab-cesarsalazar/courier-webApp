@@ -1,9 +1,11 @@
 //Libs
 import React, { Component } from 'react';
+import { withUserDefaults } from '../../commons/components/UserDefaults';
 
 //Api
 
 //Components
+
 
 
 //Styles
@@ -20,13 +22,16 @@ class DashboardPage extends Component {
   }
 
   render() {
+    const {
+      getWord
+    } = this.props.userDefaults;
     return (
       <div>
-        <h2>Dashboard</h2>
+        <h2>{getWord('DASHBOARD')}</h2>
 
       </div>
     );
   }
 }
 
-export default DashboardPage
+export default withUserDefaults(DashboardPage)

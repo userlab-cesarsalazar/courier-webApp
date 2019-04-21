@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { menuOptions } from './commons/consts/Menu';
 import moment from 'moment';
+import { withUserDefaults } from './commons/components/UserDefaults';
 
 //Services
 
@@ -25,6 +26,7 @@ import {
   Icon,
   Avatar
 } from 'antd';
+
 
 const {
   Header,
@@ -62,9 +64,17 @@ class Router extends Component {
 
   onCollapse = collapsed => {
     this.setState({ collapsed });
-  }
+  };
+
+  changeLanguage = language => {
+    this.props.userDefaults.changeLanguage(language);
+  };
 
   render() {
+    const {
+      language,
+      getWord
+    } = this.props.userDefaults;
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Sider
@@ -79,7 +89,7 @@ class Router extends Component {
               shape={'square'}
               size={this.state.collapsed ? 40 : 80}
             />
-            {!this.state.collapsed && <h2 className='App-version'>v0.0.1</h2>}
+            {!this.state.collapsed && <h2 className='App-version'>v0.0.2</h2>}
           </header>
 
           <br/>
@@ -109,7 +119,7 @@ class Router extends Component {
                 <Menu.Item key={option.route}>
                   <Link to={option.route}>
                     <Icon type={option.icon}/>
-                    <span>{option.name}</span>
+                    <span>{getWord(option.name)}</span>
                   </Link>
                 </Menu.Item>
             )}
@@ -124,6 +134,9 @@ class Router extends Component {
                 <SubMenu style={{float: 'right'}} title={<span><Icon type='user'/>{this.state.username}</span>}>
                   <Menu.Item key='logout' onClick={this.signOut}>
                     Sign out
+                  </Menu.Item>
+                  <Menu.Item key='language' onClick={_ => this.changeLanguage(language === 'EN' ? 'ES' : 'EN')}>
+                    {language === 'EN' ? 'Español' : 'English'}
                   </Menu.Item>
                 </SubMenu>
               </Menu>
@@ -155,4 +168,4 @@ class Router extends Component {
     )
   }
 }
-export default Router
+export default withUserDefaults(Router)

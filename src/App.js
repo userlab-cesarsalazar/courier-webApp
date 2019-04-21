@@ -4,6 +4,8 @@ import { createBrowserHistory } from 'history'
 
 //Components
 import { Router, Route, Switch } from 'react-router-dom'
+import { UserDefaultsProvider } from './commons/components/UserDefaults'
+
 import AppRouter  from './Router'
 
 //Styles
@@ -15,11 +17,13 @@ const history = createBrowserHistory();
 class App extends Component {
   render() {
     return (
-      <Router history={history}>
-        <Switch>
-          <Route render={props => <AppRouter {...props} />} />
-        </Switch>
-      </Router>
+      <UserDefaultsProvider>
+        <Router history={history}>
+          <Switch>
+            <Route render={props => <AppRouter {...props} />} />
+          </Switch>
+        </Router>
+      </UserDefaultsProvider>
     );
   }
 }
