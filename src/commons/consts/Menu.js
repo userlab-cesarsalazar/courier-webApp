@@ -8,17 +8,24 @@ const menuOptions = [{
   possiblePermissions: ['read'],  //Required if doesn't have sections
   requiredPermissions: ['read']   //Required if doesn't have sections
 }, {
-  name: 'Clients',
+  name: 'Usuarios',
   key: 'clients',
   icon: 'team',
   route: '/clients',
   possiblePermissions: [ 'read', 'add', 'edit', 'delete' ]
 }, {
-  name: 'Packages',
+  name: 'Paquetes',
   key: 'packages',
   icon: 'gift',
   route: '/packages',
   possiblePermissions: [ 'read', 'add', 'edit', 'delete' ]
+}, {
+  name: 'Reportes',
+  key: 'reports',
+  icon: 'area-chart',
+  route: '/reports',
+  possiblePermissions: ['read'],  //Required if doesn't have sections
+  requiredPermissions: ['read']   //Required if doesn't have sections
 }];
 
 export {

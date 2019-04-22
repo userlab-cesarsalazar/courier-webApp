@@ -1,5 +1,9 @@
 @import '~antd/dist/antd.css';
 
+html, body {
+  height: 100%;
+}
+
 .App {
   text-align: center;
 }
@@ -47,4 +51,43 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.table-action-bar{
+  margin-bottom: 10px;
+}
+
+.table-action-bar h2 {
+  display: inline-block;
+}
+.table-action-bar button {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  float: right;
+}
+
+.hidden { display:none; }
+
+.bg-login{
+  background-color: #24508B;
+  height: auto !important;
+  min-height: 100%;
+  padding-top: 10%;
+  padding-left: 30%;
+  padding-bottom: 10%;
+  padding-right: 30%;
+  text-align: center;
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.btn-separator{
+  margin-left: 10px;
+}
+
+.radio-margin{
+  margin-bottom: 30px;
 }

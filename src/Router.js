@@ -7,14 +7,22 @@ import moment from 'moment';
 //Services
 
 //Pages
+//Login
+import LoginPage from './sections/login/LoginPage';
+
 //DashBoard
 import DashboardPage from './sections/dashboard/DashboardPage';
 
 //Clients
 import ClientsPage from './sections/clients/ClientsPage';
+import ClientsAddForm from './sections/clients/forms/ClientAddForm';
 
 //Packages
 import PackagesPage from './sections/packages/PackagesPage';
+import PackagesAddForm from './sections/packages/forms/PackageAddForm';
+
+//Reports
+import ReportsPage from './sections/reports/ReportsPage';
 
 //Components
 import UISpinner from './commons/components/UISpinner';
@@ -38,9 +46,13 @@ const SubMenu = Menu.SubMenu;
 //Const
 
 const routes = [
+  { route: '/login', component: LoginPage },
   { route: '/dashboard', component: DashboardPage },
+  { route: '/reports', component: ReportsPage },
   { route: '/clients', component: ClientsPage },
   { route: '/packages', component: PackagesPage },
+  { route: '/clients/create', component: ClientsAddForm },
+  { route: '/packages/create', component: PackagesAddForm },
 ];
 
 class Router extends Component {
@@ -49,7 +61,7 @@ class Router extends Component {
 
     this.state = {
       collapsed: false,
-      login: false,
+      login: true,
       loading: false,
       username: '',
       UserStorage: null,
@@ -66,7 +78,9 @@ class Router extends Component {
 
   render() {
     return (
-      <Layout style={{ minHeight: '100vh' }}>
+      <div>
+        {this.state.login ? (
+        <Layout style={{ minHeight: '100vh' }}>
         <Sider
           width={240}
           collapsible
@@ -122,9 +136,8 @@ class Router extends Component {
             <div className={{display: 'flex', paddingRight: '16px'}}>
               <Menu mode='horizontal'>
                 <SubMenu style={{float: 'right'}} title={<span><Icon type='user'/>{this.state.username}</span>}>
-                  <Menu.Item key='logout' onClick={this.signOut}>
-                    Sign out
-                  </Menu.Item>
+                  <Menu.Item key='logout' onClick={this.signOut}>Mi Cuenta</Menu.Item>
+                  <Menu.Item key='logout' onClick={this.signOut}>Cerrar Sesion</Menu.Item>
                 </SubMenu>
               </Menu>
             </div>
@@ -152,6 +165,10 @@ class Router extends Component {
           </Footer>
         </Layout>
       </Layout>
+        ) : (
+            <Route component={LoginPage} />
+        )}
+      </div>
     )
   }
 }
