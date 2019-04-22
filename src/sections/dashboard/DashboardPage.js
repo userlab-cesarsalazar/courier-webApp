@@ -1,5 +1,6 @@
 //Libs
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 
 //Api
 
@@ -29,4 +30,4 @@ class DashboardPage extends Component {
   }
 }
 
-export default DashboardPage
+export default withRouter(DashboardPage)

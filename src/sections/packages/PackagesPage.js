@@ -1,10 +1,11 @@
 //Libs
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 
 //Api
 
 //Components
-
+import PackagesTable from './components/PackagesTable';
 
 //Styles
 
@@ -20,13 +21,13 @@ class PackagesPage extends Component {
   }
 
   render() {
+    const objectVariable = {title:'Paquetes',showBtn:true};
     return (
-      <div>
-        <h2>Packages</h2>
-
-      </div>
+        <div>
+          <PackagesTable objectVariable={objectVariable}/>
+        </div>
     );
   }
 }
 
-export default PackagesPage
+export default withRouter(PackagesPage)
