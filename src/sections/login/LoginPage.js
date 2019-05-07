@@ -3,15 +3,14 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { Card , Avatar, Form, Input, Button, Icon } from 'antd';
-
 //Components
 import ConfirmationAccount from './components/ConfirmationAccount';
 import ForgotPassword from './components/ForgotPassword';
 import PasswordConfirm from './components/PasswordConfirm';
 import RegisterComponent from './components/RegisterComponent';
-import Amplify, { Auth } from 'aws-amplify';
-import awsmobile from './../../amplify_config';
-Amplify.configure(awsmobile);
+import  { Auth } from 'aws-amplify';
+import './../../amplify_config';
+
 
 //Api
 
@@ -44,19 +43,29 @@ class LoginPage extends Component {
   }
   
   handleSubmit = () => {
-    Auth.signIn({
-      username : this.state.username, // Required, the username
-      password : this.state.password // Optional, the password
-    }).then(user => console.log(user))
-      .catch(err => console.log(err));
-  }
+    this.setState({ loading: true });
+    Auth.signIn(this.state.username, this.state.password)
+        .then(user => {
+        console.log(user);
+        this.setState({ loading: false, login: false});
+          this.props.history.push('/dashboard')
+        /*setTimeout(function() {
+          window.location.reload();
+          this.props.history.push('/dashboard')
+        }, 2000)*/
+    })
+      .catch(err => {
+        console.log('err',err);
+        this.setState({ loading: false });
+      });
+  };
   
   handleChange = async event => {
     const { target } = event
     const value = target.type === 'checkbox' ? target.checked : target.value
     const { name } = target
     await this.setState({ [name]: value })
-  }
+  };
   
   render() {
     const { username, password } = this.state

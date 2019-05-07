@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { menuOptions } from './commons/consts/Menu';
 import moment from 'moment';
+import  { Auth } from 'aws-amplify';
+
 
 //Services
 
@@ -61,7 +63,7 @@ class Router extends Component {
 
     this.state = {
       collapsed: false,
-      login: true,
+      login: false,
       loading: false,
       username: '',
       UserStorage: null,
@@ -70,6 +72,15 @@ class Router extends Component {
       routes: [],
       year: moment().format('YYYY')
     }
+  }
+
+  componentDidMount() {
+    Auth.currentSession()
+        .then(data => {
+          console.log(data)
+          this.setState({ login: true })
+        })
+        .catch(err => console.log(err));
   }
 
   onCollapse = collapsed => {
