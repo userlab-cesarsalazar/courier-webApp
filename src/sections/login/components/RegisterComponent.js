@@ -7,8 +7,6 @@ import { Form, Input, Button, Card , Checkbox } from 'antd';
 
 //Components
 import  { Auth } from 'aws-amplify';
-import '.././../../amplify_config';
-
 //Styles
 
 //const

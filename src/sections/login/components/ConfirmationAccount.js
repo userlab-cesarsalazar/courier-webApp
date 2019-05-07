@@ -6,9 +6,7 @@ import { Form, Input, Button, Card } from 'antd';
 //Api
 
 //Components
-import Amplify, { Auth } from 'aws-amplify';
-import awsmobile from '.././../../amplify_config';
-Amplify.configure(awsmobile);
+import  { Auth } from 'aws-amplify';
 
 //Styles
 

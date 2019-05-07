@@ -63,7 +63,7 @@ class Router extends Component {
 
     this.state = {
       collapsed: false,
-      login: false,
+      isAuthenticated: false,
       loading: false,
       username: '',
       UserStorage: null,
@@ -78,7 +78,7 @@ class Router extends Component {
     Auth.currentSession()
         .then(data => {
           console.log(data)
-          this.setState({ login: true })
+          this.setState({ isAuthenticated: true })
         })
         .catch(err => console.log(err));
   }
@@ -90,7 +90,7 @@ class Router extends Component {
   render() {
     return (
       <div>
-        {this.state.login ? (
+        {this.state.isAuthenticated ? (
         <Layout style={{ minHeight: '100vh' }}>
         <Sider
           width={240}

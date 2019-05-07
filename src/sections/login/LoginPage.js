@@ -6,7 +6,7 @@ import { Card , Avatar, Form, Input, Button, Icon } from 'antd';
 //Components
 import ConfirmationAccount from './components/ConfirmationAccount';
 import ForgotPassword from './components/ForgotPassword';
-import PasswordConfirm from './components/PasswordConfirm';
+
 import RegisterComponent from './components/RegisterComponent';
 import  { Auth } from 'aws-amplify';
 import './../../amplify_config';
@@ -42,17 +42,18 @@ class LoginPage extends Component {
     this.handleChange = this.handleChange.bind(this)
   }
   
-  handleSubmit = () => {
+  handleSubmit = (e) => {
+    e.preventDefault()
     this.setState({ loading: true });
     Auth.signIn(this.state.username, this.state.password)
         .then(user => {
         console.log(user);
-        this.setState({ loading: false, login: false});
-          this.props.history.push('/dashboard')
-        /*setTimeout(function() {
-          window.location.reload();
-          this.props.history.push('/dashboard')
-        }, 2000)*/
+        this.setState({ loading: false});
+          
+          setTimeout(function() {
+            window.location.reload()
+            this.props.history.push(`/dashboard`)
+          }, 2000)
     })
       .catch(err => {
         console.log('err',err);
