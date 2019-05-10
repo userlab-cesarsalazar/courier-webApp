@@ -6,7 +6,7 @@ import { Form, Input, Button, Card , Checkbox } from 'antd';
 //Api
 
 //Components
-
+import  { Auth } from 'aws-amplify';
 //Styles
 
 //const
@@ -17,30 +17,52 @@ class RegisterComponent extends Component {
     constructor(props){
         super(props);
         this.state = {
+            email: '',
+            password: '',
+            fullname: ''
         }
         this.onSignUp = this.onSignUp.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange = async event => {
+        const { target } = event
+        const value = target.type === 'checkbox' ? target.checked : target.value
+        const { name } = target
+        await this.setState({ [name]: value })
     }
 
     onSignUp = () => {
-
+        Auth.signUp({
+            username: this.state.email,
+            password: this.state.password,
+            attributes: {
+                email: this.state.email,
+                name: this.state.fullname
+            },
+            validationData: []  //optional
+        })
+        .then(data => {
+            console.log(data);
+            this.props.actionRegister();
+        })
+        .catch(err => console.log(err));
     };
 
     render() {
+        const { email, password, fullname } = this.state;
         return (
             <div>
                 <Card title="Crear Cuenta" style={{ width: '100%' }}>
                     <Form className="login-form">
                         <FormItem label="Email" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-                            <Input />
+                            <Input type='email' autoComplete='off' name={'email'} value={email} onChange={this.handleChange}  />
                         </FormItem>
-                        <FormItem label="Nombre" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-                            <Input />
-                        </FormItem>
-                        <FormItem label="Apellido" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-                            <Input />
+                        <FormItem label="Nombre Completo" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+                            <Input type='text' autoComplete='off' name={'fullname'} value={fullname} onChange={this.handleChange} />
                         </FormItem>
                         <FormItem label="Password" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-                            <Input />
+                            <Input type='password' autoComplete='off' name={'password'} value={password} onChange={this.handleChange} />
                         </FormItem>
                         <FormItem labelCol={{ span: 6 }}>
                             <Checkbox>Acepto terminos y condiciones</Checkbox>
