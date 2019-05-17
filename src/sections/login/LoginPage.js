@@ -49,10 +49,9 @@ class LoginPage extends Component {
         .then(user => {
         console.log(user);
         this.setState({ loading: false});
-          
+          this.props.history.push(`/dashboard`)
           setTimeout(function() {
             window.location.reload()
-            this.props.history.push(`/dashboard`)
           }, 2000)
     })
       .catch(err => {
