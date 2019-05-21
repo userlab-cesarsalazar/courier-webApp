@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { Table , Button } from 'antd';
+import servicesClient from '../ClientsSrc'
 
 class ClientsTable extends React.Component {
 
@@ -8,11 +9,25 @@ class ClientsTable extends React.Component {
         super(props);
 
         this.onAdd = this.onAdd.bind(this);
+        this.getColumns = this.getColumns.bind(this);
+        this.getData = this.getData.bind(this);
 
-        this.columns = [
-            { title: 'Tipo Usuario', dataIndex: 'name', key: 'name' },
-            { title: 'Nombre', dataIndex: 'age', key: 'age' },
-            { title: 'Activo', dataIndex: 'address', key: 'address' },
+        this.state = {
+            data: [],
+            isPageTween: false,
+        };
+    }
+
+    componentDidMount(){
+        servicesClient.list().then(clients => this.setState({data:clients}, _ => console.log(this.state.data,'data')))
+    }
+
+    getColumns = ()=>{
+        let columns = [
+            { title: 'Tipo Usuario', dataIndex: 'type', key: 'type' },
+            { title: 'Nombre', dataIndex: 'name', key: 'name' },
+            { title: 'Activo', dataIndex: 'activo', key: 'activo' },
+            { title: 'Email', dataIndex: 'email', key: 'email' },
             {
                 title: 'Accion',
                 dataIndex: '',
@@ -26,37 +41,18 @@ class ClientsTable extends React.Component {
             },
         ];
 
-        this.data = [
-            {
-                key: 1,
-                name: 'John Brown',
-                age: 32,
-                address: 'New York No.1 Lake Park',
-            },
-            {
-                key: 2,
-                name: 'Jim Green',
-                age: 42,
-                address: 'London No.1 Lake Park',
-            },
-            {
-                key: 3,
-                name: 'Joe Black',
-                age: 32,
-                address: 'Sidney No.1 Lake Park',
-            },
-            {
-                key: 4,
-                name: 'Jim Red',
-                age: 18,
-                address: 'London No.1 Lake Park',
-            },
-        ];
+        return columns
+    }
 
-        this.state = {
-            data: this.data,
-            isPageTween: false,
-        };
+    getData = (data)=>{
+
+        return data.map( (d) => ({
+                key: d.id,
+                name:  d.name,
+                email: d.email,
+                type: d.type,
+                activo: d.activo
+        }));
     }
 
     onDelete = (key, e) => {
@@ -80,7 +76,7 @@ class ClientsTable extends React.Component {
                     <h2>{this.props.objectVariable.title}</h2>
                     {this.props.objectVariable.showBtn ? <Button type="primary" onClick={this.onAdd}>Nuevo</Button> : ''}
                 </div>
-                <Table columns={this.columns} dataSource={this.state.data}/>
+                <Table columns={this.getColumns()} dataSource={this.getData(this.state.data)}/>
             </div>
         );
     }
