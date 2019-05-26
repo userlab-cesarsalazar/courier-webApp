@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Table , Button , Spin } from 'antd';
 import servicesPackages from '../PackagesSrc';
-import InfiniteScroll from 'react-infinite-scroller';
 
 class PackagesTable extends React.Component {
 
@@ -88,19 +87,7 @@ class PackagesTable extends React.Component {
                     <h2>{this.props.objectVariable.title}</h2>
                     {this.props.objectVariable.showBtn ? <Button type="primary" onClick={this.onAdd}>Nuevo</Button> : ''}
                 </div>
-                <div className="demo-infinite-container">
-                    <InfiniteScroll
-                        initialLoad={false}
-                        pageStart={0}
-                        loadMore={false}
-                        hasMore={!this.state.loading && this.state.hasMore}
-                    >
-                    <Table columns={this.getColumns()} dataSource={this.getData(this.state.data)}/>
-                        {this.state.loading && this.state.hasMore && (
-                            <div className="demo-loading-container"><Spin /></div>
-                        )}
-                    </InfiniteScroll>
-                </div>
+                <Table columns={this.getColumns()} dataSource={this.getData(this.state.data)}/>
             </div>
         );
     }
