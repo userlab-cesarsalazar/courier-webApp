@@ -60,6 +60,7 @@ class Router extends Component {
       routes: [],
       year: moment().format('YYYY'),
     }
+    this.handleSignOut = this.handleSignOut.bind(this)
   }
 
   componentDidMount() {
@@ -72,6 +73,20 @@ class Router extends Component {
 
   onCollapse = collapsed => {
     this.setState({ collapsed })
+  }
+
+  handleSignOut = e => {
+    this.setState({ loading: true });
+    Auth.signOut()
+        .then(() => {
+          this.setState({ loading: false })
+          //alert.success('Good Bye!!')
+          setTimeout(function() {
+            window.location.reload()
+            this.props.history.push('/login')
+          }, 2000)
+        })
+        .catch(err => console.log(err))
   }
 
   render() {
@@ -146,10 +161,10 @@ class Router extends Component {
                         </span>
                       }
                     >
-                      <Menu.Item key='logout' onClick={this.signOut}>
+                      <Menu.Item key='myaccount' onClick={this.signOut}>
                         Mi Cuenta
                       </Menu.Item>
-                      <Menu.Item key='logout' onClick={this.signOut}>
+                      <Menu.Item key='logout' onClick={this.handleSignOut}>
                         Cerrar Sesion
                       </Menu.Item>
                     </SubMenu>

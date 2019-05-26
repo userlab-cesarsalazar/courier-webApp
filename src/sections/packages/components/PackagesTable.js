@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Table , Button } from 'antd';
+import { Table , Button , Spin } from 'antd';
+import servicesPackages from '../PackagesSrc';
 
 class PackagesTable extends React.Component {
 
@@ -9,10 +10,27 @@ class PackagesTable extends React.Component {
 
         this.onAdd = this.onAdd.bind(this);
 
-        this.columns = [
-            { title: 'Traking', dataIndex: 'name', key: 'name' },
-            { title: 'Fecha Registro', dataIndex: 'age', key: 'age' },
-            { title: 'Estado', dataIndex: 'address', key: 'address' },
+        this.getColumns = this.getColumns.bind(this);
+        this.getData = this.getData.bind(this);
+
+        this.state = {
+            data: [],
+            isPageTween: false,
+            loading: false,
+            hasMore: true,
+        };
+    }
+
+    componentDidMount(){
+        //servicesPackages.list().then(packages => this.setState({data:packages}, _ => console.log(this.state.data,'data')))
+        this.loadData();
+    }
+
+    getColumns = ()=>{
+        let columns = [
+            { title: 'Tracking', dataIndex: 'tracking', key: 'tracking' },
+            { title: 'Fecha Registro', dataIndex: 'ing_date', key: 'ing_date' },
+            { title: 'Estado', dataIndex: 'status', key: 'status' },
             {
                 title: 'Accion',
                 dataIndex: '',
@@ -26,25 +44,26 @@ class PackagesTable extends React.Component {
             },
         ];
 
-        this.data = [
-            {
-                key: 1,
-                name: 'John Brown',
-                age: 32,
-                address: 'New York No.1 Lake Park',
-            },
-            {
-                key: 2,
-                name: 'Jim Green',
-                age: 42,
-                address: 'London No.1 Lake Park',
-            },
-        ];
+        return columns
+    }
 
-        this.state = {
-            data: this.data,
-            isPageTween: false,
-        };
+    getData = (data)=>{
+        return data.map( (d) => ({
+            key: d.package_id,
+            tracking: d.tracking,
+            ing_date: d.ing_date,
+            status:  d.status
+        }));
+    }
+
+    loadData = () => {
+        //if (!this.state.loading) this.setState({ loading: true })
+       /* servicesPackages.list()
+            .then(packages => this.setState({data:packages},{ loading: false }))
+            .catch(e => {
+                //alert.error(e)
+            })*/
+        servicesPackages.list().then(packages => this.setState({data:packages}, _ => console.log(this.state.data,'data')))
     }
 
     onDelete = (key, e) => {
@@ -68,7 +87,7 @@ class PackagesTable extends React.Component {
                     <h2>{this.props.objectVariable.title}</h2>
                     {this.props.objectVariable.showBtn ? <Button type="primary" onClick={this.onAdd}>Nuevo</Button> : ''}
                 </div>
-                <Table columns={this.columns} dataSource={this.state.data}/>
+                <Table columns={this.getColumns()} dataSource={this.getData(this.state.data)}/>
             </div>
         );
     }
