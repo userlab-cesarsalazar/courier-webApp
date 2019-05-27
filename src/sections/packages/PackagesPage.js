@@ -8,8 +8,9 @@ import PackagesSrc from './PackagesSrc';
 //Components
 import PackagesTable from './components/PackagesTable';
 import {
+  Button,
   message
-} from 'antd'
+} from 'antd';
 
 //Styles
 
@@ -27,7 +28,11 @@ class PackagesPage extends Component {
   }
 
   componentDidMount() {
+    this.loadData();
+  }
 
+
+  loadData = () => {
     PackagesSrc.list()
       .then(packages => this.setState({ packages, loading: false }))
       .catch(err => {
@@ -36,6 +41,10 @@ class PackagesPage extends Component {
       })
   }
 
+  onAdd = () => {
+    this.props.history.push('/packages/create');
+  };
+
 
   render() {
     const {
@@ -43,16 +52,19 @@ class PackagesPage extends Component {
       packages
     } = this.state;
 
-    const objectVariable = {title:'Paquetes',showBtn:true};
+    const objectVariable = { title: 'Paquetes', showBtn: true };
 
     return (
-        <div>
-          <PackagesTable
-            loading={loading}
-            packages={packages}
-            objectVariable={objectVariable}
-          />
+      <div>
+        <div className={'table-action-bar'}>
+          <h2>{objectVariable.title}</h2>
+          {objectVariable.showBtn ? <Button type='primary' onClick={this.onAdd}>Nuevo</Button> : ''}
         </div>
+        <PackagesTable
+          loading={loading}
+          packages={packages}
+        />
+      </div>
     );
   }
 }
