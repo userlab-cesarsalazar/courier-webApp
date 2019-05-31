@@ -1,6 +1,7 @@
 //Libs
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
+import { withUserDefaults } from '../../commons/components/UserDefaults';
 
 //Api
 
@@ -22,12 +23,16 @@ class ClientsPage extends Component {
 
   render() {
     const objectVariable = {title:'Usuarios',showBtn:true};
+    const {
+      getWord
+    } = this.props.userDefaults;
     return (
       <div>
+        <h2>{getWord('CLIENTS')}</h2>
         <ClientsTable objectVariable={objectVariable}/>
       </div>
     );
   }
 }
 
-export default withRouter(ClientsPage)
+export default withRouter(withUserDefaults(ClientsPage))

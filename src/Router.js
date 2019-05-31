@@ -4,6 +4,8 @@ import { Switch, Route, Link, Redirect } from 'react-router-dom'
 import { menuOptions } from './commons/consts/Menu'
 import moment from 'moment'
 import { Auth } from 'aws-amplify'
+import { withUserDefaults } from './commons/components/UserDefaults';
+
 //Services
 
 //Pages
@@ -78,18 +80,26 @@ class Router extends Component {
   handleSignOut = e => {
     this.setState({ loading: true });
     Auth.signOut()
-        .then(() => {
-          this.setState({ loading: false })
-          //alert.success('Good Bye!!')
-          setTimeout(function() {
-            window.location.reload()
-            this.props.history.push('/login')
-          }, 2000)
-        })
-        .catch(err => console.log(err))
+      .then(() => {
+        this.setState({ loading: false })
+        //alert.success('Good Bye!!')
+        setTimeout(function() {
+          window.location.reload()
+          this.props.history.push('/login')
+        }, 2000)
+      })
+      .catch(err => console.log(err))
   }
 
+  changeLanguage = language => {
+    this.props.userDefaults.changeLanguage(language);
+  };
+
   render() {
+    const {
+      language,
+      getWord
+    } = this.props.userDefaults;
     return (
       <div>
         {this.state.login ? (
@@ -140,7 +150,7 @@ class Router extends Component {
                       <Menu.Item key={option.route}>
                         <Link to={option.route}>
                           <Icon type={option.icon} />
-                          <span>{option.name}</span>
+                          <span>{getWord(option.name)}</span>
                         </Link>
                       </Menu.Item>
                     )
@@ -163,6 +173,9 @@ class Router extends Component {
                     >
                       <Menu.Item key='myaccount' onClick={this.signOut}>
                         Mi Cuenta
+                      </Menu.Item>
+                      <Menu.Item key='language' onClick={_ => this.changeLanguage(language === 'EN' ? 'ES' : 'EN')}>
+                        {language === 'EN' ? 'Español' : 'English'}
                       </Menu.Item>
                       <Menu.Item key='logout' onClick={this.handleSignOut}>
                         Cerrar Sesion
@@ -197,4 +210,5 @@ class Router extends Component {
     )
   }
 }
-export default Router
+
+export default withUserDefaults(Router)
