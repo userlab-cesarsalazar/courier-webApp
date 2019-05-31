@@ -1,6 +1,7 @@
 //Libs
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
+import { withUserDefaults } from '../../commons/components/UserDefaults';
 
 //Api
 import PackagesSrc from './PackagesSrc';
@@ -48,6 +49,9 @@ class PackagesPage extends Component {
 
   render() {
     const {
+      getWord
+    } = this.props.userDefaults;
+    const {
       loading,
       packages
     } = this.state;
@@ -56,6 +60,8 @@ class PackagesPage extends Component {
 
     return (
       <div>
+        <h2>{getWord('PACKAGES')}</h2>
+
         <div className={'table-action-bar'}>
           <h2>{objectVariable.title}</h2>
           {objectVariable.showBtn ? <Button type='primary' onClick={this.onAdd}>Nuevo</Button> : ''}
@@ -69,4 +75,5 @@ class PackagesPage extends Component {
   }
 }
 
+export default withUserDefaults(PackagesPage)
 export default withRouter(PackagesPage)

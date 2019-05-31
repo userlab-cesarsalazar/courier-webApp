@@ -4,6 +4,12 @@ import { Switch, Route, Link, Redirect } from 'react-router-dom'
 import { menuOptions } from './commons/consts/Menu'
 import moment from 'moment'
 import { Auth } from 'aws-amplify'
+import React, { Component } from 'react';
+import { Switch, Route, Link, Redirect } from 'react-router-dom';
+import { menuOptions } from './commons/consts/Menu';
+import moment from 'moment';
+import { withUserDefaults } from './commons/components/UserDefaults';
+
 //Services
 
 //Pages
@@ -11,18 +17,13 @@ import { Auth } from 'aws-amplify'
 import LoginPage from './sections/login/LoginPage'
 
 //DashBoard
-import DashboardPage from './sections/dashboard/DashboardPage'
+import DashboardPage from './sections/dashboard/DashboardPage';
 
 //Clients
-import ClientsPage from './sections/clients/ClientsPage'
-import ClientsAddForm from './sections/clients/forms/ClientAddForm'
+import ClientsPage from './sections/clients/ClientsPage';
 
 //Packages
-import PackagesPage from './sections/packages/PackagesPage'
-import PackagesAddForm from './sections/packages/forms/PackageAddForm'
-
-//Reports
-import ReportsPage from './sections/reports/ReportsPage'
+import PackagesPage from './sections/packages/PackagesPage';
 
 //Components
 import UISpinner from './commons/components/UISpinner'
@@ -88,8 +89,18 @@ class Router extends Component {
         })
         .catch(err => console.log(err))
   }
+    this.setState({ collapsed });
+  };
+
+  changeLanguage = language => {
+    this.props.userDefaults.changeLanguage(language);
+  };
 
   render() {
+    const {
+      language,
+      getWord
+    } = this.props.userDefaults;
     return (
       <div>
         {this.state.login ? (
@@ -198,3 +209,5 @@ class Router extends Component {
   }
 }
 export default Router
+
+export default withUserDefaults(Router)
