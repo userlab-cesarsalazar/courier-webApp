@@ -35,5 +35,4 @@ class DashboardPage extends Component {
   }
 }
 
-export default withRouter(DashboardPage)
-export default withUserDefaults(DashboardPage)
+export default withRouter(withUserDefaults(DashboardPage))

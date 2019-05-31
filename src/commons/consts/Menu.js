@@ -20,7 +20,7 @@ const menuOptions = [{
   route: '/packages',
   possiblePermissions: [ 'read', 'add', 'edit', 'delete' ]
 }, {
-  name: 'Reportes',
+  name: 'REPORTS',
   key: 'reports',
   icon: 'area-chart',
   route: '/reports',

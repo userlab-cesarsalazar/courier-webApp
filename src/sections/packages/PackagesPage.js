@@ -60,10 +60,8 @@ class PackagesPage extends Component {
 
     return (
       <div>
-        <h2>{getWord('PACKAGES')}</h2>
-
         <div className={'table-action-bar'}>
-          <h2>{objectVariable.title}</h2>
+          <h2>{getWord('PACKAGES')}</h2>
           {objectVariable.showBtn ? <Button type='primary' onClick={this.onAdd}>Nuevo</Button> : ''}
         </div>
         <PackagesTable
@@ -75,5 +73,4 @@ class PackagesPage extends Component {
   }
 }
 
-export default withUserDefaults(PackagesPage)
-export default withRouter(PackagesPage)
+export default withRouter(withUserDefaults(PackagesPage))

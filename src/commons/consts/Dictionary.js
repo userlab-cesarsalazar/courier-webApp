@@ -13,6 +13,10 @@ const dictionary = {
     'EN': 'Packages',
     'ES': 'Paquetes'
   },
+  'REPORTS': {
+    'EN': 'Reports',
+    'ES': 'Reportes'
+  },
 };
 
 export {

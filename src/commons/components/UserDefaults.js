@@ -1,4 +1,5 @@
 import React, { createContext } from 'react';
+import { Cache } from 'aws-amplify'
 import { dictionary } from '../consts/Dictionary';
 
 const { Provider, Consumer } = createContext();
@@ -21,7 +22,24 @@ export class UserDefaultsProvider extends React.Component {
     }
   }
 
-  changeLanguage = language => this.setState({ language });
+  componentDidMount() {
+    this.setState({ language: this.getLanguage() })
+  }
+
+  getLanguage = () => {
+
+    let language = Cache.getItem('language')
+
+    return language ? JSON.parse(language) : 'EN'
+  }
+
+  changeLanguage = async language => {
+
+    await this.setState({ isLoading: true });
+    await Cache.setItem('language', JSON.stringify(language));
+    await this.setState({ language, isLoading: false });
+
+  }
 
   getWord = index => dictionary[index] && dictionary[index][this.state.language] ? dictionary[index][this.state.language] : 'WORD NOT FOUND';
 

@@ -28,11 +28,11 @@ class ClientsPage extends Component {
     } = this.props.userDefaults;
     return (
       <div>
+        <h2>{getWord('CLIENTS')}</h2>
         <ClientsTable objectVariable={objectVariable}/>
       </div>
     );
   }
 }
 
-export default withRouter(ClientsPage)
-export default withUserDefaults(ClientsPage)
+export default withRouter(withUserDefaults(ClientsPage))

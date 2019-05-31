@@ -4,10 +4,6 @@ import { Switch, Route, Link, Redirect } from 'react-router-dom'
 import { menuOptions } from './commons/consts/Menu'
 import moment from 'moment'
 import { Auth } from 'aws-amplify'
-import React, { Component } from 'react';
-import { Switch, Route, Link, Redirect } from 'react-router-dom';
-import { menuOptions } from './commons/consts/Menu';
-import moment from 'moment';
 import { withUserDefaults } from './commons/components/UserDefaults';
 
 //Services
@@ -17,13 +13,18 @@ import { withUserDefaults } from './commons/components/UserDefaults';
 import LoginPage from './sections/login/LoginPage'
 
 //DashBoard
-import DashboardPage from './sections/dashboard/DashboardPage';
+import DashboardPage from './sections/dashboard/DashboardPage'
 
 //Clients
-import ClientsPage from './sections/clients/ClientsPage';
+import ClientsPage from './sections/clients/ClientsPage'
+import ClientsAddForm from './sections/clients/forms/ClientAddForm'
 
 //Packages
-import PackagesPage from './sections/packages/PackagesPage';
+import PackagesPage from './sections/packages/PackagesPage'
+import PackagesAddForm from './sections/packages/forms/PackageAddForm'
+
+//Reports
+import ReportsPage from './sections/reports/ReportsPage'
 
 //Components
 import UISpinner from './commons/components/UISpinner'
@@ -79,18 +80,16 @@ class Router extends Component {
   handleSignOut = e => {
     this.setState({ loading: true });
     Auth.signOut()
-        .then(() => {
-          this.setState({ loading: false })
-          //alert.success('Good Bye!!')
-          setTimeout(function() {
-            window.location.reload()
-            this.props.history.push('/login')
-          }, 2000)
-        })
-        .catch(err => console.log(err))
+      .then(() => {
+        this.setState({ loading: false })
+        //alert.success('Good Bye!!')
+        setTimeout(function() {
+          window.location.reload()
+          this.props.history.push('/login')
+        }, 2000)
+      })
+      .catch(err => console.log(err))
   }
-    this.setState({ collapsed });
-  };
 
   changeLanguage = language => {
     this.props.userDefaults.changeLanguage(language);
@@ -151,7 +150,7 @@ class Router extends Component {
                       <Menu.Item key={option.route}>
                         <Link to={option.route}>
                           <Icon type={option.icon} />
-                          <span>{option.name}</span>
+                          <span>{getWord(option.name)}</span>
                         </Link>
                       </Menu.Item>
                     )
@@ -174,6 +173,9 @@ class Router extends Component {
                     >
                       <Menu.Item key='myaccount' onClick={this.signOut}>
                         Mi Cuenta
+                      </Menu.Item>
+                      <Menu.Item key='language' onClick={_ => this.changeLanguage(language === 'EN' ? 'ES' : 'EN')}>
+                        {language === 'EN' ? 'Español' : 'English'}
                       </Menu.Item>
                       <Menu.Item key='logout' onClick={this.handleSignOut}>
                         Cerrar Sesion
@@ -208,6 +210,5 @@ class Router extends Component {
     )
   }
 }
-export default Router
 
 export default withUserDefaults(Router)
