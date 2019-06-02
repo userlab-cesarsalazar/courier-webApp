@@ -1,6 +1,10 @@
 //ALPHABETICALLY ORDERLY
 
 const dictionary = {
+  'USERS': {
+    'EN': 'Users',
+    'ES': 'Usuarios'
+  },
   'CLIENTS': {
     'EN': 'Clients',
     'ES': 'Clientes'
