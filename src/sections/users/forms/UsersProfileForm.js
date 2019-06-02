@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { Form, Input, Card, message, Divider, Col, Row, Button } from 'antd';
 import { utilChange, verifyPassword } from '../../../config/util';
 
-import ClientsSrc from '../ClientsSrc';
+import UsersSrc from '../UsersSrc';
 
 const FormItem = Form.Item;
 const DescriptionItem = ({ title, content }) => (
@@ -29,7 +29,7 @@ const DescriptionItem = ({ title, content }) => (
 );
 
 
-class ClientProfileForm extends React.Component {
+class UsersProfileForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -55,7 +55,7 @@ class ClientProfileForm extends React.Component {
 				password2: this.state.password2
 			};
 
-			await ClientsSrc.create(_users);
+			await UsersSrc.create(_users);
 			message.success('Contrasena actualizada');
 			return this.setState({ loading: false });
 
@@ -69,7 +69,7 @@ class ClientProfileForm extends React.Component {
 	};
 
 	onEdit = () => {
-		this.props.history.push('/clients/edit');
+		this.props.history.push('/users/edit');
 	};
 
 	handleClick = (e) => {
@@ -82,11 +82,7 @@ class ClientProfileForm extends React.Component {
 	};
 
 	componentDidMount(){
-		this.setState({ loading: true });
-		ClientsSrc.getProfile().then(profile => {
-			this.setState({data:profile[0]});
-			this.setState({ loading: false });
-		})
+		UsersSrc.getProfile().then(profile => this.setState({data:profile[0]}))
 	}
 
 	validateFields = async() => {
@@ -123,7 +119,7 @@ class ClientProfileForm extends React.Component {
 		const { errors, loading } = this.state;
 		return (
 			<div>
-				<Card loading={loading} title="Mi Cuenta" style={{ width: '100%' }} extra={<Button type="default" icon="edit" onClick={this.onEdit}/>}>
+				<Card title="Mi Cuenta" style={{ width: '100%' }} extra={<Button type="default" icon="edit" onClick={this.onEdit}/>}>
 					<Row>
 						<Col span={12}>
 							<DescriptionItem title="Codigo Cliente" content={this.state.data.client_id} />
@@ -220,6 +216,7 @@ class ClientProfileForm extends React.Component {
 			</div>
 		);
 	}
+
 }
 
-export default withRouter(ClientProfileForm)
+export default withRouter(UsersProfileForm)

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { stage } from '../config/credentials'
+import  { Cache } from 'aws-amplify';
 
 const GET = 'GET';
 const POST = 'POST';
@@ -11,7 +12,7 @@ const makeRequestApi = (url, method, data) =>
     axios({
       url: url,
       method: method,
-      headers: stage.headers,
+      headers: {'content-type': 'application-json','Authorization': Cache.getItem('userApp').token},
       data: JSON.stringify(data)
     })
       .then(data => {

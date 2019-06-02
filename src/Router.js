@@ -18,6 +18,14 @@ import DashboardPage from './sections/dashboard/DashboardPage'
 //Clients
 import ClientsPage from './sections/clients/ClientsPage'
 import ClientsAddForm from './sections/clients/forms/ClientAddForm'
+import ClientProfileForm from './sections/clients/forms/ClientProfileForm'
+import ClientEditForm from './sections/clients/forms/ClientEditForm'
+
+//Users
+import UsersPage from './sections/users/UsersPage'
+import UsersAddForm from './sections/users/forms/UsersAddForm'
+import UsersProfileForm from './sections/users/forms/UsersProfileForm'
+import UsersEditForm from './sections/users/forms/UsersEditForm'
 
 //Packages
 import PackagesPage from './sections/packages/PackagesPage'
@@ -44,7 +52,13 @@ const routes = [
   { route: '/clients', component: ClientsPage },
   { route: '/packages', component: PackagesPage },
   { route: '/clients/create', component: ClientsAddForm },
+  { route: '/clients/profile', component: ClientProfileForm },
+  { route: '/clients/edit', component: ClientEditForm },
   { route: '/packages/create', component: PackagesAddForm },
+  { route: '/users', component: UsersPage },
+  { route: '/users/create', component: UsersAddForm },
+  { route: '/users/profile', component: UsersProfileForm },
+  { route: '/users/edit', component: UsersEditForm }
 ]
 
 class Router extends Component {
@@ -61,6 +75,7 @@ class Router extends Component {
       menuOptions: null,
       routes: [],
       year: moment().format('YYYY'),
+      visible: false
     }
     this.handleSignOut = this.handleSignOut.bind(this)
   }
@@ -80,16 +95,20 @@ class Router extends Component {
   handleSignOut = e => {
     this.setState({ loading: true });
     Auth.signOut()
-      .then(() => {
-        this.setState({ loading: false })
-        //alert.success('Good Bye!!')
-        setTimeout(function() {
-          window.location.reload()
-          this.props.history.push('/login')
-        }, 2000)
-      })
-      .catch(err => console.log(err))
-  }
+        .then(() => {
+          this.setState({ loading: false })
+          //alert.success('Good Bye!!')
+          setTimeout(function() {
+            window.location.reload()
+            this.props.history.push('/login')
+          }, 2000)
+        })
+        .catch(err => console.log(err))
+  };
+
+  showProfile = () => {
+    this.props.history.push('/clients/profile');
+  };
 
   changeLanguage = language => {
     this.props.userDefaults.changeLanguage(language);
@@ -171,7 +190,7 @@ class Router extends Component {
                         </span>
                       }
                     >
-                      <Menu.Item key='myaccount' onClick={this.signOut}>
+                      <Menu.Item key='myaccount' onClick={this.showProfile}>
                         Mi Cuenta
                       </Menu.Item>
                       <Menu.Item key='language' onClick={_ => this.changeLanguage(language === 'EN' ? 'ES' : 'EN')}>

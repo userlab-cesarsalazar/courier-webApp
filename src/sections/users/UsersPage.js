@@ -3,61 +3,59 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 
 //Api
-import ClientsSrc from './ClientsSrc';
+import UsersSrc from './UsersSrc';
 
 //Components
-import ClientsTable from './components/ClientsTable';
+import UsersTable from './components/UsersTable';
 
 import {Button,message} from 'antd';
 
 //Styles
 
 //const
+class UsersPage extends Component {
 
-
-class ClientsPage extends Component {
-  
   constructor(props){
     super(props)
-    
+
     this.onAdd = this.onAdd.bind(this);
     this.state = {
       loading: true,
       users: []
     }
   }
-  
+
   componentDidMount() {
     this.loadData();
   }
-  
-  
+
+
   loadData = () => {
-    ClientsSrc.list()
+    UsersSrc.list()
       .then(users => this.setState({ users, loading: false }))
       .catch(err => {
         message.error(err.message || err)
         this.setState({ loading: false })
       })
   }
-  
+
   onAdd = () => {
-    this.props.history.push('/clients/create');
+    this.props.history.push('/users/create');
   };
-  
+
   render() {
     const {
       loading,
       users
-    } = this.state;
-    const objectVariable = {title:'Clientes',showBtn:true};
+      } = this.state;
+    const objectVariable = {title:'Usuarios',showBtn:true};
     return (
       <div>
         <div className={'table-action-bar'}>
           <h2>{objectVariable.title}</h2>
           {objectVariable.showBtn ? <Button type='primary' onClick={this.onAdd}>Nuevo</Button> : ''}
         </div>
-        <ClientsTable
+        <UsersTable
           loading={loading}
           users={users}
         />
@@ -66,4 +64,4 @@ class ClientsPage extends Component {
   }
 }
 
-export default withRouter(ClientsPage)
+export default withRouter(UsersPage)

@@ -8,6 +8,12 @@ const menuOptions = [{
   possiblePermissions: ['read'],  //Required if doesn't have sections
   requiredPermissions: ['read']   //Required if doesn't have sections
 }, {
+  name: 'USERS',
+  key: 'users',
+  icon: 'team',
+  route: '/users',
+  possiblePermissions: [ 'read', 'add', 'edit', 'delete' ]
+},{
   name: 'CLIENTS',
   key: 'clients',
   icon: 'team',
