@@ -1,10 +1,12 @@
 //Libs
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
+import { withUserDefaults } from '../../commons/components/UserDefaults';
 
 //Api
 
 //Components
+
 
 
 //Styles
@@ -21,13 +23,16 @@ class DashboardPage extends Component {
   }
 
   render() {
+    const {
+      getWord
+    } = this.props.userDefaults;
     return (
       <div>
-        <h2>Dashboard</h2>
+        <h2>{getWord('DASHBOARD')}</h2>
 
       </div>
     );
   }
 }
 
-export default withRouter(DashboardPage)
+export default withRouter(withUserDefaults(DashboardPage))

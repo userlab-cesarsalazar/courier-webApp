@@ -16,22 +16,22 @@ import {Button,message} from 'antd';
 
 
 class ClientsPage extends Component {
-
+  
   constructor(props){
     super(props)
-
+    
     this.onAdd = this.onAdd.bind(this);
     this.state = {
       loading: true,
       users: []
     }
   }
-
+  
   componentDidMount() {
     this.loadData();
   }
-
-
+  
+  
   loadData = () => {
     ClientsSrc.list()
       .then(users => this.setState({ users, loading: false }))
@@ -40,16 +40,16 @@ class ClientsPage extends Component {
         this.setState({ loading: false })
       })
   }
-
+  
   onAdd = () => {
     this.props.history.push('/clients/create');
   };
-
+  
   render() {
     const {
       loading,
       users
-      } = this.state;
+    } = this.state;
     const objectVariable = {title:'Clientes',showBtn:true};
     return (
       <div>
