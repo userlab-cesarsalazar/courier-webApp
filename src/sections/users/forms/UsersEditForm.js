@@ -3,13 +3,13 @@ import { withRouter } from 'react-router';
 import { Form, Input, Select, Button, Radio, Switch , Card, message } from 'antd';
 import { utilChange, verifyEmail, verifyPassword } from '../../../config/util';
 
-import ClientsSrc from '../ClientsSrc';
+import UsersSrc from '../UsersSrc';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
-class ClientsEditForm extends React.Component {
+class UsersEditForm extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -20,9 +20,8 @@ class ClientsEditForm extends React.Component {
 		this.loadProfile = this.loadProfile.bind(this);
 	}
 
-	loadProfile = async() => {
-		this.setState({ loading: true })
-		ClientsSrc.getProfile().then(
+	loadProfile = () => {
+		UsersSrc.getProfile().then(
 			profile => {
 				this.setState({
 					user_id:profile[0].user_id,
@@ -36,8 +35,7 @@ class ClientsEditForm extends React.Component {
 					message_user:profile[0].message_user,
 					cuota:profile[0].cuota,
 					type:profile[0].type
-				});
-				this.setState({ loading: false });
+				})
 			}
 		)
 	};
@@ -63,7 +61,7 @@ class ClientsEditForm extends React.Component {
 				entrega: this.state.entrega,
 				message_user: this.state.message_user
 			};
-			await ClientsSrc.update(_users,this.state.user_id);
+			await UsersSrc.update(_users,this.state.user_id);
 			message.success('Registro actualizado');
 			this.loadProfile();
 			return this.setState({ loading: false });
@@ -97,7 +95,7 @@ class ClientsEditForm extends React.Component {
 	};
 
 	onBack = () => {
-		this.props.history.push('/clients');
+		this.props.history.push('/users/profile');
 	};
 
 	handleChange = event => {
@@ -128,7 +126,7 @@ class ClientsEditForm extends React.Component {
 		const { errors, loading, client_id, email, name, phone, nit, entrega, main_address, message_user, cuota, type } = this.state;
 		return (
 			<div>
-				<Card title="Editar" style={{ width: '100%' }} loading={loading}>
+				<Card title="Editar" style={{ width: '100%' }}>
 					<Form>
 						<FormItem
 							label="Codigo Cliente" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
@@ -256,5 +254,5 @@ class ClientsEditForm extends React.Component {
 	}
 }
 
-const WrappedCreateForm = Form.create()(ClientsEditForm);
+const WrappedCreateForm = Form.create()(UsersEditForm);
 export default withRouter(WrappedCreateForm)

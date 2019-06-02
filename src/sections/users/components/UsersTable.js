@@ -1,13 +1,13 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Table, Form, Button, Input , Card, Select, Row, Col, Divider,message} from 'antd';
+import { Table, Form, Button, Input , Card, Select, Row, Col, Divider, message} from 'antd';
 import { utilChange } from '../../../config/util';
-import servicesClient from '../ClientsSrc'
+import UsersSrc from '../UsersSrc';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-class ClientsTable extends React.Component {
+class UsersTable extends React.Component {
 
     constructor(props){
         super(props);
@@ -18,7 +18,7 @@ class ClientsTable extends React.Component {
         this.state = {
             data: [],
             isPageTween: false,
-            loading : true,
+            loading : false,
             page: 0,
             type: '',
             name: '',
@@ -31,16 +31,15 @@ class ClientsTable extends React.Component {
     }
 
     loadUser = async() => {
-        try{
+        try {
             this.setState({ loading: true })
             let listTmp = [];
             this.state.page = this.state.page + 1;
-            let params = '&page='+this.state.page;
-            await servicesClient.list(params).then(
+            let params = 'page='+this.state.page;
+            await UsersSrc.list(params).then(
               clients => {
                   listTmp = this.state.data.concat(clients);
                   this.setState({data:listTmp});
-
               }
             )
             return this.setState({ loading: false });
@@ -52,28 +51,38 @@ class ClientsTable extends React.Component {
             this.setState({ loading: false })        }
     };
 
-    onSearch = () => {
-        let params = '';
-        if(this.state.name) {
-            params += '&name='+this.state.name;
+    onSearch = async(e) => {
+        try {
+            e.preventDefault()
+            this.setState({ loading: true })
+            let params = '';
+            if(this.state.name) {
+                params += '&name='+this.state.name;
+            }
+            if(this.state.type) {
+                params += '&type='+this.state.type;
+            }
+            if(this.state.email) {
+                params += '&email='+this.state.email;
+            }
+            await UsersSrc.list(params).then(
+              clients => {
+                  this.setState({data:clients});
+              }
+            );
+            return this.setState({ loading: false });
+        } catch (e) {
+            console.log(e)
+            if (e && e.message) {
+                message.error(e.message);
+            }
+            this.setState({ loading: false })
         }
-        if(this.state.client_id) {
-            params += '&client_id='+this.state.client_id;
-        }
-        if(this.state.email) {
-            params += '&email='+this.state.email;
-        }
-
-        servicesClient.list(params).then(
-          clients => {
-              this.setState({data:clients});
-          }
-        )
     };
 
     getColumns = ()=>{
         let columns = [
-            { title: 'Codigo', dataIndex: 'client_id', key: 'client_id' },
+            { title: 'Tipo Usuario', dataIndex: 'type', key: 'type' },
             { title: 'Nombre', dataIndex: 'name', key: 'name' },
             { title: 'Email', dataIndex: 'email', key: 'email' },
             { title: 'Activo', dataIndex: 'activo', key: 'activo' },
@@ -83,9 +92,8 @@ class ClientsTable extends React.Component {
                 key: 'x',
                 render: (text, record) => (
                   <span>
-                <Button type="default" icon="edit" onClick={(e) => { this.onEdit(record.key, e); }}/>
-                <Button type="default" icon="file-search" title="Ver paquetes" onClick={(e) => { this.onEdit(record.key, e); }}/>
-             </span>
+                    <Button type="default" icon="edit" onClick={(e) => { this.onEdit(record.key, e); }}/>
+                  </span>
                 ),
             },
         ];
@@ -98,7 +106,7 @@ class ClientsTable extends React.Component {
             key: d.id,
             name:  d.name,
             email: d.email,
-            client_id: d.client_id,
+            type: d.type,
             activo: d.activo
         }));
     };
@@ -120,7 +128,7 @@ class ClientsTable extends React.Component {
     };
 
     onEdit = (key, e) => {
-        this.props.history.push('/clients/edit?id='+key);
+
     };
 
     render() {
@@ -131,14 +139,20 @@ class ClientsTable extends React.Component {
                   <Form>
                       <Row type="flex">
                           <Col span={6}>
-                              <FormItem
-                                label="Codigo" labelCol={{ span: 12 }} wrapperCol={{ span: 12 }}>
-                                  <Input
-                                    name="client_id"
-                                    onChange={this.handleChange}
-                                    value={this.state.client_id}
-                                    disabled={loading}
-                                  />
+                              <FormItem label="Tipo Usuario" labelCol={{ span: 12 }} wrapperCol={{ span: 12 }}>
+                                  <Select placeholder="Seleccione"
+                                          name="type"
+                                          onChange={this.handleSelectChange}
+                                          value={this.state.type}
+                                          disabled={loading}
+                                  >
+                                      <Option value="">Seleccione</Option>
+                                      {/*<Option value="cliente">Cliente</Option>*/}
+                                      <Option value="vendedor">Usuario traesTodo</Option>
+                                      <Option value="admin">Administrador</Option>
+                                      <Option value="warehouse">Operador Guatemala</Option>
+                                      <Option value="delegate">Operador Miami</Option>
+                                  </Select>
                               </FormItem>
                           </Col>
                           <Col span={6}>
@@ -181,4 +195,4 @@ class ClientsTable extends React.Component {
     }
 }
 
-export default withRouter(ClientsTable)
+export default withRouter(UsersTable)

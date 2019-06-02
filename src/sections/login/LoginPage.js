@@ -8,13 +8,11 @@ import ConfirmationAccount from './components/ConfirmationAccount';
 import ForgotPassword from './components/ForgotPassword';
 
 import RegisterComponent from './components/RegisterComponent';
-import  { Auth } from 'aws-amplify';
+import  { Auth, Cache } from 'aws-amplify';
 import './../../amplify_config';
 
 
 //Api
-
-
 
 //Styles
 
@@ -43,11 +41,20 @@ class LoginPage extends Component {
   }
   
   handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    let profile = {
+      attributes: '',
+      token: '',
+      groups: ''
+    };
     this.setState({ loading: true });
     Auth.signIn(this.state.username, this.state.password)
         .then(user => {
         console.log(user);
+        profile.token = user.signInUserSession.idToken.jwtToken;
+        profile.attributes = JSON.stringify(user.attributes);
+        Cache.setItem('userApp',profile);
+        console.log(profile);
         this.setState({ loading: false});
           this.props.history.push(`/dashboard`)
           setTimeout(function() {

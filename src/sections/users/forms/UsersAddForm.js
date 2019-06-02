@@ -3,23 +3,24 @@ import { withRouter } from 'react-router';
 import { Form, Input, Select, Button, Radio, Switch , Card, message } from 'antd';
 import { utilChange, verifyEmail, verifyPassword } from '../../../config/util';
 
-import ClientsSrc from '../ClientsSrc';
+import UsersSrc from '../UsersSrc';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
-class ClientsAddForm extends React.Component {
+class UsersAddForm extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            type: 'cliente',
+            tipo: 'cliente',
             tarifa: 'normal',
             preferencia: 'traestodo',
             activo: 'Y',
             errors: {}
         };
         this.onSave = this.onSave.bind(this);
+        this.init = this.init.bind(this);
     }
 
     onSave = async(e) => {
@@ -29,29 +30,33 @@ class ClientsAddForm extends React.Component {
             await this.validateFields()
 
             let _users = {
-                type: 'cliente',
+                type: this.state.type,
                 name: this.state.name,
                 email: this.state.email,
-                password: this.state.password,
-                nit: this.state.nit,
-                phone: this.state.phone,
-                main_address: this.state.main_address,
-                entrega: this.state.entrega,
-                message_user: this.state.message_user
+                password: this.state.password
             };
-
-            await ClientsSrc.create(_users);
+            await UsersSrc.create(_users);
             message.success('Creado satisfactoriamente');
+            this.init();
             return this.setState({ loading: false });
-
         } catch (e) {
-            console.log(e)
-            if (e && e.message) {
-                message.error(e.message);
+            let error = e;
+            if (e.indexOf('Duplicate') > -1) {
+                error = 'Ya existe un usuario con el email ingresado';
+                message.error(error);
             }
             this.setState({ loading: false })
         }
     };
+
+    init = () => {
+        this.setState({
+            type: '',
+            name: '',
+            email: '',
+            password: ''
+        });
+    }
 
     validateFields = async() => {
         try {
@@ -84,7 +89,7 @@ class ClientsAddForm extends React.Component {
     };
 
     onBack = () => {
-        this.props.history.push('/clients');
+        this.props.history.push('/users');
     };
 
     handleChange = event => {
@@ -114,22 +119,22 @@ class ClientsAddForm extends React.Component {
         const { errors, loading } = this.state;
         return (
           <div>
-              <Card title="Nuevo Cliente" style={{ width: '100%' }}>
+              <Card title="Nuevo Usuario" style={{ width: '100%' }}>
                   <Form>
-                      {/*<FormItem label="Tipo Usuario" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
+                      <FormItem label="Tipo Usuario" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                           <Select placeholder="Seleccione"
                                   name="type"
                                   onChange={this.handleSelectChange}
                                   value={this.state.type}
                                   disabled={loading}
                           >
-                              <Option value="cliente">Cliente</Option>
+                              {/*<Option value="cliente">Cliente</Option>*/}
                               <Option value="vendedor">Usuario traesTodo</Option>
                               <Option value="admin">Administrador</Option>
                               <Option value="warehouse">Operador Guatemala</Option>
                               <Option value="delegate">Operador Miami</Option>
                           </Select>
-                      </FormItem>*/}
+                      </FormItem>
                       <FormItem
                         required
                         validateStatus={errors.email && 'error'}
@@ -259,5 +264,5 @@ class ClientsAddForm extends React.Component {
     }
 }
 
-const WrappedCreateForm = Form.create()(ClientsAddForm);
+const WrappedCreateForm = Form.create()(UsersAddForm);
 export default withRouter(WrappedCreateForm)
