@@ -29,7 +29,8 @@ import UsersEditForm from './sections/users/forms/UsersEditForm'
 
 //Packages
 import PackagesPage from './sections/packages/PackagesPage'
-import PackagesAddForm from './sections/packages/forms/PackageAddForm'
+import PackageAddForm from './sections/packages/forms/PackageAddForm'
+import PackageAdminAddForm from './sections/packages/forms/PackageAdminAddForm'
 
 //Reports
 import ReportsPage from './sections/reports/ReportsPage'
@@ -54,7 +55,8 @@ const routes = [
   { route: '/clients/create', component: ClientsAddForm },
   { route: '/clients/profile', component: ClientProfileForm },
   { route: '/clients/edit', component: ClientEditForm },
-  { route: '/packages/create', component: PackagesAddForm },
+  { route: '/packages/create', component: PackageAddForm },
+  { route: '/packages/admincreate', component: PackageAdminAddForm },
   { route: '/users', component: UsersPage },
   { route: '/users/create', component: UsersAddForm },
   { route: '/users/profile', component: UsersProfileForm },

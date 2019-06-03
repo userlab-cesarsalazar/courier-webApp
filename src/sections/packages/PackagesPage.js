@@ -43,7 +43,13 @@ class PackagesPage extends Component {
   }
 
   onAdd = () => {
+    console.log('click here')
     this.props.history.push('/packages/create');
+  };
+
+  onAdminAdd = () => {
+    console.log('click here')
+    this.props.history.push('/packages/admincreate');
   };
 
 
@@ -62,6 +68,7 @@ class PackagesPage extends Component {
       <div>
         <div className={'table-action-bar'}>
           <h2>{getWord('PACKAGES')}</h2>
+          {objectVariable.showBtn ? <Button type='primary' onClick={this.onAdminAdd}>Ingresar</Button> : ''}
           {objectVariable.showBtn ? <Button type='primary' onClick={this.onAdd}>Nuevo</Button> : ''}
         </div>
         <PackagesTable

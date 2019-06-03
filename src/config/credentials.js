@@ -1,4 +1,5 @@
 const dev = {
+  baseUrl: 'https://bccmtpjj6g.execute-api.us-east-1.amazonaws.com/dev',
   baseUrlUsers: 'https://bccmtpjj6g.execute-api.us-east-1.amazonaws.com/dev/users',
   baseUrlPackages: 'https://e62jzws75m.execute-api.us-east-1.amazonaws.com/dev/packages',
   headers: {
