@@ -1,31 +1,15 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Form, Input, Card, message, Divider, Col, Row, Button } from 'antd';
+import { Card, message, Divider, Col, Row, Button } from 'antd';
 import { utilChange, verifyPassword } from '../../../config/util';
 
 import UsersSrc from '../UsersSrc';
 
-const FormItem = Form.Item;
 const DescriptionItem = ({ title, content }) => (
-	<div
-		style={{
-      fontSize: 14,
-      lineHeight: '22px',
-      marginBottom: 7,
-      color: 'rgba(0,0,0,0.65)',
-    }}
-	>
-		<p
-			style={{
-        marginRight: 8,
-        display: 'inline-block',
-        color: 'rgba(0,0,0,0.85)',
-      }}
-		>
-			{title}:
-		</p>
-		{content}
-	</div>
+		<div className="desc-item-div">
+			<p className="desc-item-p">{title}:</p>
+			{content}
+		</div>
 );
 
 
@@ -116,7 +100,7 @@ class UsersProfileForm extends React.Component {
 	};
 
 	render() {
-		const { errors, loading } = this.state;
+		const { loading } = this.state;
 		return (
 			<div>
 				<Card title="Mi Cuenta" style={{ width: '100%' }} extra={<Button type="default" icon="edit" onClick={this.onEdit}/>}>

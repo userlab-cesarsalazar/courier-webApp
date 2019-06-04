@@ -39,11 +39,9 @@ class UsersAddForm extends React.Component {
             message.success('Creado satisfactoriamente');
             this.init();
             return this.setState({ loading: false });
-        } catch (e) {
-            let error = e;
-            if (e.indexOf('Duplicate') > -1) {
-                error = 'Ya existe un usuario con el email ingresado';
-                message.error(error);
+        } catch (err) {
+            if((typeof err === 'string') && err.indexOf('Duplicate') > -1) {
+                message.error('Ya existe un usuario con el email ingresado');
             }
             this.setState({ loading: false })
         }
@@ -61,6 +59,10 @@ class UsersAddForm extends React.Component {
     validateFields = async() => {
         try {
             let errors = {}
+
+            if(!this.state.type) {
+                errors.type = 'El tipo es requerido'
+            }
             if(!this.state.name) {
                 errors.name = 'El nombre es requerido'
             }
@@ -120,7 +122,7 @@ class UsersAddForm extends React.Component {
         return (
           <div>
               <Card title="Nuevo Usuario" style={{ width: '100%' }}>
-                  <Form>
+                  <Form autoComplete="off">
                       <FormItem label="Tipo Usuario" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                           <Select placeholder="Seleccione"
                                   name="type"
@@ -128,11 +130,11 @@ class UsersAddForm extends React.Component {
                                   value={this.state.type}
                                   disabled={loading}
                           >
-                              {/*<Option value="cliente">Cliente</Option>*/}
                               <Option value="vendedor">Usuario traesTodo</Option>
                               <Option value="admin">Administrador</Option>
                               <Option value="warehouse">Operador Guatemala</Option>
                               <Option value="delegate">Operador Miami</Option>
+                              <Option value="recepcionista">Recepcionista</Option>
                           </Select>
                       </FormItem>
                       <FormItem

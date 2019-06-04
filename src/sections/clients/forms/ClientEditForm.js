@@ -106,11 +106,6 @@ class ClientsEditForm extends React.Component {
 		});
 	};
 
-
-	handleSelectChange = (value) => {
-		this.setState({tipo: value });
-	};
-
 	handleSelectTarifaChange = (value) => {
 		this.setState({tarifa: value });
 	};

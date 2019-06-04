@@ -97,7 +97,6 @@ class UsersTable extends React.Component {
                 ),
             },
         ];
-
         return columns
     }
 
@@ -128,8 +127,8 @@ class UsersTable extends React.Component {
     };
 
     onEdit = (key, e) => {
-
-    };
+        this.props.history.push(`/users/edit/${key}`);
+    }
 
     render() {
         const { loading } = this.state;

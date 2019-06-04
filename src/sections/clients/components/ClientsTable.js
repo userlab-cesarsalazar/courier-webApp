@@ -1,11 +1,12 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Table, Form, Button, Input , Card, Select, Row, Col, Divider,message} from 'antd';
+import  { Cache } from 'aws-amplify';
+
+import { Table, Form, Button, Input , Card, Row, Col, Divider,message} from 'antd';
 import { utilChange } from '../../../config/util';
 import servicesClient from '../ClientsSrc'
 
 const FormItem = Form.Item;
-const Option = Select.Option;
 
 class ClientsTable extends React.Component {
 
@@ -18,7 +19,7 @@ class ClientsTable extends React.Component {
         this.state = {
             data: [],
             isPageTween: false,
-            loading : true,
+            loading : false,
             page: 0,
             type: '',
             name: '',
@@ -27,7 +28,9 @@ class ClientsTable extends React.Component {
     }
 
     componentDidMount(){
-        this.loadUser();
+        if(Cache.getItem('userApp').profile !== 'recepcionista'){
+            this.loadUser();
+        }
     }
 
     loadUser = async() => {
@@ -35,12 +38,11 @@ class ClientsTable extends React.Component {
             this.setState({ loading: true })
             let listTmp = [];
             this.state.page = this.state.page + 1;
-            let params = '&page='+this.state.page;
+            let params = 'type=cliente&page='+this.state.page;
             await servicesClient.list(params).then(
               clients => {
                   listTmp = this.state.data.concat(clients);
                   this.setState({data:listTmp});
-
               }
             )
             return this.setState({ loading: false });
@@ -52,23 +54,33 @@ class ClientsTable extends React.Component {
             this.setState({ loading: false })        }
     };
 
-    onSearch = () => {
-        let params = '';
-        if(this.state.name) {
-            params += '&name='+this.state.name;
+    onSearch = async(e) => {
+        try {
+            e.preventDefault()
+            this.setState({ loading: true })
+		        let params = 'type=cliente';
+		        if(this.state.name) {
+		            params += '&name='+this.state.name;
+		        }
+		        if(this.state.client_id) {
+		            params += '&client_id='+this.state.client_id;
+		        }
+		        if(this.state.email) {
+		            params += '&email='+this.state.email;
+		        }
+		        await servicesClient.list(params).then(
+		          clients => {
+		              this.setState({data:clients});
+		          }
+		        );
+            return this.setState({ loading: false });
+        } catch (e) {
+            console.log(e)
+            if (e && e.message) {
+                message.error(e.message);
+            }
+            this.setState({ loading: false })
         }
-        if(this.state.client_id) {
-            params += '&client_id='+this.state.client_id;
-        }
-        if(this.state.email) {
-            params += '&email='+this.state.email;
-        }
-
-        servicesClient.list(params).then(
-          clients => {
-              this.setState({data:clients});
-          }
-        )
     };
 
     getColumns = ()=>{
@@ -83,13 +95,14 @@ class ClientsTable extends React.Component {
                 key: 'x',
                 render: (text, record) => (
                   <span>
+                {(Cache.getItem('userApp').profile !== 'recepcionista') ? (
                 <Button type="default" icon="edit" onClick={(e) => { this.onEdit(record.key, e); }}/>
-                <Button type="default" icon="file-search" title="Ver paquetes" onClick={(e) => { this.onEdit(record.key, e); }}/>
+                ) : ('')}
+                <Button type="default" icon="file-search" title="Ver paquetes" onClick={(e) => { this.onViewPackages(record.client_id, e); }}/>
              </span>
                 ),
             },
         ];
-
         return columns
     }
 
@@ -120,8 +133,12 @@ class ClientsTable extends React.Component {
     };
 
     onEdit = (key, e) => {
-        this.props.history.push('/clients/edit?id='+key);
-    };
+        this.props.history.push(`/clients/edit/${key}`);
+    }
+
+    onViewPackages = (key, e) => {
+        this.props.history.push(`/clients/viewpackage/${key}`);
+    }
 
     render() {
         const { loading } = this.state;
@@ -173,9 +190,11 @@ class ClientsTable extends React.Component {
               </Card>
               <Divider/>
               <Table loading={this.props.loading} columns={this.getColumns()} dataSource={this.getData(this.state.data)} pagination={false}/>
+              {(Cache.getItem('userApp').profile !== 'recepcionista') ? (
               <FormItem wrapperCol={{ offset: 11 }}>
                   <Button type="primary" loading={loading} onClick={this.loadUser}>Cargar mas</Button>
               </FormItem>
+              ) : ('')}
           </div>
         );
     }

@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Switch, Route, Link, Redirect } from 'react-router-dom'
 import { menuOptions } from './commons/consts/Menu'
 import moment from 'moment'
-import { Auth } from 'aws-amplify'
+import { Auth ,Cache} from 'aws-amplify'
 import { withUserDefaults } from './commons/components/UserDefaults';
 
 //Services
@@ -20,6 +20,7 @@ import ClientsPage from './sections/clients/ClientsPage'
 import ClientsAddForm from './sections/clients/forms/ClientAddForm'
 import ClientProfileForm from './sections/clients/forms/ClientProfileForm'
 import ClientEditForm from './sections/clients/forms/ClientEditForm'
+import ClientViewPackage from './sections/clients/forms/ClientViewPackage'
 
 //Users
 import UsersPage from './sections/users/UsersPage'
@@ -53,12 +54,13 @@ const routes = [
   { route: '/packages', component: PackagesPage },
   { route: '/clients/create', component: ClientsAddForm },
   { route: '/clients/profile', component: ClientProfileForm },
-  { route: '/clients/edit', component: ClientEditForm },
+  { route: '/clients/edit/', component: ClientEditForm },
+  { route: '/clients/viewpackage/:id', component: ClientViewPackage },
   { route: '/packages/create', component: PackagesAddForm },
   { route: '/users', component: UsersPage },
   { route: '/users/create', component: UsersAddForm },
   { route: '/users/profile', component: UsersProfileForm },
-  { route: '/users/edit', component: UsersEditForm }
+  { route: '/users/edit/:id', component: UsersEditForm }
 ]
 
 class Router extends Component {
@@ -119,6 +121,7 @@ class Router extends Component {
       language,
       getWord
     } = this.props.userDefaults;
+
     return (
       <div>
         {this.state.login ? (
@@ -136,8 +139,7 @@ class Router extends Component {
               <br />
 
               <Menu theme='dark' mode='inline' selectedKeys={[this.props.location && this.props.location.pathname]}>
-                {menuOptions &&
-                  menuOptions.length > 0 &&
+                {menuOptions && menuOptions.length > 0 &&
                   menuOptions.map((option, i) =>
                     option.sections && option.sections.length > 0 ? (
                       <SubMenu
@@ -165,14 +167,14 @@ class Router extends Component {
                             )
                           })}
                       </SubMenu>
-                    ) : (
+                    ) : [(option.profilePermissions.indexOf(Cache.getItem('userApp').profile) > -1 ?
                       <Menu.Item key={option.route}>
                         <Link to={option.route}>
                           <Icon type={option.icon} />
                           <span>{getWord(option.name)}</span>
                         </Link>
                       </Menu.Item>
-                    )
+                    :''),'']
                   )}
               </Menu>
             </Sider>
