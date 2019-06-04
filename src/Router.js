@@ -30,7 +30,8 @@ import UsersEditForm from './sections/users/forms/UsersEditForm'
 
 //Packages
 import PackagesPage from './sections/packages/PackagesPage'
-import PackagesAddForm from './sections/packages/forms/PackageAddForm'
+import PackageAddForm from './sections/packages/forms/PackageAddForm'
+import PackageAdminAddForm from './sections/packages/forms/PackageAdminAddForm'
 
 //Reports
 import ReportsPage from './sections/reports/ReportsPage'
@@ -56,7 +57,8 @@ const routes = [
   { route: '/clients/profile', component: ClientProfileForm },
   { route: '/clients/edit/', component: ClientEditForm },
   { route: '/clients/viewpackage/:id', component: ClientViewPackage },
-  { route: '/packages/create', component: PackagesAddForm },
+  { route: '/packages/create', component: PackageAddForm },
+  { route: '/packages/admincreate', component: PackageAdminAddForm },
   { route: '/users', component: UsersPage },
   { route: '/users/create', component: UsersAddForm },
   { route: '/users/profile', component: UsersProfileForm },
@@ -121,7 +123,6 @@ class Router extends Component {
       language,
       getWord
     } = this.props.userDefaults;
-
     return (
       <div>
         {this.state.login ? (
@@ -139,7 +140,8 @@ class Router extends Component {
               <br />
 
               <Menu theme='dark' mode='inline' selectedKeys={[this.props.location && this.props.location.pathname]}>
-                {menuOptions && menuOptions.length > 0 &&
+                {menuOptions &&
+                  menuOptions.length > 0 &&
                   menuOptions.map((option, i) =>
                     option.sections && option.sections.length > 0 ? (
                       <SubMenu
@@ -167,7 +169,7 @@ class Router extends Component {
                             )
                           })}
                       </SubMenu>
-                    ) : [(option.profilePermissions.indexOf(Cache.getItem('userApp').profile) > -1 ?
+                    ) : (
                       <Menu.Item key={option.route}>
                         <Link to={option.route}>
                           <Icon type={option.icon} />

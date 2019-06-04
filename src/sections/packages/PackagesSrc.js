@@ -7,7 +7,6 @@ const list = () => api.get(url);
 
 const create = _package => api.post(url, _package);
 
-
 export default {
   create,
   list
