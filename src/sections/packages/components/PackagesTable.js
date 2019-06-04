@@ -1,6 +1,7 @@
 //Libs
 import React from 'react';
 import { withRouter } from 'react-router';
+import Accounting from 'accounting';
 
 //Components
 import {
@@ -26,7 +27,12 @@ class PackagesTable extends React.Component {
 
   getColumns = ()=>{
     let columns = [
+      { title: '#', dataIndex: 'package_id', key: 'package_id' },
+      { title: 'Codigo', dataIndex: 'client_id', key: 'client_id' },
+      { title: 'Usuario', dataIndex: 'contact_name', key: 'contact_name' },
+      { title: 'Descripcion', dataIndex: 'description', key: 'description' },
       { title: 'Tracking', dataIndex: 'tracking', key: 'tracking' },
+      { title: 'Total', dataIndex: 'total', key: 'total' },
       { title: 'Fecha Registro', dataIndex: 'ing_date', key: 'ing_date' },
       { title: 'Estado', dataIndex: 'status', key: 'status' },
       {
@@ -35,8 +41,8 @@ class PackagesTable extends React.Component {
         key: 'action',
         render: (text, record) => (
           <span>
-              <Button type='default' icon='edit' onClick={(e) => { this.onEdit(record.key, e); }}/>
-              <Button type='danger' icon='delete' onClick={(e) => { this.onDelete(record.key, e); }}/>
+            <Button type='default' icon='edit' onClick={e => { this.onEdit(record.key, e); }}/>
+            <Button type='danger' icon='delete' onClick={e => { this.onDelete(record.key, e); }}/>
           </span>
         ),
       },
@@ -48,6 +54,11 @@ class PackagesTable extends React.Component {
   getData = data => data.map(d => ({
 
     key: d.package_id,
+    package_id: d.package_id,
+    client_id: d.client_id,
+    contact_name: d.contact_name,
+    description: d.description,
+    total: Accounting.formatMoney(d.total_a_pagar, 'Q'),
     tracking: d.tracking,
     ing_date: d.ing_date,
     status: d.status
@@ -59,8 +70,9 @@ class PackagesTable extends React.Component {
     this.setState({ data, isPageTween: false });
   };
 
-  onEdit = (key, e) => {
-
+  onEdit = (package_id, e) => {
+    e.preventDefault();
+    this.props.history.push('/packages/adminupdate/'+package_id);
   };
 
   render() {

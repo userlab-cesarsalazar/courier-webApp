@@ -26,19 +26,41 @@ const FormItem = Form.Item;
 
 const initialState = {
   errors: {},
-  loading: false,
+  loading: true,
   client_id: null,
-  client_date: null,
+  client_data: null,
   weight: null,
   tracking_number: '',
   description: 'Paquete'
 }
 
-class PackageAdminAddForm extends React.Component {
+class PackageAdminEditForm extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       ...initialState
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.match.params.id) {
+      PackagesSrc.get(this.props.match.params.id)
+        .then(_package => {
+          this.setState({
+            client_id: String(_package[0].client_id),
+            tracking_number: _package[0].tracking,
+            description: _package[0].description,
+            weight: _package[0].weight || 1
+          })
+          return _package[0]
+        })
+        .then(_package => this.searchClient(_package.client_id))
+        .then(_ => this.setState({ loading: false }))
+        .catch(e => {
+          this.setState({ loading: false });
+          message.error(e.message);
+        })
+
     }
   }
 
@@ -79,17 +101,17 @@ class PackageAdminAddForm extends React.Component {
         status: 0,
       }
 
-      await PackagesSrc.create(_package);
+      await PackagesSrc.update(this.props.match.params.id, _package);
 
-      message.success('Creado satisfactoriamente');
+      message.success('Actualizado satisfactoriamente');
 
-      return this.setState({ ...initialState });
+      this.props.history.push('/packages')
 
     } catch (e) {
-      if (e && e.message) {
-        message.error(e.message);
-      }
-      this.setState({ loading: false })
+
+      message.error(e && e.message ? e.message : 'Error al guardar el paquete');
+
+      this.setState({ loading: false });
     }
   };
 
@@ -168,7 +190,7 @@ class PackageAdminAddForm extends React.Component {
 
     return (
       <div>
-        <Card title='Registrar Paquete' style={{ width: '100%' }}>
+        <Card title='Editar Paquete' style={{ width: '100%' }} loading={loading}>
           <Form>
             <Form.Item
               required
@@ -320,5 +342,5 @@ class PackageAdminAddForm extends React.Component {
   }
 }
 
-const WrappedCreateForm = Form.create()(PackageAdminAddForm);
+const WrappedCreateForm = Form.create()(PackageAdminEditForm);
 export default withRouter(WrappedCreateForm)

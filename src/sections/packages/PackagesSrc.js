@@ -7,7 +7,13 @@ const list = () => api.get(url);
 
 const create = _package => api.post(url, _package);
 
+const get = package_id => api.get(url+'/'+package_id);
+
+const update = (package_id, _package) => api.put(url+'/'+package_id, _package);
+
 export default {
   create,
-  list
+  get,
+  list,
+  update
 }
