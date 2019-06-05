@@ -23,7 +23,8 @@ class ClientsTable extends React.Component {
             page: 0,
             type: '',
             name: '',
-            email: ''
+            email: '',
+            errors: {}
         };
     }
 
@@ -57,6 +58,11 @@ class ClientsTable extends React.Component {
     onSearch = async(e) => {
         try {
             e.preventDefault()
+
+            if(Cache.getItem('userApp').profile === 'recepcionista'){
+                await this.validateFields();
+            }
+
             this.setState({ loading: true })
 		        let params = 'type=cliente';
 		        if(this.state.name) {
@@ -80,6 +86,25 @@ class ClientsTable extends React.Component {
                 message.error(e.message);
             }
             this.setState({ loading: false })
+        }
+    };
+
+    validateFields = async() => {
+        try {
+            let errors = {}
+            if(!this.state.name && !this.state.client_id && !this.state.email) {
+                errors.client_id = 'Debe ingresar un campo de busqueda'
+                errors.name = 'Debe ingresar un campo de busqueda'
+                errors.email = 'Debe ingresar un campo de busqueda'
+            }
+
+            this.setState({ errors });
+            if (Object.keys(errors).length > 0)
+                throw errors
+
+            return false
+        } catch (errors) {
+            throw errors
         }
     };
 
@@ -141,7 +166,7 @@ class ClientsTable extends React.Component {
     }
 
     render() {
-        const { loading } = this.state;
+        const { loading, errors } = this.state;
         return (
           <div>
               <Card title="Buscar" style={{ width: '100%' }}>
@@ -149,6 +174,8 @@ class ClientsTable extends React.Component {
                       <Row type="flex">
                           <Col span={6}>
                               <FormItem
+                                validateStatus={errors.client_id && 'error'}
+                                help={errors.client_id}
                                 label="Codigo" labelCol={{ span: 12 }} wrapperCol={{ span: 12 }}>
                                   <Input
                                     name="client_id"
@@ -160,6 +187,8 @@ class ClientsTable extends React.Component {
                           </Col>
                           <Col span={6}>
                               <FormItem
+                                validateStatus={errors.name && 'error'}
+                                help={errors.name}
                                 label="Nombre" labelCol={{ span: 12 }} wrapperCol={{ span: 12 }}>
                                   <Input
                                     name="name"
@@ -171,6 +200,8 @@ class ClientsTable extends React.Component {
                           </Col>
                           <Col span={6}>
                               <FormItem
+                                validateStatus={errors.email && 'error'}
+                                help={errors.email}
                                 label="Email" labelCol={{ span: 12 }} wrapperCol={{ span: 12 }}>
                                   <Input
                                     name="email"

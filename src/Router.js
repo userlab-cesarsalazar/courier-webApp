@@ -169,7 +169,7 @@ class Router extends Component {
                             )
                           })}
                       </SubMenu>
-                    ) : (
+                    ) : [(option.profilePermissions.indexOf(Cache.getItem('userApp').profile) > -1 ?
                       <Menu.Item key={option.route}>
                         <Link to={option.route}>
                           <Icon type={option.icon} />

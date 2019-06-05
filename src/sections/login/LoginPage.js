@@ -11,6 +11,7 @@ import RegisterComponent from './components/RegisterComponent';
 import  { Auth, Cache } from 'aws-amplify';
 import './../../amplify_config';
 
+import ClientsSrc from '../clients/ClientsSrc';
 
 //Api
 
@@ -59,13 +60,27 @@ class LoginPage extends Component {
           Cache.setItem('userApp',profile);
           this.setState({ loading: false});
 
-          let values =  routeDefaults.map((item, index) => {
-            if(item.type === profile.profile){
-              return item.route;
-            }
-          });
+          let values = routeDefaults.filter(function (item) {
+             if(item.type === profile.profile){
+               return item.route;
+             }
+          }).map(item => item.route);
+
           if(values){
-            this.props.history.push(`/${values}`)
+            let client_id = 0;
+            if(profile.profile === 'cliente'){
+               ClientsSrc.getProfile().then(cliente => {
+                  client_id = cliente[0].client_id;
+                  this.props.history.push(`/${values}${client_id}`)
+                }).catch(e => {
+                  if (e && e.message) {
+                    message.error(e.message);
+                  }
+                });
+            }else{
+              this.props.history.push(`/${values}`)
+            }
+
           }else{
             this.props.history.push(`/dashboard`)
           }

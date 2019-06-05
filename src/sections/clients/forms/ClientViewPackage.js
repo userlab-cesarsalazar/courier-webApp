@@ -34,7 +34,7 @@ class ClientViewPackage extends React.Component {
 		try{
 			this.setState({ loading: true })
 			await ClientsSrc.getPackage(this.props.match.params.id).then(
-					packages => { console.log(packages);
+					packages => {
 						this.setState({data:packages.profile});
 						this.setState({packages:packages.packages});
 					}

@@ -40,7 +40,8 @@ const menuOptions = [{
 }];
 
 const routeDefaults = [
-  {type: 'recepcionista', route: 'clients'}
+  {type: 'recepcionista', route: 'clients'},
+  {type: 'cliente', route: 'clients/viewpackage/'},
 ];
 
 export {

@@ -2,6 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Card, message, Divider, Col, Row, Button } from 'antd';
 import { utilChange, verifyPassword } from '../../../config/util';
+import  { Cache } from 'aws-amplify';
 
 import ClientsSrc from '../ClientsSrc';
 
@@ -52,7 +53,11 @@ class ClientProfileForm extends React.Component {
 	};
 
 	onEdit = () => {
-		this.props.history.push('/clients/edit');
+		if(Cache.getItem('userApp').profile === 'cliente'){
+			this.props.history.push('/clients/edit');
+		}else{
+			this.props.history.push(`/users/edit/${this.state.data.user_id}`);
+		}
 	};
 
 	handleClick = (e) => {

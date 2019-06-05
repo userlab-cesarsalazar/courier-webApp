@@ -2,6 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Form, Input, Select, Button, Radio, Switch , Card, message } from 'antd';
 import { utilChange } from '../../../config/util';
+import  { Cache } from 'aws-amplify';
 
 import UsersSrc from '../UsersSrc';
 
@@ -84,7 +85,11 @@ class UsersEditForm extends React.Component {
 	};
 
 	onBack = () => {
-		this.props.history.push('/users/');
+		if(Cache.getItem('userApp').profile === 'recepcionista'){
+			this.props.history.push('/clients/');
+		}else{
+			this.props.history.push('/users/');
+		}
 	};
 
 	handleChange = event => {
