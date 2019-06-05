@@ -1,17 +1,31 @@
 //Libs
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
-import { Form, Input, Select, Button, Card, DatePicker, Col, Row, Radio } from 'antd'
+
 //Api
+import ClientsSrc from "../clients/ClientsSrc";
 
 //Components
+import UIDateSelect from '../../commons/components/UIDateSelect'
+import UIIntegerInput from '../../commons/components/UIIntegerInput'
+import ClientSearchSelect from '../clients/components/ClientSearchSelect'
 
+import {
+  Form,
+  Input,
+  Select,
+  Button,
+  Card,
+  Col,
+  Row,
+  message
+} from 'antd'
 //Styles
 
 //const
 const FormItem = Form.Item
 const Option = Select.Option
-const { RangePicker } = DatePicker
+
 
 class ReportsPage extends Component {
   constructor(props) {
@@ -19,56 +33,94 @@ class ReportsPage extends Component {
     this.onSearch = this.onSearch.bind(this)
     this.state = {
       radioValue: 'today',
+      dateRange: null
     }
   }
 
   onSearch = () => {}
 
-  handleSelectChange = e => {
-    this.setState({ radioValue: e.target.value })
+  handleChange = (name, value) => {
+
+    let otherState = {}
+
+    if(name === 'client' && value) {
+      this.searchClient(value)
+      otherState = { client_id : undefined }
+    }
+
+    if(name === 'client_id') {
+      otherState = {
+        client: undefined,
+        client_data: undefined
+      }
+    }
+
+    this.setState({ [name]: value, ...otherState })
   }
 
+
+  searchClient = async client_id => {
+
+    try {
+
+      await this.setState({ clientLoading: true });
+
+      let client = await ClientsSrc.getByClientId(client_id);
+
+      await this.setState({ clientLoading: false, client_data: client[0] });
+
+      this.handleBlur()
+
+    } catch (e) {
+      this.setState({ clientLoading: false });
+      message.error(e);
+    }
+  }
+
+
   render() {
+
+    const {
+      dateRange,
+      client_id,
+      client
+    } = this.state
+
     return (
       <div>
         <Card title='Reportes' style={{ width: '100%' }}>
           <Form>
             <Row>
-              <Col span={12} offset={3}>
-                <Radio.Group
-                  defaultValue='today'
-                  buttonStyle='solid'
-                  onChange={this.handleSelectChange}
-                  className='radio-margin'
-                >
-                  <Radio.Button value='today'>Hoy</Radio.Button>
-                  <Radio.Button value='week'>Semana actual</Radio.Button>
-                  <Radio.Button value='month'>Mes actual</Radio.Button>
-                  <Radio.Button value='custom'>Personalizar</Radio.Button>
-                </Radio.Group>
+              <Col span={24}>
+                <FormItem label='Fecha' labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+                  <UIDateSelect
+                    onChange={value => this.handleChange('dateRange', value)}
+                    value={dateRange}
+                    placeholder={'Fecha'}
+                  />
+                </FormItem>
               </Col>
-              <Col span={12}>
-                <div className={this.state.radioValue !== 'custom' ? 'hidden' : ''}>
-                  <FormItem label='Rango de fechas' labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-                    <RangePicker />
-                  </FormItem>
-                </div>
-              </Col>
-            </Row>
-            <Row>
               <Col span={12}>
                 <FormItem label='Cod. Cliente' labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-                  <Input />
+                  <UIIntegerInput
+                    onBlur={this.handleBlur}
+                    onChange={e => this.handleChange('client_id', e.target.value)}
+                    value={client_id}
+                    placeholder='Cod. Cliente'
+                  />
                 </FormItem>
               </Col>
               <Col span={12}>
                 <FormItem label='Nombre Cliente' labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-                  <Input />
+                  <ClientSearchSelect
+                    value={client}
+                    onChange={value => this.handleChange('client', value)}
+                  />
                 </FormItem>
               </Col>
               <Col span={12}>
                 <FormItem label='Nro. Tracking' labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-                  <Input />
+                  <Input placeholder={'Nro. Tracking'} />
                 </FormItem>
               </Col>
               <Col span={12}>
