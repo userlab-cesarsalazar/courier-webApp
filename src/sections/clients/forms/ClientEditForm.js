@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
+import  { Cache } from 'aws-amplify';
 import { Form, Input, Select, Button, Radio, Switch , Card, message } from 'antd';
 import { utilChange, verifyEmail, verifyPassword } from '../../../config/util';
 
@@ -97,18 +98,17 @@ class ClientsEditForm extends React.Component {
 	};
 
 	onBack = () => {
-		this.props.history.push('/clients');
+		if(Cache.getItem('userApp').profile === 'cliente'){
+			this.props.history.push(`/clients/viewpackage/${this.state.client_id}`);
+		}else{
+			this.props.history.push('/clients');
+		}
 	};
 
 	handleChange = event => {
 		utilChange(event, (name, value) => {
 			this.setState({ [name]: value })
 		});
-	};
-
-
-	handleSelectChange = (value) => {
-		this.setState({tipo: value });
 	};
 
 	handleSelectTarifaChange = (value) => {

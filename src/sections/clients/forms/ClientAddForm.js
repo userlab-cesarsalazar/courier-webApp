@@ -66,13 +66,10 @@ class ClientsAddForm extends React.Component {
             }
             if(!this.state.email) {
                 errors.email = 'El email es requerido';
-
             }else if (verifyEmail(this.state.email)){
                 errors.email = 'Email invalido';
             }
-
             this.setState({ errors });
-
             if (Object.keys(errors).length > 0)
                 throw errors
 

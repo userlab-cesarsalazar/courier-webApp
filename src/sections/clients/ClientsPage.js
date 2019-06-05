@@ -1,6 +1,7 @@
 //Libs
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
+import  { Cache } from 'aws-amplify';
 
 //Api
 import ClientsSrc from './ClientsSrc';
@@ -53,10 +54,11 @@ class ClientsPage extends Component {
     const objectVariable = {title:'Clientes',showBtn:true};
     return (
       <div>
+        {(Cache.getItem('userApp').profile !== 'recepcionista') ? (
         <div className={'table-action-bar'}>
-          <h2>{objectVariable.title}</h2>
-          {objectVariable.showBtn ? <Button type='primary' onClick={this.onAdd}>Nuevo</Button> : ''}
+          <h2>{objectVariable.title}</h2>{objectVariable.showBtn ? <Button type='primary' onClick={this.onAdd}>Nuevo</Button> : ''}
         </div>
+        ) : ('')}
         <ClientsTable
           loading={loading}
           users={users}

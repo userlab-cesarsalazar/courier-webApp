@@ -91,3 +91,16 @@ html, body {
 .radio-margin{
   margin-bottom: 30px;
 }
+
+.desc-item-div{
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 22px;
+  margin-bottom: 7px;
+}
+
+.desc-item-p{
+  margin-right: 8px;
+  display: inline-block;
+  font-weight: bold;
+}
