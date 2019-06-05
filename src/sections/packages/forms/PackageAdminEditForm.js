@@ -10,10 +10,13 @@ import ClientsSrc from '../../clients/ClientsSrc';
 //Components
 import UIIntegerInput from '../../../commons/components/UIIntegerInput';
 import ClientSearchSelect from '../../clients/components/ClientSearchSelect';
+import PackageDeliverySelect from '../components/PackageDeliverySelect';
+import PackageStatusSelect from '../components/PackageStatusSelect';
 
 import {
   Button,
   Card,
+  Checkbox,
   Col,
   Form,
   Input,
@@ -129,6 +132,10 @@ class PackageAdminEditForm extends React.Component {
         errors.client = 'Es necesario buscar al cliente'
       }
 
+      if(!this.state.entrega) {
+        errors.entrega = 'El tipo de entrega es requerido'
+      }
+
       if(!this.state.tracking_number) {
         errors.tracking_number = 'El nro. de tracking es requerido'
       }
@@ -139,6 +146,10 @@ class PackageAdminEditForm extends React.Component {
 
       if(!this.state.weight) {
         errors.weight = 'El peso es requerido'
+      }
+
+      if(!this.state.status) {
+        errors.status = 'El estado es requerido'
       }
 
       this.setState({ errors })
@@ -185,7 +196,10 @@ class PackageAdminEditForm extends React.Component {
       weight,
       client_id,
       client,
-      client_data
+      client_data,
+      main_address,
+      entrega,
+      status
     } = this.state;
 
     return (
@@ -276,6 +290,34 @@ class PackageAdminEditForm extends React.Component {
 
             <Form.Item
               required
+              validateStatus={errors.entrega && 'error'}
+              help={errors.entrega}
+              label={'Entrega'}
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 12 }}
+            >
+              <PackageDeliverySelect
+                onChange={value =>  this.handleChange('entrega', value)}
+                value={entrega}
+                placeholder={'Entrega'}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label={'Dirección'}
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 12 }}
+            >
+              <Input
+                onBlur={this.handleBlur}
+                placeholder={'Dirección'}
+                value={main_address}
+                onChange={e => this.handleChange('main_address', e.target.value)}
+              />
+            </Form.Item>
+
+            <Form.Item
+              required
               validateStatus={errors.tracking_number && 'error'}
               help={errors.tracking_number}
               label={'Nro. Tracking'}
@@ -324,11 +366,45 @@ class PackageAdminEditForm extends React.Component {
             </Form.Item>
 
             <Form.Item
+              required
+              validateStatus={errors.status && 'error'}
+              help={errors.status}
+              label={'Estado'}
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 12 }}
+            >
+              <PackageStatusSelect
+                onChange={value =>  this.handleChange('status', value)}
+                value={status}
+                placeholder={'Estado'}
+              />
+            </Form.Item>
+
+            <Form.Item
               label='Total a Pagar'
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 12 }}
             >
               {client_data && !isNaN(weight) ? Accounting.formatMoney(client_data.cuota * weight, 'Q') : 'Q0'}
+            </Form.Item>
+
+            <Form.Item labelCol={{ span: 5 }} wrapperCol={{offset: 6, span: 12 }}>
+              <Checkbox.Group style={{ width: '100%' }}>
+                <Row>
+                  <Col span={6}>
+                    <Checkbox value='VIP' disabled>VIP</Checkbox>
+                  </Col>
+                  <Col span={6}>
+                    <Checkbox value='DOMICILIO' disabled>Domicilio</Checkbox>
+                  </Col>
+                  <Col span={6}>
+                    <Checkbox value='ENTREGADO' disabled>Entregado</Checkbox>
+                  </Col>
+                  <Col span={6}>
+                    <Checkbox value='CANCELADO' disabled>Cancelado</Checkbox>
+                  </Col>
+                </Row>
+              </Checkbox.Group>
             </Form.Item>
 
             <FormItem wrapperCol={{ span: 6, offset: 9 }}>
