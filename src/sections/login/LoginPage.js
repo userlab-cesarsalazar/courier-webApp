@@ -36,8 +36,8 @@ class LoginPage extends Component {
       fullname: '',
       forgotPassword: false,
       recovery: false,
-    }
-    this.handleSubmit = this.handleSubmit.bind(this)
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this)
   }
 
@@ -52,7 +52,7 @@ class LoginPage extends Component {
         profile: ''
       };
       await this.validateFields();
-      await Auth.signIn(this.state.username, this.state.password)
+      Auth.signIn(this.state.username, this.state.password)
         .then(user => {
           profile.token = user.signInUserSession.idToken.jwtToken;
           profile.profile = user.attributes.profile;
@@ -60,12 +60,8 @@ class LoginPage extends Component {
           Cache.setItem('userApp',profile);
           this.setState({ loading: false});
 
-          let values = routeDefaults.filter(function (item) {
-             if(item.type === profile.profile){
-               return item.route;
-             }
-          }).map(item => item.route);
-
+          let values = routeDefaults.filter( item => item.type === profile.profile ).map(item => item.route);
+          
           if(values){
             let client_id = 0;
             if(profile.profile === 'cliente'){
@@ -104,7 +100,7 @@ class LoginPage extends Component {
 
   validateFields = async() => {
     try {
-      let errors = {}
+      let errors = {};
 
       if(this.state.login) {
         if (!this.state.username) {
@@ -117,7 +113,7 @@ class LoginPage extends Component {
       this.setState({ errors });
 
       if (Object.keys(errors).length > 0)
-        throw errors
+        throw errors;
 
       return false
 
@@ -127,14 +123,14 @@ class LoginPage extends Component {
   };
 
   handleChange = async event => {
-    const { target } = event
-    const value = target.type === 'checkbox' ? target.checked : target.value
-    const { name } = target
+    const { target } = event;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const { name } = target;
     await this.setState({ [name]: value })
   };
 
   render() {
-    const { username, password, errors, loading } = this.state
+    const { username, password, errors, loading } = this.state;
     return (
       <div>
         <div className="bg-login">

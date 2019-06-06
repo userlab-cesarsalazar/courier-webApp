@@ -49,7 +49,6 @@ const SubMenu = Menu.SubMenu
 //Const
 
 const routes = [
-  { route: '/login', component: LoginPage },
   { route: '/dashboard', component: DashboardPage },
   { route: '/reports', component: ReportsPage },
   { route: '/clients', component: ClientsPage },
@@ -64,7 +63,8 @@ const routes = [
   { route: '/users', component: UsersPage },
   { route: '/users/create', component: UsersAddForm },
   { route: '/users/profile', component: UsersProfileForm },
-  { route: '/users/edit/:id', component: UsersEditForm }
+  { route: '/users/edit/:id', component: UsersEditForm },
+  { route: '/login', component: LoginPage }
 ]
 
 class Router extends Component {
@@ -74,7 +74,7 @@ class Router extends Component {
     this.state = {
       collapsed: false,
       login: false,
-      loading: false,
+      loading: true,
       username: '',
       UserStorage: null,
       menuLoading: true,
@@ -89,7 +89,7 @@ class Router extends Component {
   componentDidMount() {
     Auth.currentSession()
       .then(data => {
-        this.setState({ login: true })
+        this.setState({ login: true, loading:false })
       })
       .catch(err => console.log(err))
   }
@@ -102,11 +102,9 @@ class Router extends Component {
     this.setState({ loading: true });
     Auth.signOut()
         .then(() => {
-          this.setState({ loading: false })
-          //alert.success('Good Bye!!')
+          this.props.history.push('/')
           setTimeout(function() {
             window.location.reload()
-            this.props.history.push('/login')
           }, 2000)
         })
         .catch(err => console.log(err))

@@ -142,7 +142,7 @@ class RegisterComponent extends Component {
                         validateStatus={errors.checked && 'error'}
                         help={errors.checked}
                         labelCol={{ span: 6 }}>
-                          <p><a target="_blank" href="http://traestodo.com/traestodo17/terms.php">Leer terminos y condiciones</a></p>
+                          <p><a target="_blank" rel="noopener noreferrer"  href="http://traestodo.com/traestodo17/terms.php">Leer terminos y condiciones</a></p>
                           <Checkbox checked={this.state.checked} onChange={this.onChange}>Acepto terminos y condiciones</Checkbox>
                       </FormItem>
                       <FormItem wrapperCol={{ span: 12, offset: 6 }}>

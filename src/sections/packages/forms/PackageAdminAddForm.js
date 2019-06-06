@@ -76,7 +76,7 @@ class PackageAdminAddForm extends React.Component {
         description: this.state.description,
         category_id: 1,
         cuota: this.state.client_data.cuota,
-        status: 0,
+        entrega: this.state.client_data.entrega
       }
 
       await PackagesSrc.create(_package);

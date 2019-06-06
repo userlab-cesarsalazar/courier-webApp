@@ -6,10 +6,9 @@ import Accounting from 'accounting';
 //Components
 import {
   Table,
-  Button
 } from 'antd';
 
-class PackagesTable extends React.Component {
+class ResumenTable extends React.Component {
 
   constructor(props){
     super(props);
@@ -35,16 +34,6 @@ class PackagesTable extends React.Component {
       { title: 'Total', dataIndex: 'total', key: 'total' },
       { title: 'Fecha Registro', dataIndex: 'ing_date', key: 'ing_date' },
       { title: 'Estado', dataIndex: 'status', key: 'status' },
-      {
-        title: 'Accion',
-        dataIndex: 'action',
-        key: 'action',
-        render: (text, record) => (
-          <span>
-            <Button type='default' icon='edit' onClick={e => { this.onEdit(record.key, e); }}/>
-          </span>
-        ),
-      },
     ];
 
     return columns
@@ -62,18 +51,7 @@ class PackagesTable extends React.Component {
     ing_date: d.ing_date,
     status: d.status
   }));
-
-  onDelete = (key, e) => {
-    e.preventDefault();
-    const data = this.state.data.filter(item => item.key !== key);
-    this.setState({ data, isPageTween: false });
-  };
-
-  onEdit = (package_id, e) => {
-    e.preventDefault();
-    this.props.history.push('/packages/adminupdate/'+package_id);
-  };
-
+  
   render() {
     return (
       <div>
@@ -87,4 +65,4 @@ class PackagesTable extends React.Component {
   }
 }
 
-export default withRouter(PackagesTable)
+export default withRouter(ResumenTable)

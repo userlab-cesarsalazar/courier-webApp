@@ -1,6 +1,5 @@
 import axios from 'axios'
-import { stage } from '../config/credentials'
-import  { Cache } from 'aws-amplify';
+import  { Auth } from 'aws-amplify';
 
 const GET = 'GET';
 const POST = 'POST';
@@ -9,12 +8,14 @@ const DELETE = 'DELETE';
 
 const makeRequestApi = (url, method, data) =>
   new Promise((resolve, reject) => {
-    axios({
-      url: url,
-      method: method,
-      headers: {'content-type': 'application-json','Authorization': Cache.getItem('userApp').token},
-      data: JSON.stringify(data)
-    })
+    Auth.currentSession()
+      .then( session =>
+        axios({
+        url: url,
+        method: method,
+        headers: {'content-type': 'application-json','Authorization': session.idToken.jwtToken},
+        data: JSON.stringify(data)
+      }) )
       .then(data => {
         if (data.errors) reject(data.errors[0].message)
         else resolve(data.data)

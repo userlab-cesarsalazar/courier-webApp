@@ -1,14 +1,12 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Form, Input, Select, Button, Radio, Switch , Card, message } from 'antd';
+import { Form, Input, Button, Switch , Card, message } from 'antd';
 import { utilChange } from '../../../config/util';
 import  { Cache } from 'aws-amplify';
 
 import UsersSrc from '../UsersSrc';
 
 const FormItem = Form.Item;
-const Option = Select.Option;
-const RadioGroup = Radio.Group;
 
 class UsersEditForm extends React.Component {
 	constructor(props){
@@ -104,7 +102,7 @@ class UsersEditForm extends React.Component {
 
 	render() {
 
-		const { errors, loading, email, name, type } = this.state;
+		const { errors, loading, email, name } = this.state;
 		return (
 			<div>
 				<Card title="Editar" style={{ width: '100%' }}>

@@ -10,7 +10,6 @@ import ClientsSrc from '../../clients/ClientsSrc';
 //Components
 import UIIntegerInput from '../../../commons/components/UIIntegerInput';
 import ClientSearchSelect from '../../clients/components/ClientSearchSelect';
-import PackageDeliverySelect from '../components/PackageDeliverySelect';
 import PackageStatusSelect from '../components/PackageStatusSelect';
 
 import {
@@ -53,7 +52,8 @@ class PackageAdminEditForm extends React.Component {
             client_id: String(_package[0].client_id),
             tracking_number: _package[0].tracking,
             description: _package[0].description,
-            weight: _package[0].weight || 1
+            weight: _package[0].weight || 1,
+            status:_package[0].status
           })
           return _package[0]
         })
@@ -101,7 +101,8 @@ class PackageAdminEditForm extends React.Component {
         description: this.state.description,
         category_id: 1,
         cuota: this.state.client_data.cuota,
-        status: 0,
+        entrega: this.state.client_data.entrega,
+        status: this.state.status
       }
 
       await PackagesSrc.update(this.props.match.params.id, _package);
@@ -130,10 +131,6 @@ class PackageAdminEditForm extends React.Component {
 
       if(!this.state.client_data) {
         errors.client = 'Es necesario buscar al cliente'
-      }
-
-      if(!this.state.entrega) {
-        errors.entrega = 'El tipo de entrega es requerido'
       }
 
       if(!this.state.tracking_number) {
@@ -198,7 +195,6 @@ class PackageAdminEditForm extends React.Component {
       client,
       client_data,
       main_address,
-      entrega,
       status
     } = this.state;
 
@@ -287,22 +283,7 @@ class PackageAdminEditForm extends React.Component {
 
             </div>
             }
-
-            <Form.Item
-              required
-              validateStatus={errors.entrega && 'error'}
-              help={errors.entrega}
-              label={'Entrega'}
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 12 }}
-            >
-              <PackageDeliverySelect
-                onChange={value =>  this.handleChange('entrega', value)}
-                value={entrega}
-                placeholder={'Entrega'}
-              />
-            </Form.Item>
-
+            
             <Form.Item
               label={'Dirección'}
               labelCol={{ span: 5 }}

@@ -9,7 +9,8 @@ import ReportSrc from "../reports/ReportsSrc";
 import UIDateSelect from '../../commons/components/UIDateSelect'
 import UIIntegerInput from '../../commons/components/UIIntegerInput'
 import ClientSearchSelect from '../clients/components/ClientSearchSelect'
-import { DatePicker } from 'antd';
+import ResumeTable from './components/ResumenTable'
+import { DatePicker, Divider, Statistic } from 'antd';
 
 import {
   Form,
@@ -19,7 +20,6 @@ import {
   Card,
   Col,
   Row,
-  message
 } from 'antd'
 //Styles
 
@@ -35,11 +35,14 @@ class ReportsPage extends Component {
     this.state = {
       radioValue: 'today',
       dateRange: null,
-      type: 'CIERRE'
+      type: 'CIERRE',
+      data:[],
+      loading: false
     }
   }
 
-  onSearch = () => {
+  onSearch = async () => {
+    this.setState({ loading: true})
     console.log(this.state,'search')
     let params = {
       total: this.state.type === 'CIERRE' ? true : false,
@@ -48,13 +51,10 @@ class ReportsPage extends Component {
     
     console.log(params,'params')
     
-    ReportSrc.totals(params)
-      .then( result => {
-        console.log( result,'result')
-      })
-      .catch( e => {
-      
-      })
+    const counts = await ReportSrc.totals(params)
+    const data = await ReportSrc.closedReport(params)
+    
+    this.setState({ counters: counts[0], data: data,loading: false })
     
   }
 
@@ -74,7 +74,7 @@ class ReportsPage extends Component {
       }
     }
 
-    this.setState({ [name]: value, ...otherState },_ => { console.log(this.state,'state')})
+    this.setState({ [name]: value, ...otherState })
   }
 
 /*
@@ -104,7 +104,9 @@ class ReportsPage extends Component {
       client_id,
       client,
       type,
-      date
+      date,
+      counters,
+      data
     } = this.state
 
     return (
@@ -188,6 +190,26 @@ class ReportsPage extends Component {
             </div>
           </Form>
         </Card>
+        <Divider/>
+        {counters  &&
+          <div style={{textAlign:'center'}}>
+            <Row gutter={24}>
+              <Col span={8}>
+                <Statistic title="Total de Paquetes" value={ counters.tota_paquetes } />
+              </Col>
+              <Col span={8}>
+                <Statistic title="Total de Libras" value={ counters.total_libras } />
+              </Col>
+              <Col span={8}>
+                <Statistic title="Total de Cobrado" value={ counters.total_cobrado } />
+              </Col>
+            </Row>
+            <ResumeTable
+              loading={this.state.loading}
+              packages={data}
+            />
+          </div>
+        }
       </div>
     )
   }

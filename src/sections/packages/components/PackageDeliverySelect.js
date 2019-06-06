@@ -1,6 +1,5 @@
 //Libs
 import React from 'react';
-import { withRouter } from 'react-router';
 
 //Components
 import {
@@ -8,7 +7,8 @@ import {
 } from 'antd';
 
 const options = [
-  { value: 'Entrega en Traestodo', label: 'Entrega en Traestodo' },
+  { value: 'Entrega en Traestodo.', label: 'Entrega en Traestodo.' },
+  { value: 'Listo para Entrega a Domicilio.', label: 'Listo para Entrega a Domicilio.' },
 ]
 
 class PackageDeliverySelect extends React.Component {

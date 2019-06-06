@@ -1,13 +1,12 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import  { Cache } from 'aws-amplify';
-import { Form, Input, Select, Button, Radio, Switch , Card, message } from 'antd';
-import { utilChange, verifyEmail, verifyPassword } from '../../../config/util';
+import { Form, Input, Button, Radio , Card, message } from 'antd';
+import { utilChange } from '../../../config/util';
 
 import ClientsSrc from '../ClientsSrc';
 
 const FormItem = Form.Item;
-const Option = Select.Option;
 const RadioGroup = Radio.Group;
 
 class ClientsEditForm extends React.Component {

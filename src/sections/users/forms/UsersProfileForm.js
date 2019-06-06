@@ -100,7 +100,6 @@ class UsersProfileForm extends React.Component {
 	};
 
 	render() {
-		const { loading } = this.state;
 		return (
 			<div>
 				<Card title="Mi Cuenta" style={{ width: '100%' }} extra={<Button type="default" icon="edit" onClick={this.onEdit}/>}>
