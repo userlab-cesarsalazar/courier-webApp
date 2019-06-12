@@ -84,7 +84,8 @@ class LoginPage extends Component {
             window.location.reload()
           }, 1000);
         }).catch(e => {
-          if (e.message.indexOf('UserMigration failed') > -1) {
+          console.log(e, e.message.indexOf('Incorrect'))
+          if (e.message.indexOf('UserMigration failed') > -1 || e.message.indexOf('Incorrect') > -1) {
             message.error('Usuario/Password incorrectos');
           }
           this.setState({ loading: false });

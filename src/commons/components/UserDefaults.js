@@ -18,7 +18,7 @@ export class UserDefaultsProvider extends React.Component {
     this.state = {
       isAuth: false,
       isLoading: true,
-      language: 'EN'
+      language: 'ES'
     }
   }
 
