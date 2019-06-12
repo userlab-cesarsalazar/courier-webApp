@@ -9,56 +9,197 @@ import ClientsSrc from './ClientsSrc';
 //Components
 import ClientsTable from './components/ClientsTable';
 
-import {Button,message} from 'antd';
+import {
+  Button,
+  Card,
+  Col,
+  Divider,
+  Form,
+  Input,
+  Row,
+  message
+} from 'antd';
+import {utilChange} from "../../config/util";
 
+const FormItem = Form.Item;
 //Styles
 
 //const
-
 
 class ClientsPage extends Component {
   
   constructor(props){
     super(props)
-    
-    this.onAdd = this.onAdd.bind(this);
+
     this.state = {
       loading: true,
-      users: []
+      users: [],
+      errors: {}
     }
+
+    this.onAdd = this.onAdd.bind(this);
+
   }
   
   componentDidMount() {
     this.loadData();
   }
-  
-  
+
   loadData = () => {
     ClientsSrc.list()
       .then(users => this.setState({ users, loading: false }))
       .catch(err => {
-        message.error(err.message || err)
-        this.setState({ loading: false })
+        message.error(err.message || err);
+        this.setState({ loading: false });
       })
   }
   
   onAdd = () => {
     this.props.history.push('/clients/create');
   };
+
+  onSearch = async e => {
+    try {
+      e.preventDefault();
+
+      if(Cache.getItem('userApp').profile === 'recepcionista'){
+        await this.validateFields();
+      }
+
+      this.setState({ loading: true })
+
+      let params = 'type=cliente';
+
+      if(this.state.name) {
+        params += '&name='+this.state.name;
+      }
+
+      if(this.state.client_id) {
+        params += '&client_id='+this.state.client_id;
+      }
+
+      if(this.state.email) {
+        params += '&email='+this.state.email;
+      }
+
+      let clients = await ClientsSrc.list(params)
+
+      this.setState({ data: clients, loading: false  });
+
+    } catch (e) {
+      console.log(e)
+      if (e && e.message) {
+        message.error(e.message);
+      }
+      this.setState({ loading: false })
+    }
+  };
+
+  validateFields = async() => {
+    try {
+      let errors = {}
+      if(!this.state.name && !this.state.client_id && !this.state.email) {
+        errors.client_id = 'Debe ingresar un campo de busqueda'
+        errors.name = 'Debe ingresar un campo de busqueda'
+        errors.email = 'Debe ingresar un campo de busqueda'
+      }
+
+      this.setState({ errors });
+      if (Object.keys(errors).length > 0)
+        throw errors
+
+      return false
+    } catch (errors) {
+      throw errors
+    }
+  };
+
+  handleChange = event => {
+    utilChange(event, (name, value) => {
+      this.setState({ [name]: value }, this.validate)
+    });
+  };
   
   render() {
     const {
       loading,
-      users
+      users,
+      errors
     } = this.state;
-    const objectVariable = {title:'Clientes',showBtn:true};
+
+    console.log(errors)
     return (
       <div>
-        {(Cache.getItem('userApp').profile !== 'recepcionista') ? (
+
         <div className={'table-action-bar'}>
-          <h2>{objectVariable.title}</h2>{objectVariable.showBtn ? <Button type='primary' onClick={this.onAdd}>Nuevo</Button> : ''}
+          <h2>Clientes</h2>
+          {Cache.getItem('userApp').profile !== 'recepcionista' ?
+            <Button type='primary' onClick={this.onAdd}>Nuevo</Button>
+            :
+            ''
+          }
         </div>
-        ) : ('')}
+        <Form>
+          <Card>
+            <Row gutter={16}>
+              <Col className='gutter-row' span={8}>
+                <FormItem
+                  validateStatus={errors.client_id && 'error'}
+                  help={errors.client_id}
+                  label='Codigo'
+                >
+                  <Input
+                    placeholder={'Codigo'}
+                    name='client_id'
+                    onChange={this.handleChange}
+                    value={this.state.client_id}
+                  />
+                </FormItem>
+              </Col>
+              <Col className='gutter-row' span={8}>
+                <FormItem
+                  validateStatus={errors.name && 'error'}
+                  help={errors.name}
+                  label='Nombre'
+                >
+                  <Input
+                    placeholder={'Nombre'}
+                    name='name'
+                    onChange={this.handleChange}
+                    value={this.state.name}
+                  />
+                </FormItem>
+              </Col>
+              <Col className='gutter-row' span={8}>
+                <FormItem
+                  validateStatus={errors.email && 'error'}
+                  help={errors.email}
+                  label='Email'
+                >
+                  <Input
+                    placeholder={'Email'}
+                    name='email'
+                    onChange={this.handleChange}
+                    value={this.state.email}
+                  />
+                </FormItem>
+              </Col>
+            </Row>
+          </Card>
+          <br/>
+
+          <Row>
+            <Col span={24} style={{ textAlign: 'center' }}>
+              <Form.Item>
+                <Button type='primary' onClick={this.onSearch} loading={loading} >
+                  Buscar
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+
+        <Divider/>
         <ClientsTable
           loading={loading}
           users={users}

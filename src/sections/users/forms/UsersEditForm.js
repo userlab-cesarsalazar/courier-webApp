@@ -23,7 +23,6 @@ class UsersEditForm extends React.Component {
 	loadUsers = () => {
 		UsersSrc.get(this.props.match.params.id).then(
 			profile => {
-				console.log(profile);
 				this.setState({
 					user_id:profile.id,
 					email:profile.email,
@@ -105,12 +104,12 @@ class UsersEditForm extends React.Component {
 		const { errors, loading, email, name } = this.state;
 		return (
 			<div>
-				<Card title="Editar" style={{ width: '100%' }}>
+				<Card title='Editar' style={{ width: '100%' }}>
 					<Form>
 						<FormItem
-							label="Email" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
+							label='Email' labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
 							<Input
-								name="email"
+								name='email'
 								value={email}
 								disabled
 							/>
@@ -119,25 +118,25 @@ class UsersEditForm extends React.Component {
 							required
 							validateStatus={errors.name && 'error'}
 							help={errors.name}
-							label="Nombre" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
+							label='Nombre' labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
 							<Input
-								name="name"
+								name='name'
 								onChange={this.handleChange}
 								value={name}
 								disabled={loading}
 							/>
 						</FormItem>
-						<FormItem label="Activo" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
+						<FormItem label='Activo' labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
 							<Switch
-								name="activo"
+								name='activo'
 								checked={this.state.activo === 'Y'}
 								onChange={this.onActivoChanged}
 								disabled={loading}
 							/>
 						</FormItem>
 						<FormItem wrapperCol={{ span: 6, offset: 9 }}>
-							<Button type="primary" loading={loading} onClick={this.onSave}>Guardar</Button>
-							<Button type="danger" className="btn-separator" onClick={this.onBack}>Regresar</Button>
+							<Button type='primary' loading={loading} onClick={this.onSave}>Guardar</Button>
+							<Button type='danger' className='btn-separator' onClick={this.onBack}>Regresar</Button>
 						</FormItem>
 					</Form>
 				</Card>

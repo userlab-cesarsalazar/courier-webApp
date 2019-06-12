@@ -2,14 +2,14 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { withUserDefaults } from '../../commons/components/UserDefaults';
-import { Cache } from 'aws-amplify'
+import { Cache } from 'aws-amplify';
 
 //Api
 import PackagesSrc from './PackagesSrc';
 
 //Components
 import PackagesTable from './components/PackagesTable';
-import ClientSearchSelect from '../clients/components/ClientSearchSelect'
+import ClientSearchSelect from '../clients/components/ClientSearchSelect';
 import {
   Button,
   message,
@@ -24,7 +24,7 @@ import {
 //Styles
 
 //const
-const FormItem = Form.Item
+const FormItem = Form.Item;
 
 
 class PackagesPage extends Component {
@@ -45,10 +45,9 @@ class PackagesPage extends Component {
 
   componentDidMount() {
     this.loadData();
-    let profile = Cache.getItem('userApp')
+    let profile = Cache.getItem('userApp');
     this.setState({ role : profile.profile})
   }
-  
   
   handleChange = (name, value) => {
     
@@ -59,13 +58,13 @@ class PackagesPage extends Component {
           client: undefined,
           tracking:undefined
         }
-        break
+        break;
       case 'client':
         otherState = {
           client_id: undefined,
           tracking:undefined
         }
-      break
+      break;
       default:
         otherState = {
           client_id: undefined,
@@ -73,7 +72,7 @@ class PackagesPage extends Component {
         }
     }
     
-    this.setState({ [name]: value, ...otherState },_=> console.log(this.state,'sdsd'))
+    this.setState({ [name]: value, ...otherState })
   }
   
   loadData = () => {
@@ -86,12 +85,10 @@ class PackagesPage extends Component {
   }
 
   onAdd = () => {
-    console.log('click here')
     this.props.history.push('/packages/create');
   };
 
   onAdminAdd = () => {
-    console.log('click here')
     this.props.history.push('/packages/admincreate');
   };
   
@@ -99,15 +96,14 @@ class PackagesPage extends Component {
     let params = {
       tracking:this.state.tracking || '',
       client_id: this.state.client || this.state.client_id || ''
-    }
+    };
     
-      this.setState({loading : true})
-      PackagesSrc.getByFilter(params)
-        .then( response => this.setState({ packages : response, loading: false}))
-        .catch(e => {
-          this.setState({ loading: false })
-          console.log(e,'err')
-        })
+    this.setState({loading : true})
+    PackagesSrc.getByFilter(params)
+      .then( response => this.setState({ packages : response, loading: false }))
+      .catch(_ => {
+        this.setState({ loading: false });
+      })
   }
 
 
@@ -115,6 +111,7 @@ class PackagesPage extends Component {
     const {
       getWord
     } = this.props.userDefaults;
+
     const {
       loading,
       packages,
@@ -131,19 +128,20 @@ class PackagesPage extends Component {
           {role === 'admin' ? <Button type='primary' onClick={this.onAdminAdd}>Ingresar</Button> : ''}
           {role === 'cliente' ? <Button type='primary' onClick={this.onAdd}>Nuevo</Button> : ''}
         </div>
-        <Card>
-          <Form>
+        <Form>
+          <Card>
             <Row gutter={16}>
-              <Col className="gutter-row" span={6}>
+              <Col className='gutter-row' span={8}>
                 <FormItem label='Nro. Tracking' >
-                  <Input placeholder={'Nro. Tracking'}
-                         onChange={ e => this.handleChange('tracking', e.target.value)}
-                         value={tracking}
-                         name="tracking"
+                  <Input
+                    placeholder={'Nro. Tracking'}
+                    onChange={ e => this.handleChange('tracking', e.target.value)}
+                    value={tracking}
+                    name='tracking'
                   />
                 </FormItem>
                 </Col>
-              <Col className="gutter-row" span={6}>
+              <Col className='gutter-row' span={8}>
                 <FormItem label='Nombre Cliente'>
                   <ClientSearchSelect
                     value={client}
@@ -151,25 +149,32 @@ class PackagesPage extends Component {
                   />
                 </FormItem>
               </Col>
-              <Col className="gutter-row" span={6}>
+              <Col className='gutter-row' span={8}>
                 <FormItem label='Codigo Cliente' >
-                  <Input placeholder={'Codigo de cliente'}
-                         onChange={ e => this.handleChange('client_id', e.target.value)}
-                         value={client_id}
-                         name="client_id"
+                  <Input
+                    placeholder={'Codigo de cliente'}
+                    onChange={e => this.handleChange('client_id', e.target.value)}
+                    value={client_id}
+                    name='client_id'
                   />
                 </FormItem>
               </Col>
-              <Col className="gutter-row" span={6}>
-                <FormItem label=" " >
-                  <Button type='primary' onClick={this.onSearch} loading={loading} >
-                    Buscar
-                  </Button>
-                </FormItem>
-              </Col>
             </Row>
-          </Form>
-        </Card>
+          </Card>
+
+          <br/>
+
+          <Row>
+            <Col span={24} style={{ textAlign: 'center' }}>
+              <Form.Item>
+                <Button type='primary' onClick={this.onSearch} loading={loading} >
+                  Buscar
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+
         <Divider/>
         <PackagesTable
           loading={loading}

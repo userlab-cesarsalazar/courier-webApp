@@ -1,62 +1,95 @@
 //Libs
-import React, { Component } from 'react'
-import { withRouter } from 'react-router'
+import React, { Component } from 'react';
+import { withRouter } from 'react-router';
+import Accounting from 'accounting';
 
 //Api
-import ReportSrc from "../reports/ReportsSrc";
+import ReportSrc from '../reports/ReportsSrc';
 
 //Components
-import UIDateSelect from '../../commons/components/UIDateSelect'
-import UIIntegerInput from '../../commons/components/UIIntegerInput'
-import ClientSearchSelect from '../clients/components/ClientSearchSelect'
-import ResumeTable from './components/ResumenTable'
-import { DatePicker, Divider, Statistic } from 'antd';
-
+import UIDateSelect from '../../commons/components/UIDateSelect';
+import UIIntegerInput from '../../commons/components/UIIntegerInput';
+import ClientSearchSelect from '../clients/components/ClientSearchSelect';
+import ResumeTable from './components/ResumenTable';
 import {
   Form,
+  DatePicker,
+  Divider,
+  Statistic,
   Input,
   Select,
   Button,
   Card,
   Col,
   Row,
-} from 'antd'
+  message
+} from 'antd';
+
 //Styles
 
 //const
-const FormItem = Form.Item
-const Option = Select.Option
-
+const FormItem = Form.Item;
+const Option = Select.Option;
 
 class ReportsPage extends Component {
   constructor(props) {
     super(props)
-    this.onSearch = this.onSearch.bind(this)
+
     this.state = {
       radioValue: 'today',
       dateRange: null,
       type: 'CIERRE',
       data:[],
-      loading: false
+      loading: false,
+      errors: {}
     }
+
+    this.onSearch = this.onSearch.bind(this)
   }
 
   onSearch = async () => {
-    this.setState({ loading: true})
-    console.log(this.state,'search')
-    let params = {
-      total: this.state.type === 'CIERRE' ? true : false,
-      date: this.state.date.format('YYYY-MM-DD')
+    console.log('asdasdasds')
+    try {
+
+      await this.validateFields();
+      this.setState({ loading: true });
+
+      let params = {
+        total: this.state.type === 'CIERRE' ? true : false,
+        date: this.state.date.format('YYYY-MM-DD')
+      };
+
+      const counts = await ReportSrc.totals(params)
+      const data = await ReportSrc.closedReport(params)
+
+      this.setState({ counters: counts[0], data: data, loading: false })
+
+    } catch (e) {
+      console.log(e);
+      if (e && e.message) {
+        message.error(e.message);
+      }
+      this.setState({ loading: false });
     }
-    
-    console.log(params,'params')
-    
-    const counts = await ReportSrc.totals(params)
-    const data = await ReportSrc.closedReport(params)
-    
-    this.setState({ counters: counts[0], data: data,loading: false })
-    
   }
+
+  validateFields = async() => {
+    try {
+      let errors = {}
+      if(!this.state.date) {
+        errors.date = 'La fecha es requerida'
+      }
+
+      this.setState({ errors });
+      if (Object.keys(errors).length > 0)
+        throw errors
+
+      return false
+    } catch (errors) {
+      console.log(errors)
+      throw errors
+    }
+  };
 
   handleChange = (name, value) => {
 
@@ -106,26 +139,40 @@ class ReportsPage extends Component {
       type,
       date,
       counters,
-      data
-    } = this.state
+      data,
+      loading,
+      errors
+    } = this.state;
 
     return (
       <div>
-        <Card title='Reportes' style={{ width: '100%' }}>
-          <Form>
+        <div className={'table-action-bar'}>
+          <h2>Reportes</h2>
+        </div>
+        <Form>
+          <Card>
             <Row>
               <Col span={12}>
                 <FormItem label='Tipo de Reporte' labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-                  <Select placeholder='Seleccione' onChange={value => this.handleChange('type', value)} value={type} defaultValue={type}>
+                  <Select
+                    placeholder='Seleccione'
+                    onChange={value => this.handleChange('type', value)}
+                    value={type}
+                    defaultValue={type}
+                  >
                     <Option value='GENERAL'>General</Option>
                     <Option value='CIERRE'>Cierre</Option>
                   </Select>
                 </FormItem>
               </Col>
-              { this.state.type === 'GENERAL' &&
+              {this.state.type === 'GENERAL' &&
               <div>
                 <Col span={12}>
-                  <FormItem label='Fecha' labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+                  <FormItem
+                    label='Fecha'
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 12 }}
+                  >
                     <UIDateSelect
                       onChange={value => this.handleChange('dateRange', value)}
                       value={dateRange}
@@ -171,37 +218,52 @@ class ReportsPage extends Component {
               </div>
               }
               
-              { this.state.type === 'CIERRE' &&
+              {this.state.type === 'CIERRE' &&
                 <Col span={12}>
-                  <FormItem label='Fecha' labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-                    <DatePicker placeholder="Seleccione una Fecha"
-                                onChange={value => this.handleChange('date', value)}
-                                value={date} style={{ width: '300px'}} />
+                  <FormItem
+                    label='Fecha'
+                    labelCol={{ span: 6 }}
+                    wrapperCol={{ span: 12 }}
+                    required
+                    validateStatus={errors.date && 'error'}
+                    help={errors.date}
+                  >
+                    <DatePicker 
+                      placeholder='Seleccione una Fecha'
+                      onChange={value => this.handleChange('date', value)}
+                      value={date} style={{ width: '300px'}}
+                    />
                   </FormItem>
                 </Col>
               }
             </Row>
-            <div style={{textAlign:'center'}}>
-              <FormItem>
-                <Button type='primary' onClick={this.onSearch}>
+          </Card>
+
+          <br/>
+
+          <Row>
+            <Col span={24} style={{ textAlign: 'center' }}>
+              <Form.Item>
+                <Button type='primary' onClick={this.onSearch} loading={loading} >
                   Buscar
                 </Button>
-              </FormItem>
-            </div>
-          </Form>
-        </Card>
+              </Form.Item>
+            </Col>
+          </Row>
+
+        </Form>
         <Divider/>
         {counters  &&
-          <div style={{textAlign:'center'}}>
+          <div style={{ textAlign: 'center' }}>
             <Row gutter={24}>
               <Col span={8}>
-                <Statistic title="Total de Paquetes" value={ counters.tota_paquetes } />
+                <Statistic title='Total de Paquetes' value={ counters.tota_paquetes || 0 } />
               </Col>
               <Col span={8}>
-                <Statistic title="Total de Libras" value={ counters.total_libras } />
+                <Statistic title='Total de Libras' value={ counters.total_libras || 0 } />
               </Col>
               <Col span={8}>
-                <Statistic title="Total de Cobrado" value={ counters.total_cobrado } />
+                <Statistic title='Total de Cobrado' value={Accounting.formatMoney(counters.total_cobrado || 0, 'Q')} />
               </Col>
             </Row>
             <ResumeTable
