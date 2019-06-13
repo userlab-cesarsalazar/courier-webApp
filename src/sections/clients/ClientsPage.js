@@ -33,12 +33,12 @@ class ClientsPage extends Component {
 
     this.state = {
       loading: true,
-      users: [],
+      isPageTween: false,
+      page: 1,
+      clients: [],
+      disabledLoadMore: false,
       errors: {}
     }
-
-    this.onAdd = this.onAdd.bind(this);
-
   }
   
   componentDidMount() {
@@ -46,8 +46,8 @@ class ClientsPage extends Component {
   }
 
   loadData = () => {
-    ClientsSrc.list()
-      .then(users => this.setState({ users, loading: false }))
+    ClientsSrc.list(this.getFilters())
+      .then(clients => this.setState({ clients, loading: false }))
       .catch(err => {
         message.error(err.message || err);
         this.setState({ loading: false });
@@ -66,25 +66,13 @@ class ClientsPage extends Component {
         await this.validateFields();
       }
 
-      this.setState({ loading: true })
+      this.setState({ loading: true });
 
-      let params = 'type=cliente';
+      let params = this.getFilters();
 
-      if(this.state.name) {
-        params += '&name='+this.state.name;
-      }
+      let clients = await ClientsSrc.list(params);
 
-      if(this.state.client_id) {
-        params += '&client_id='+this.state.client_id;
-      }
-
-      if(this.state.email) {
-        params += '&email='+this.state.email;
-      }
-
-      let clients = await ClientsSrc.list(params)
-
-      this.setState({ data: clients, loading: false  });
+      this.setState({ clients: clients, loading: false, page: 1, disabledLoadMore: false });
 
     } catch (e) {
       console.log(e)
@@ -94,6 +82,29 @@ class ClientsPage extends Component {
       this.setState({ loading: false })
     }
   };
+
+  getFilters = page => {
+
+    let params = 'type=cliente';
+
+    if(this.state.name) {
+      params += '&name='+this.state.name;
+    }
+
+    if(this.state.client_id) {
+      params += '&client_id='+this.state.client_id;
+    }
+
+    if(this.state.email) {
+      params += '&email='+this.state.email;
+    }
+
+    if(page) {
+      params += '&page='+page;
+    }
+
+    return params
+  }
 
   validateFields = async() => {
     try {
@@ -119,15 +130,40 @@ class ClientsPage extends Component {
       this.setState({ [name]: value }, this.validate)
     });
   };
+
+  loadMore = async() => {
+    try{
+      this.setState({ loading: true });
+      let listTmp = [];
+      let params = this.getFilters(this.state.page + 1);
+      let clients = await ClientsSrc.list(params)
+      listTmp = this.state.clients.concat(clients);
+
+      let disabledLoadMore = clients && clients.length === 25 ? false : true
+
+      this.setState(prevState => ({
+        clients: listTmp,
+        loading: false,
+        page: prevState.page+1,
+        disabledLoadMore: disabledLoadMore
+      }));
+
+    } catch (e) {
+      console.log(e)
+      if (e && e.message) {
+        message.error(e.message);
+      }
+      this.setState({ loading: false })
+    }
+  };
   
   render() {
     const {
       loading,
-      users,
+      clients,
       errors
     } = this.state;
 
-    console.log(errors)
     return (
       <div>
 
@@ -202,7 +238,9 @@ class ClientsPage extends Component {
         <Divider/>
         <ClientsTable
           loading={loading}
-          users={users}
+          clients={clients}
+          loadMore={this.loadMore}
+          disabledLoadMore={this.state.disabledLoadMore}
         />
       </div>
     );

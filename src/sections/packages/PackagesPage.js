@@ -120,7 +120,7 @@ class PackagesPage extends Component {
       client_id,
       client
     } = this.state;
-    
+
     return (
       <div>
         <div className={'table-action-bar'}>
@@ -176,6 +176,7 @@ class PackagesPage extends Component {
         </Form>
 
         <Divider/>
+
         <PackagesTable
           loading={loading}
           packages={packages}
