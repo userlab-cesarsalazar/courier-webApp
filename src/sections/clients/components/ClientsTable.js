@@ -41,7 +41,7 @@ class ClientsTable extends React.Component {
           render: (text, record) => (
             <span>
               {(Cache.getItem('userApp').profile !== 'recepcionista') ? (
-              <Button type='default' icon='edit' onClick={(e) => { this.onEdit(record.key, e); }}/>
+              <Button type='default' icon='edit' onClick={(e) => { this.onEdit(record.client_id, e); }}/>
               ) : ('')}
               <Button type='default' icon='file-search' title='Ver paquetes' onClick={(e) => { this.onViewPackages(record.client_id, e); }}/>
             </span>

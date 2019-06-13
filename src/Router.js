@@ -55,7 +55,7 @@ const routes = [
   { route: '/packages', component: PackagesPage },
   { route: '/clients/create', component: ClientsAddForm },
   { route: '/clients/profile', component: ClientProfileForm },
-  { route: '/clients/edit/', component: ClientEditForm },
+  { route: '/clients/edit/:id', component: ClientEditForm },
   { route: '/clients/viewpackage/:id', component: ClientViewPackage },
   { route: '/packages/create', component: PackageAddForm },
   { route: '/packages/admincreate', component: PackageAdminAddForm },
