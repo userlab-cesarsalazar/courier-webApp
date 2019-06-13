@@ -22,6 +22,6 @@ export default {
   getProfile,
   getByClientId,
   getByName,
-    getPackage,
-    getUser
+  getPackage,
+  getUser
 }

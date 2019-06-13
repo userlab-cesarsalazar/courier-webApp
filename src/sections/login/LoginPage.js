@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { Card , Avatar, Form, Input, Button, Icon, message } from 'antd';
-import { routeDefaults } from '../../commons/consts/Menu'
+//import { routeDefaults } from '../../commons/consts/Menu'
 //Components
 import ConfirmationAccount from './components/ConfirmationAccount';
 import ForgotPassword from './components/ForgotPassword';
@@ -11,7 +11,7 @@ import RegisterComponent from './components/RegisterComponent';
 import  { Auth, Cache } from 'aws-amplify';
 import './../../amplify_config';
 
-import ClientsSrc from '../clients/ClientsSrc';
+//import ClientsSrc from '../clients/ClientsSrc';
 
 //Api
 
@@ -60,26 +60,26 @@ class LoginPage extends Component {
           Cache.setItem('userApp',profile);
           this.setState({ loading: false});
 
-          let values = routeDefaults.filter( item => item.type === profile.profile ).map(item => item.route);
+        //  let values = routeDefaults.filter( item => item.type === profile.profile ).map(item => item.route);
           
-          if(values){
-            let client_id = 0;
-            if(profile.profile === 'cliente'){
-               ClientsSrc.getProfile().then(cliente => {
-                  client_id = cliente[0].client_id;
-                  this.props.history.push(`/${values}${client_id}`)
-                }).catch(e => {
-                  if (e && e.message) {
-                    message.error(e.message);
-                  }
-                });
-            }else{
-              this.props.history.push(`/${values}`)
-            }
-
-          }else{
+          // if(values){
+          //   let client_id = 0;
+          //   if(profile.profile === 'cliente'){
+          //      ClientsSrc.getProfile().then(cliente => {
+          //         client_id = cliente[0].client_id;
+          //         this.props.history.push(`/${values}${client_id}`)
+          //       }).catch(e => {
+          //         if (e && e.message) {
+          //           message.error(e.message);
+          //         }
+          //       });
+          //   }else{
+          //     this.props.history.push(`/${values}`)
+          //   }
+          //
+          // }else{
             this.props.history.push(`/dashboard`)
-          }
+          //}
           setTimeout(function() {
             window.location.reload()
           }, 1000);

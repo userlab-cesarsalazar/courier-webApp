@@ -17,7 +17,7 @@ class ClientViewPackage extends React.Component {
 		this.state = {
 			data: [],
 			packages: [],
-			loading: false,
+			loading: true,
 			errors: {}
 		};
 
@@ -26,20 +26,19 @@ class ClientViewPackage extends React.Component {
 		this.loadPackage = this.loadPackage.bind(this);
 	}
 
-	componentDidMount(){
-		this.loadPackage();
+	componentDidMount = async() =>{
+
+		let profile = await ClientsSrc.getProfile()
+    this.setState({ data: profile[0] })
+
+		await this.loadPackage(profile[0].client_id);
 	}
 
-	loadPackage = async() => {
-		try{
-			this.setState({ loading: true })
-			await ClientsSrc.getPackage(this.props.match.params.id).then(
-					packages => {
-						this.setState({data:packages.profile});
-						this.setState({packages:packages.packages});
-					}
-			)
-			return this.setState({ loading: false });
+	loadPackage = async client_id => {
+		try {
+			let packages = await ClientsSrc.getPackage(client_id)
+      console.log(packages)
+      this.setState({ packages: packages.packages, loading: false});
 		} catch (e) {
 			console.log(e)
 			if (e && e.message) {
@@ -86,7 +85,7 @@ class ClientViewPackage extends React.Component {
 		const { loading } = this.state;
 		return (
 			<div>
-				<Card loading={loading} title={`Codigo: ${this.props.match.params.id} - ${this.state.data.name}`} style={{ width: '100%' }}>
+				<Card loading={loading} title={`Codigo: ${this.state.data.client_id} - ${this.state.data.name}`} style={{ width: '100%' }}>
 					<Row>
 						<Col span={12}>
 							<DescriptionItem title="Email" content={this.state.data.email} />

@@ -164,6 +164,8 @@ class ClientsPage extends Component {
       errors
     } = this.state;
 
+    console.log(Cache.getItem('userApp'))
+
     return (
       <div>
 
