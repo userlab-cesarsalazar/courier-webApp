@@ -6,12 +6,8 @@ import {
   Table,
   Form,
   Button,
-  message
+  Col
 } from 'antd';
-
-import servicesClient from '../ClientsSrc'
-
-const FormItem = Form.Item;
 
 class ClientsTable extends React.Component {
 
@@ -19,7 +15,6 @@ class ClientsTable extends React.Component {
     super(props);
     this.getColumns = this.getColumns.bind(this);
     this.getData = this.getData.bind(this);
-    this.loadUser = this.loadUser.bind(this);
 
     this.state = {
       data: [],
@@ -32,35 +27,6 @@ class ClientsTable extends React.Component {
       errors: {}
     };
   }
-
-    componentDidMount(){
-      if(Cache.getItem('userApp').profile !== 'recepcionista'){
-        this.loadUser();
-      }
-    }
-
-    loadUser = async() => {
-      try{
-        this.setState({ loading: true })
-        let listTmp = [];
-        this.state.page = this.state.page + 1;
-        let params = 'type=cliente&page='+this.state.page;
-        await servicesClient.list(params)
-          .then(
-          clients => {
-            listTmp = this.state.data.concat(clients);
-            this.setState({data:listTmp});
-          }
-        )
-        return this.setState({ loading: false });
-      } catch (e) {
-        console.log(e)
-        if (e && e.message) {
-          message.error(e.message);
-        }
-        this.setState({ loading: false })
-      }
-    };
 
     getColumns = ()=>{
       let columns = [
@@ -75,7 +41,7 @@ class ClientsTable extends React.Component {
           render: (text, record) => (
             <span>
               {(Cache.getItem('userApp').profile !== 'recepcionista') ? (
-              <Button type='default' icon='edit' onClick={(e) => { this.onEdit(record.key, e); }}/>
+              <Button type='default' icon='edit' onClick={(e) => { this.onEdit(record.client_id, e); }}/>
               ) : ('')}
               <Button type='default' icon='file-search' title='Ver paquetes' onClick={(e) => { this.onViewPackages(record.client_id, e); }}/>
             </span>
@@ -91,7 +57,7 @@ class ClientsTable extends React.Component {
         name:  d.name,
         email: d.email,
         client_id: d.client_id,
-        activo: d.activo
+        activo: d.activo === 'Y' ? 'Si' : 'No'
       }));
     };
 
@@ -104,19 +70,36 @@ class ClientsTable extends React.Component {
     }
 
     render() {
-      const { loading } = this.state;
+
       return (
         <div>
 
-          <Table loading={this.props.loading} columns={this.getColumns()} dataSource={this.getData(this.state.data)} pagination={false}/>
-            {(Cache.getItem('userApp').profile !== 'recepcionista') ? (
-              <FormItem wrapperCol={{ offset: 11 }}>
-                <Button type='primary' loading={loading} onClick={this.loadUser}>Cargar mas</Button>
-              </FormItem>
-              )
-              :
-              ('')
-            }
+          <Table
+            loading={this.props.loading}
+            columns={this.getColumns()}
+            dataSource={this.getData(this.props.clients)}
+            pagination={false}
+          />
+
+          <br/>
+
+          {(Cache.getItem('userApp').profile !== 'recepcionista') ? (
+            <Col span={24} style={{ textAlign: 'center' }}>
+              <Form.Item>
+                <Button
+                  type='primary'
+                  loading={this.props.loading}
+                  disabled={this.props.disabledLoadMore}
+                  onClick={this.props.loadMore}
+                >
+                 Cargar mas
+               </Button>
+              </Form.Item>
+            </Col>
+          )
+            :
+            ''
+          }
         </div>
       );
     }

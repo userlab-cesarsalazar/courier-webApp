@@ -7,7 +7,7 @@ const menuOptions = [{
   route: '/dashboard',            //Required if doesn't have sections
   possiblePermissions: ['read'],  //Required if doesn't have sections
   requiredPermissions: ['read'],   //Required if doesn't have sections
-  profilePermissions: ['admin']   //Required if doesn't have sections
+  profilePermissions: ['admin', 'recepcionista', 'cliente']   //Required if doesn't have sections
 }, {
   name: 'USERS',
   key: 'users',
@@ -30,6 +30,12 @@ const menuOptions = [{
   possiblePermissions: [ 'read', 'add', 'edit', 'delete' ],
   profilePermissions: ['admin']
 }, {
+  name: 'PACKAGES',
+  key: 'packages',
+  icon: 'gift',
+  route: 'clients/viewpackage',
+  profilePermissions: ['cliente']
+}, {
   name: 'REPORTS',
   key: 'reports',
   icon: 'area-chart',
@@ -40,8 +46,8 @@ const menuOptions = [{
 }];
 
 const routeDefaults = [
-  {type: 'recepcionista', route: 'clients'},
-  {type: 'cliente', route: 'clients/viewpackage/'},
+  { type: 'recepcionista', route: 'clients' },
+  { type: 'cliente', route: 'clients/viewpackage/' },
 ];
 
 export {
