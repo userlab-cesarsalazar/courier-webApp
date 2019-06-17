@@ -11,7 +11,7 @@ const get = package_id => api.get(url+'/'+package_id);
 
 const update = (package_id, _package) => api.put(url+'/'+package_id, _package);
 
-const getByFilter = pararms => api.get(url+'?tracking='+pararms.tracking+'&client_id='+pararms.client_id);
+const getByFilter = pararms => api.get(`${url}?${pararms}`);
 
 export default {
   create,

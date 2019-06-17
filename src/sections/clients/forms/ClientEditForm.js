@@ -18,6 +18,7 @@ class ClientsEditForm extends React.Component {
 		};
 		this.onSave = this.onSave.bind(this);
 		this.loadProfile = this.loadProfile.bind(this);
+		this.loadClients = this.loadClients.bind(this);
 	}
 
 	loadProfile = async() => {
@@ -41,9 +42,39 @@ class ClientsEditForm extends React.Component {
 			}
 		)
 	};
+  
+  loadClients = async() => {
+    this.setState({ loading: true });
+    
+    ClientsSrc.getByClientId(this.props.match.params.id).then(
+      profile => { console.log(profile[0]);
+        this.setState({
+          user_id:profile[0].id,
+          client_id:profile[0].client_id,
+          email:profile[0].email,
+          name:profile[0].name,
+          phone:profile[0].phone,
+          nit:profile[0].nit,
+          entrega:profile[0].entrega,
+          main_address:profile[0].main_address,
+          message_user:profile[0].message_user,
+          cuota:profile[0].cuota,
+          type:profile[0].type
+        });
+        this.setState({ loading: false });
+      }
+    )
+  };
+	
 
 	componentDidMount(){
-		this.loadProfile();
+		
+		if(this.props.match.params.id){
+      console.log(this.props.match.params.id,'id')
+      this.loadClients();
+		}else{
+      this.loadProfile();
+		}
 	}
 
 	onSave = async(e) => {
@@ -65,8 +96,7 @@ class ClientsEditForm extends React.Component {
 			};
 			await ClientsSrc.update(_users,this.state.user_id);
 			message.success('Registro actualizado');
-			this.loadProfile();
-			return this.setState({ loading: false });
+			 this.setState({ loading: false });
 
 		} catch (e) {
 			console.log(e)

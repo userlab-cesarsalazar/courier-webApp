@@ -93,11 +93,14 @@ class PackagesPage extends Component {
   };
   
   onSearch = () => {
-    let params = {
-      tracking:this.state.tracking || '',
-      client_id: this.state.client || this.state.client_id || ''
-    };
-    
+    let params = '';
+    if(this.state.tracking && this.state.tracking !== ''){
+      params = `tracking=${this.state.tracking}`
+    }else {
+      params = `client_id=${this.state.client_id ? this.state.client_id : this.state.client}`
+      
+    }
+
     this.setState({loading : true})
     PackagesSrc.getByFilter(params)
       .then( response => this.setState({ packages : response, loading: false }))
@@ -128,7 +131,7 @@ class PackagesPage extends Component {
           {role === 'admin' ? <Button type='primary' onClick={this.onAdminAdd}>Ingresar</Button> : ''}
           {role === 'cliente' ? <Button type='primary' onClick={this.onAdd}>Nuevo</Button> : ''}
         </div>
-        <Form>
+        <Form autoComplete='off'>
           <Card>
             <Row gutter={16}>
               <Col className='gutter-row' span={8}>
