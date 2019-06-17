@@ -71,7 +71,7 @@ html, body {
 
 .bg-login{
   background-color: #24508B;
-  height: auto !important;
+  height: 100vh;
   min-height: 100%;
   padding-top: 10%;
   padding-left: 30%;

@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 
-import { utilChange } from '../../config/util';
-
 //Api
 import UsersSrc from './UsersSrc';
 
@@ -37,7 +35,10 @@ class UsersPage extends Component {
       disabledLoadMore: false,
       isPageTween: false,
       users: [],
-      errors: {}
+      errors: {},
+      email:'',
+      name:'',
+      type:''
     }
   }
 
@@ -58,14 +59,33 @@ class UsersPage extends Component {
     this.props.history.push('/users/create');
   };
 
-  handleChange = event => {
-    utilChange(event, (name, value) => {
-      this.setState({ [name]: value }, this.validate)
-    });
+  handleChange = (name, value) => {
+      let otherState = {}
+      switch (name) {
+        case 'name':
+          otherState = {
+            email: undefined,
+            type:undefined
+          }
+          break;
+        case 'email':
+          otherState = {
+            name: undefined,
+            type:undefined
+          }
+          break;
+        default:
+          otherState = {
+            name: undefined,
+            email:undefined
+          }
+      }
+    this.setState({ [name]: value, ...otherState }, _=> console.log(this.state, 'state'))
+    
   };
 
   handleSelectChange = value => {
-    this.setState({ type: value });
+    this.setState({ type: value, name: undefined, email:undefined });
   };
 
   getFilters = page => {
@@ -138,7 +158,9 @@ class UsersPage extends Component {
     const {
       loading,
       users,
-      errors
+      email,
+      name,
+      type
       } = this.state;
 
     return (
@@ -147,54 +169,44 @@ class UsersPage extends Component {
         <h2>Usuarios</h2>
           <Button type='primary' onClick={this.onAdd}>Nuevo</Button>
         </div>
-        <Form>
+        <Form autoComplete='off'>
           <Card>
             <Row gutter={16}>
               <Col className='gutter-row' span={8}>
-                <Form.Item
-                  validateStatus={errors.client_id && 'error'}
-                  help={errors.client_id}
-                  label='Tipo'
-                >
+                <Form.Item label='Tipo'>
                   <Select
                     allowClear
                     placeholder='Tipo'
                     name='type'
                     onChange={this.handleSelectChange}
-                    value={this.state.type}
+                    value={type}
                   >
-                    <Select.Option value='vendedor'>Usuario traesTodo</Select.Option>
+                    <Select.Option value='vendedor'>Vendedor</Select.Option>
                     <Select.Option value='admin'>Administrador</Select.Option>
+                    <Select.Option value='recepcionista'>Recepcionista</Select.Option>
                     <Select.Option value='warehouse'>Operador Guatemala</Select.Option>
                     <Select.Option value='delegate'>Operador Miami</Select.Option>
+                    
                   </Select>
                 </Form.Item>
               </Col>
               <Col className='gutter-row' span={8}>
-                <Form.Item
-                  validateStatus={errors.name && 'error'}
-                  help={errors.name}
-                  label='Nombre'
-                >
+                <Form.Item label='Nombre'>
                   <Input
                     placeholder={'Nombre'}
                     name='name'
-                    onChange={this.handleChange}
-                    value={this.state.name}
+                    onChange={ e => this.handleChange('name', e.target.value)}
+                    value={name}
                   />
                 </Form.Item>
               </Col>
               <Col className='gutter-row' span={8}>
-                <Form.Item
-                  validateStatus={errors.email && 'error'}
-                  help={errors.email}
-                  label='Email'
-                >
+                <Form.Item label='Email'>
                   <Input
                     placeholder={'Email'}
                     name='email'
-                    onChange={this.handleChange}
-                    value={this.state.email}
+                    onChange={ e => this.handleChange('email', e.target.value)}
+                    value={email}
                   />
                 </Form.Item>
               </Col>

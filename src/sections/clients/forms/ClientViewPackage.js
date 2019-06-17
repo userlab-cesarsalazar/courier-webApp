@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Card, message, Divider, Col, Row, Table } from 'antd';
-
+import { Card, message, Divider, Col, Row, Table, Button } from 'antd';
+import  { Cache } from 'aws-amplify';
 import ClientsSrc from '../ClientsSrc';
 
 const DescriptionItem = ({ title, content }) => (
@@ -17,28 +17,37 @@ class ClientViewPackage extends React.Component {
 		this.state = {
 			data: [],
 			packages: [],
-			loading: true,
+			loading: false,
 			errors: {}
 		};
 
 		this.getColumns = this.getColumns.bind(this);
 		this.getData = this.getData.bind(this);
 		this.loadPackage = this.loadPackage.bind(this);
+		this.onAddPackage = this.onAddPackage.bind(this);
 	}
 
-	componentDidMount = async() =>{
-
-		let profile = await ClientsSrc.getProfile()
-    this.setState({ data: profile[0] })
-
-		await this.loadPackage(profile[0].client_id);
+	componentDidMount(){
+		this.loadPackage();
 	}
 
-	loadPackage = async client_id => {
-		try {
-			let packages = await ClientsSrc.getPackage(client_id)
-      console.log(packages)
-      this.setState({ packages: packages.packages, loading: false});
+	loadPackage = async() => {
+		try{
+			this.setState({ loading: true })
+			await ClientsSrc.getPackage(this.props.match.params.id).then(
+					packages => {
+						this.setState({data:packages.profile}, _ => {
+							if(packages.profile === 'cliente'){
+                let profile = packages.profile
+                Cache.setItem('userApp',profile);
+							}
+						});
+						this.setState({packages:packages.packages});
+					}
+			)
+   
+   
+			this.setState({ loading: false });
 		} catch (e) {
 			console.log(e)
 			if (e && e.message) {
@@ -51,8 +60,8 @@ class ClientViewPackage extends React.Component {
 	getColumns = ()=>{
 		let columns = [
 			{ title: 'Ref#', dataIndex: 'package_id', key: 'package_id' },
-			{ title: 'Descripcion', dataIndex: 'tracking', key: 'tracking' },
-			{ title: 'Estado', dataIndex: 'entregado', key: 'entregado' },
+			{ title: 'Tracking', dataIndex: 'tracking', key: 'tracking' },
+			{ title: 'Estado', dataIndex: 'status', key: 'status' },
 			{ title: 'Peso', dataIndex: 'weight', key: 'weight' },
 			{ title: 'Ingreso', dataIndex: 'ing_date', key: 'ing_date' },
 			{ title: 'Entrega', dataIndex: 'ent_date', key: 'ent_date' },
@@ -67,7 +76,7 @@ class ClientViewPackage extends React.Component {
 			key: d.package_id,
 			package_id: d.package_id,
 			tracking:  d.tracking,
-			entregado: (d.entregado === 1) ? 'Entregado' :'',
+			status: d.status,
 			weight: d.weight,
 			ing_date: d.ing_date,
 			ent_date: d.ent_date,
@@ -81,28 +90,32 @@ class ClientViewPackage extends React.Component {
 		this.props.history.push('/clients');
 	};
 
+	onAddPackage = () => {
+		this.props.history.push(`/clients/addpackage`);
+	};
+
 	render() {
 		const { loading } = this.state;
 		return (
-			<div>
-				<Card loading={loading} title={`Codigo: ${this.state.data.client_id} - ${this.state.data.name}`} style={{ width: '100%' }}>
-					<Row>
-						<Col span={12}>
-							<DescriptionItem title="Email" content={this.state.data.email} />
-						</Col>
-						<Col span={12}>
-							<DescriptionItem title="Telefono" content={this.state.data.phone} />
-						</Col>
-					</Row>
-					<Row>
-						<Col span={12}>
-							<DescriptionItem title="Direccion" content={this.state.data.main_address} />
-						</Col>
-					</Row>
-				</Card>
-				<Divider/>
-				<Table loading={this.props.loading} columns={this.getColumns()} dataSource={this.getData(this.state.packages)} pagination={false}/>
-			</div>
+				<div>
+					<Card loading={loading} title={`Código: ${this.state.data.client_id } - ${this.state.data.name}`} style={{ width: '100%' }}  extra={ (Cache.getItem('userApp').profile === 'cliente') ? <Button type="primary" icon="file-add" title="Registrar paquete" onClick={this.onAddPackage}>Registrar Paquete</Button> : ''} >
+						<Row>
+							<Col span={12}>
+								<DescriptionItem title="Email" content={this.state.data.email} />
+							</Col>
+							<Col span={12}>
+								<DescriptionItem title="Teléfono" content={this.state.data.phone} />
+							</Col>
+						</Row>
+						<Row>
+							<Col span={12}>
+								<DescriptionItem title="Dirección" content={this.state.data.main_address} />
+							</Col>
+						</Row>
+					</Card>
+					<Divider/>
+					<Table loading={this.props.loading} columns={this.getColumns()} dataSource={this.getData(this.state.packages)} pagination={false}/>
+				</div>
 		);
 	}
 }

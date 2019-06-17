@@ -7,6 +7,7 @@ import  { Cache } from 'aws-amplify';
 import ClientsSrc from './ClientsSrc';
 
 //Components
+import UIIntegerInput from '../../commons/components/UIIntegerInput';
 import ClientsTable from './components/ClientsTable';
 
 import {
@@ -19,7 +20,7 @@ import {
   Row,
   message
 } from 'antd';
-import {utilChange} from "../../config/util";
+
 
 const FormItem = Form.Item;
 //Styles
@@ -32,17 +33,23 @@ class ClientsPage extends Component {
     super(props)
 
     this.state = {
-      loading: true,
+      loading: false,
       isPageTween: false,
       page: 1,
       clients: [],
       disabledLoadMore: false,
-      errors: {}
+      errors: {},
+      client_id:'',
+      name:'',
+      email:''
     }
   }
   
   componentDidMount() {
-    this.loadData();
+    if(Cache.getItem('userApp').profile !== 'recepcionista'){
+      this.setState({ loading: true });
+      this.loadData();
+    }
   }
 
   loadData = () => {
@@ -125,10 +132,28 @@ class ClientsPage extends Component {
     }
   };
 
-  handleChange = event => {
-    utilChange(event, (name, value) => {
-      this.setState({ [name]: value }, this.validate)
-    });
+  handleChange = (name, value) => {
+      let otherState = {}
+      switch (name) {
+        case 'name':
+          otherState = {
+            client_id: undefined,
+            email:undefined
+          }
+          break;
+        case 'client_id':
+          otherState = {
+            name: undefined,
+            email:undefined
+          }
+          break;
+        default:
+          otherState = {
+            name: undefined,
+            client_id:undefined
+          }
+      }
+      this.setState({ [name]: value , ...otherState})
   };
 
   loadMore = async() => {
@@ -161,10 +186,10 @@ class ClientsPage extends Component {
     const {
       loading,
       clients,
-      errors
+      name,
+      client_id,
+      email
     } = this.state;
-
-    console.log(Cache.getItem('userApp'))
 
     return (
       <div>
@@ -177,48 +202,36 @@ class ClientsPage extends Component {
             ''
           }
         </div>
-        <Form>
+        <Form autoComplete='NOPE'>
           <Card>
             <Row gutter={16}>
               <Col className='gutter-row' span={8}>
-                <FormItem
-                  validateStatus={errors.client_id && 'error'}
-                  help={errors.client_id}
-                  label='Codigo'
-                >
-                  <Input
+                <FormItem label='Codigo'>
+                  <UIIntegerInput
                     placeholder={'Codigo'}
                     name='client_id'
-                    onChange={this.handleChange}
-                    value={this.state.client_id}
+                    onChange={ e => this.handleChange('client_id', e.target.value)}
+                    value={client_id}
                   />
                 </FormItem>
               </Col>
               <Col className='gutter-row' span={8}>
-                <FormItem
-                  validateStatus={errors.name && 'error'}
-                  help={errors.name}
-                  label='Nombre'
-                >
+                <FormItem label='Nombre'>
                   <Input
                     placeholder={'Nombre'}
                     name='name'
-                    onChange={this.handleChange}
-                    value={this.state.name}
+                    onChange={ e => this.handleChange('name', e.target.value)}
+                    value={name}
                   />
                 </FormItem>
               </Col>
               <Col className='gutter-row' span={8}>
-                <FormItem
-                  validateStatus={errors.email && 'error'}
-                  help={errors.email}
-                  label='Email'
-                >
+                <FormItem label='Email'>
                   <Input
                     placeholder={'Email'}
                     name='email'
-                    onChange={this.handleChange}
-                    value={this.state.email}
+                    onChange={ e => this.handleChange('email', e.target.value)}
+                    value={email}
                   />
                 </FormItem>
               </Col>

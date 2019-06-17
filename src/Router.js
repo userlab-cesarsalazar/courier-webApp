@@ -21,6 +21,7 @@ import ClientsAddForm from './sections/clients/forms/ClientAddForm'
 import ClientProfileForm from './sections/clients/forms/ClientProfileForm'
 import ClientEditForm from './sections/clients/forms/ClientEditForm'
 import ClientViewPackage from './sections/clients/forms/ClientViewPackage'
+import ClientAddPackage from './sections/clients/forms/ClientAddPackage'
 
 //Users
 import UsersPage from './sections/users/UsersPage'
@@ -56,7 +57,8 @@ const routes = [
   { route: '/clients/create', component: ClientsAddForm },
   { route: '/clients/profile', component: ClientProfileForm },
   { route: '/clients/edit/:id', component: ClientEditForm },
-  { route: '/clients/viewpackage', component: ClientViewPackage },
+  { route: '/clients/viewpackage/:id', component: ClientViewPackage },
+  { route: '/clients/addpackage', component: ClientAddPackage },
   { route: '/packages/create', component: PackageAddForm },
   { route: '/packages/admincreate', component: PackageAdminAddForm },
   { route: '/packages/adminupdate/:id', component: PackageAdminEditForm },
@@ -84,6 +86,7 @@ class Router extends Component {
       visible: false
     }
     this.handleSignOut = this.handleSignOut.bind(this)
+    this.loadPage = this.loadPage.bind(this)
   }
 
   componentDidMount() {
@@ -118,6 +121,14 @@ class Router extends Component {
     this.props.userDefaults.changeLanguage(language);
   };
 
+  loadPage = (page) => {
+    if(Cache.getItem('userApp').profile === 'cliente'){
+      return `/${page}/${Cache.getItem('userApp').client_id}`;
+    }else{
+      return page;
+    }
+  };
+
   render() {
     const {
       language,
@@ -130,7 +141,7 @@ class Router extends Component {
             <Sider width={240} collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
               <header className='App-header'>
                 <Avatar
-                  src={'http://traestodo.com/traestodo17/assets/img/logo/logo-traestodo.png'}
+                  src={''}
                   shape={'square'}
                   size={this.state.collapsed ? 40 : 80}
                 />
@@ -171,7 +182,7 @@ class Router extends Component {
                       </SubMenu>
                     ) : [(option.profilePermissions.indexOf(Cache.getItem('userApp').profile) > -1 ?
                       <Menu.Item key={option.route}>
-                        <Link to={option.route}>
+                        <Link to={this.loadPage(option.route)}>
                           <Icon type={option.icon} />
                           <span>{getWord(option.name)}</span>
                         </Link>

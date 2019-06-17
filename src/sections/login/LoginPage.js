@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { Card , Avatar, Form, Input, Button, Icon, message } from 'antd';
-//import { routeDefaults } from '../../commons/consts/Menu'
+import { routeDefaults } from '../../commons/consts/Menu'
 //Components
 import ConfirmationAccount from './components/ConfirmationAccount';
 import ForgotPassword from './components/ForgotPassword';
@@ -11,7 +11,7 @@ import RegisterComponent from './components/RegisterComponent';
 import  { Auth, Cache } from 'aws-amplify';
 import './../../amplify_config';
 
-//import ClientsSrc from '../clients/ClientsSrc';
+import ClientsSrc from '../clients/ClientsSrc';
 
 //Api
 
@@ -49,7 +49,8 @@ class LoginPage extends Component {
       let profile = {
         attributes: '',
         token: '',
-        profile: ''
+        profile: '',
+        client_id: 0
       };
       await this.validateFields();
       Auth.signIn(this.state.username, this.state.password)
@@ -60,26 +61,28 @@ class LoginPage extends Component {
           Cache.setItem('userApp',profile);
           this.setState({ loading: false});
 
-        //  let values = routeDefaults.filter( item => item.type === profile.profile ).map(item => item.route);
-          
-          // if(values){
-          //   let client_id = 0;
-          //   if(profile.profile === 'cliente'){
-          //      ClientsSrc.getProfile().then(cliente => {
-          //         client_id = cliente[0].client_id;
-          //         this.props.history.push(`/${values}${client_id}`)
-          //       }).catch(e => {
-          //         if (e && e.message) {
-          //           message.error(e.message);
-          //         }
-          //       });
-          //   }else{
-          //     this.props.history.push(`/${values}`)
-          //   }
-          //
-          // }else{
+          let values = routeDefaults.filter( item => item.type === profile.profile ).map(item => item.route);
+
+           if(values){
+             let client_id = 0;
+             if(profile.profile === 'cliente'){
+                ClientsSrc.getProfile().then(cliente => {
+                   client_id = cliente[0].client_id;
+                   profile.client_id = client_id;
+                   Cache.setItem('userApp',profile);
+                   this.props.history.push(`/${values}${client_id}`)
+                 }).catch(e => {
+                   if (e && e.message) {
+                     message.error(e.message);
+                   }
+                 });
+             }else{
+               this.props.history.push(`/${values}`)
+             }
+
+           }else{
             this.props.history.push(`/dashboard`)
-          //}
+          }
           setTimeout(function() {
             window.location.reload()
           }, 1000);
@@ -136,7 +139,7 @@ class LoginPage extends Component {
       <div>
         <div className="bg-login">
           <div className='logo-login'>
-            <Avatar src={'http://traestodo.com/traestodo17/assets/img/logo/logo-traestodo.png'} shape={'square'} size={100}/>
+            <Avatar src={''} shape={'square'} size={100}/>
           </div>
 
           {this.state.login && (
