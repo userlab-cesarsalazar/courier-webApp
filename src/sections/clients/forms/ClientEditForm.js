@@ -13,7 +13,7 @@ class ClientsEditForm extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			tipo: 'cliente',
+			type: 'cliente',
 			errors: {}
 		};
 		this.onSave = this.onSave.bind(this);
@@ -70,7 +70,6 @@ class ClientsEditForm extends React.Component {
 	componentDidMount(){
 		
 		if(this.props.match.params.id){
-      console.log(this.props.match.params.id,'id')
       this.loadClients();
 		}else{
       this.loadProfile();
@@ -96,7 +95,14 @@ class ClientsEditForm extends React.Component {
 			};
 			await ClientsSrc.update(_users,this.state.user_id);
 			message.success('Registro actualizado');
-			 this.setState({ loading: false });
+			
+			if(this.props.match.params.id){
+        this.loadClients();
+			}else{
+        this.loadProfile();
+			}
+
+			this.setState({ loading: false });
 
 		} catch (e) {
 			console.log(e)
@@ -158,7 +164,7 @@ class ClientsEditForm extends React.Component {
 		return (
 			<div>
 				<Card title="Editar" style={{ width: '100%' }} loading={loading}>
-					<Form>
+					<Form autoComplete="off">
 						<FormItem
 							label="Codigo Cliente" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
 							<Input
@@ -241,15 +247,15 @@ class ClientsEditForm extends React.Component {
 								 disabled={loading}
 							 />
 						 </FormItem>
+							<FormItem label="Tarifa Q" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
+								<Input
+										name="cuota"
+										value={cuota}
+										disabled
+								/>
+							</FormItem>
 						 </div>
 
-						<FormItem label="Tarifa Q" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
-							<Input
-								name="cuota"
-								value={cuota}
-								disabled
-							/>
-						</FormItem>
 
 						{/*<FormItem label="Tarifa" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
 							<Select placeholder="Selecciona tarifa"

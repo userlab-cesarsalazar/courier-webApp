@@ -126,7 +126,7 @@ class UsersEditForm extends React.Component {
 								disabled={loading}
 							/>
 						</FormItem>
-						<FormItem label='Activo' labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
+						<FormItem label='Activo' labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} className={(Cache.getItem('userApp').profile !== 'recepcionista') ? 'show' :'hidden'}>
 							<Switch
 								name='activo'
 								checked={this.state.activo === 'Y'}

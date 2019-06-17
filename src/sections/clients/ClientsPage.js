@@ -7,6 +7,7 @@ import  { Cache } from 'aws-amplify';
 import ClientsSrc from './ClientsSrc';
 
 //Components
+import UIIntegerInput from '../../commons/components/UIIntegerInput';
 import ClientsTable from './components/ClientsTable';
 
 import {
@@ -20,6 +21,7 @@ import {
   message
 } from 'antd';
 
+
 const FormItem = Form.Item;
 //Styles
 
@@ -31,7 +33,7 @@ class ClientsPage extends Component {
     super(props)
 
     this.state = {
-      loading: true,
+      loading: false,
       isPageTween: false,
       page: 1,
       clients: [],
@@ -44,7 +46,10 @@ class ClientsPage extends Component {
   }
   
   componentDidMount() {
-    this.loadData();
+    if(Cache.getItem('userApp').profile !== 'recepcionista'){
+      this.setState({ loading: true });
+      this.loadData();
+    }
   }
 
   loadData = () => {
@@ -148,7 +153,7 @@ class ClientsPage extends Component {
             client_id:undefined
           }
       }
-      this.setState({ [name]: value }, ...otherState)
+      this.setState({ [name]: value , ...otherState})
   };
 
   loadMore = async() => {
@@ -185,7 +190,7 @@ class ClientsPage extends Component {
       client_id,
       email
     } = this.state;
-    
+
     return (
       <div>
 
@@ -202,7 +207,7 @@ class ClientsPage extends Component {
             <Row gutter={16}>
               <Col className='gutter-row' span={8}>
                 <FormItem label='Codigo'>
-                  <Input
+                  <UIIntegerInput
                     placeholder={'Codigo'}
                     name='client_id'
                     onChange={ e => this.handleChange('client_id', e.target.value)}

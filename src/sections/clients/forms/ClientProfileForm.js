@@ -54,7 +54,7 @@ class ClientProfileForm extends React.Component {
 
 	onEdit = () => {
 		if(Cache.getItem('userApp').profile === 'cliente'){
-			this.props.history.push('/clients/edit');
+			this.props.history.push(`/clients/edit/${Cache.getItem('userApp').client_id}`);
 		}else{
 			this.props.history.push(`/users/edit/${this.state.data.user_id}`);
 		}
@@ -152,58 +152,6 @@ class ClientProfileForm extends React.Component {
 							<DescriptionItem title="Telefono" content={this.state.data.phone} />
 						</Col>
 					</Row>
-					{/*<Divider />
-					<Row>
-						<Col span={12}>
-							<a href="#" onClick={this.handleClick}>Cambiar contraseña</a>
-						</Col>
-					</Row>
-					<Row className={this.state.showRow ? '' : 'hidden'}>
-						<Col span={6}>
-							<span>
-                La contraseña debe contener al menos:
-                <ul>
-                  <li> 6 caracteres </li>
-                  <li> numeros </li>
-                  <li> letras</li>
-                </ul>
-              </span>
-						</Col>
-						<Col span={12}>
-							<FormItem
-								required
-								validateStatus={errors.password1 && 'error'}
-								help={errors.password1}
-								label="Nueva contraseña" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-								<Input.Password
-									name="password1"
-									onChange={this.handleChange}
-									value={this.state.password1}
-									disabled={loading}
-								/>
-							</FormItem>
-						</Col>
-						<Col span={12}>
-							<FormItem
-								required
-								validateStatus={errors.password2 && 'error'}
-								help={errors.password2}
-								label="Repetir contraseña" labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
-								<Input.Password
-									name="password2"
-									onChange={this.handleChange}
-									value={this.state.password2}
-									disabled={loading}
-								/>
-							</FormItem>
-						</Col>
-						<Col span={12} offset={9}>
-							<FormItem wrapperCol={{ span:12 }}>
-								<Button type="primary" loading={loading} onClick={this.onSave}>Guardar</Button>
-								<Button type="danger" className="btn-separator" onClick={this.onBack}>Cancelar</Button>
-							</FormItem>
-						</Col>
-					</Row>*/}
 				</Card>
 			</div>
 		);

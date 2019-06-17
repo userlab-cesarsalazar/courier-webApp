@@ -7,7 +7,7 @@ const menuOptions = [{
   route: '/dashboard',            //Required if doesn't have sections
   possiblePermissions: ['read'],  //Required if doesn't have sections
   requiredPermissions: ['read'],   //Required if doesn't have sections
-  profilePermissions: ['admin', 'recepcionista', 'cliente']   //Required if doesn't have sections
+  profilePermissions: ['admin']   //Required if doesn't have sections
 }, {
   name: 'USERS',
   key: 'users',
