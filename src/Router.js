@@ -141,7 +141,7 @@ class Router extends Component {
             <Sider width={240} collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
               <header className='App-header'>
                 <Avatar
-                  src={''}
+                  src={'https://images-traestodo.s3.amazonaws.com/logo-traestodo.png'}
                   shape={'square'}
                   size={this.state.collapsed ? 40 : 80}
                 />

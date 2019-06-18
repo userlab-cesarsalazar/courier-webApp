@@ -139,7 +139,7 @@ class LoginPage extends Component {
       <div>
         <div className="bg-login">
           <div className='logo-login'>
-            <Avatar src={''} shape={'square'} size={100}/>
+            <Avatar src={'https://images-traestodo.s3.amazonaws.com/logo-traestodo.png'} shape={'square'} size={100}/>
           </div>
 
           {this.state.login && (
