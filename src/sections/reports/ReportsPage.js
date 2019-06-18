@@ -48,20 +48,33 @@ class ReportsPage extends Component {
   }
 
   onSearch = async () => {
-    console.log('asdasdasds')
     try {
 
       await this.validateFields();
       this.setState({ loading: true });
-
       let params = {
-        total: this.state.type === 'CIERRE' ? true : false,
+        total: false,
         date: this.state.date.format('YYYY-MM-DD')
-      };
-
-      const counts = await ReportSrc.totals(params)
-      const data = await ReportSrc.closedReport(params)
-
+      }
+      console.log(params, 'parasm')
+      let counts;
+      let data;
+      
+      switch (this.state.type){
+        case 'CIERRE':
+          params.total = true
+            counts = await ReportSrc.totals(params)
+            data = await ReportSrc.closedReport(params)
+          break;
+        case 'ENTRADA':
+          params.total = true;
+          counts = await ReportSrc.entriesTotal(params)
+          data = await ReportSrc.entriesDetails(params)
+          break;
+        default:
+          console.log('no actions')
+      }
+      
       this.setState({ counters: counts[0], data: data, loading: false })
 
     } catch (e) {
@@ -109,27 +122,7 @@ class ReportsPage extends Component {
 
     this.setState({ [name]: value, ...otherState })
   }
-
-/*
-  searchClient = async client_id => {
-
-    try {
-
-      await this.setState({ clientLoading: true });
-
-      let client = await ClientsSrc.getByClientId(client_id);
-
-      await this.setState({ clientLoading: false, client_data: client[0] });
-
-      this.handleBlur()
-
-    } catch (e) {
-      this.setState({ clientLoading: false });
-      message.error(e);
-    }
-  }*/
-
-
+  
   render() {
 
     const {
@@ -161,6 +154,7 @@ class ReportsPage extends Component {
                     defaultValue={type}
                   >
                     <Option value='GENERAL'>General</Option>
+                    <Option value='ENTRADA'>Entradas</Option>
                     <Option value='CIERRE'>Cierre</Option>
                   </Select>
                 </FormItem>
@@ -218,7 +212,7 @@ class ReportsPage extends Component {
               </div>
               }
               
-              {this.state.type === 'CIERRE' &&
+              {(this.state.type === 'CIERRE' || this.state.type === 'ENTRADA') &&
                 <Col span={12}>
                   <FormItem
                     label='Fecha'

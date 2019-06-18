@@ -28,12 +28,14 @@ class ResumenTable extends React.Component {
     let columns = [
       { title: '#', dataIndex: 'package_id', key: 'package_id' },
       { title: 'Codigo', dataIndex: 'client_id', key: 'client_id' },
-      { title: 'Usuario', dataIndex: 'contact_name', key: 'contact_name' },
+      //{ title: 'Usuario', dataIndex: 'contact_name', key: 'contact_name' },
       { title: 'Descripcion', dataIndex: 'description', key: 'description' },
       { title: 'Tracking', dataIndex: 'tracking', key: 'tracking' },
+      { title: 'Peso', dataIndex: 'weight', key: 'weight' },
       { title: 'Total', dataIndex: 'total', key: 'total' },
       { title: 'Fecha Registro', dataIndex: 'ing_date', key: 'ing_date' },
       { title: 'Estado', dataIndex: 'status', key: 'status' },
+      
     ];
 
     return columns
@@ -44,12 +46,13 @@ class ResumenTable extends React.Component {
     key: d.package_id,
     package_id: d.package_id,
     client_id: d.client_id,
-    contact_name: d.contact_name,
+    //contact_name: d.contact_name,
     description: d.description,
     total: Accounting.formatMoney(d.total_a_pagar, 'Q'),
     tracking: d.tracking,
     ing_date: d.ing_date,
-    status: d.status
+    status: d.status,
+    weight: d.weight
   }));
   
   render() {
