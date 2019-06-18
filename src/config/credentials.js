@@ -9,9 +9,13 @@ const dev = {
 }
 
 const production = {
-  baseUrl: 'https://hhl406mlz8.execute-api.us-east-1.amazonaws.com/dev',
-  reportURL: 'https://r3q719y1rc.execute-api.us-east-1.amazonaws.com/dev/reports'
-  
+  baseUrl: 'https://061g0v0ppa.execute-api.us-east-1.amazonaws.com/prod',
+  baseUrlUsers: 'https://061g0v0ppa.execute-api.us-east-1.amazonaws.com/prod/users',
+  baseUrlPackages: 'https://hks04qckka.execute-api.us-east-1.amazonaws.com/prod/packages',
+  reportURL: 'https://r6td50k9n8.execute-api.us-east-1.amazonaws.com/prod/reports',
+  headers: {
+    'content-type': 'application-json',
+  },
 }
 //const localhost = 'http://localhost:3000/'
 const local = {
@@ -31,5 +35,5 @@ const enviroment = env => {
 }
 
 module.exports = {
-  stage: enviroment('dev'),
+  stage: enviroment('production'),
 }
