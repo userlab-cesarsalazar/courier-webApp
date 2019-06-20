@@ -188,7 +188,8 @@ class ClientsPage extends Component {
       clients,
       name,
       client_id,
-      email
+      email,
+      errors
     } = this.state;
 
     return (
@@ -206,7 +207,11 @@ class ClientsPage extends Component {
           <Card>
             <Row gutter={16}>
               <Col className='gutter-row' span={8}>
-                <FormItem label='Codigo'>
+                <FormItem
+                  label='Codigo'
+                  validateStatus={errors.client_id && 'error'}
+                  help={errors.client_id}
+                >
                   <UIIntegerInput
                     placeholder={'Codigo'}
                     name='client_id'
@@ -216,7 +221,11 @@ class ClientsPage extends Component {
                 </FormItem>
               </Col>
               <Col className='gutter-row' span={8}>
-                <FormItem label='Nombre'>
+                <FormItem
+                  label='Nombre'
+                  validateStatus={errors.name && 'error'}
+                  help={errors.name}
+                >
                   <Input
                     placeholder={'Nombre'}
                     name='name'
@@ -226,7 +235,11 @@ class ClientsPage extends Component {
                 </FormItem>
               </Col>
               <Col className='gutter-row' span={8}>
-                <FormItem label='Email'>
+                <FormItem
+                  label='Email'
+                  validateStatus={errors.email && 'error'}
+                  help={errors.email}
+                >
                   <Input
                     placeholder={'Email'}
                     name='email'

@@ -53,18 +53,18 @@ const routes = [
   { route: '/dashboard', component: DashboardPage, profiles: ['admin'] },
   { route: '/reports', component: ReportsPage, profiles: ['admin'] },
   { route: '/clients', component: ClientsPage, profiles: ['admin', 'recepcionista'] },
-  { route: '/packages', component: PackagesPage, profiles: ['admin',  'recepcionista'] },
-  { route: '/clients/create', component: ClientsAddForm, profiles: ['admin', 'recepcionista'] },
+  { route: '/packages', component: PackagesPage, profiles: ['admin'] },
+  { route: '/clients/create', component: ClientsAddForm, profiles: ['admin'] },
   { route: '/clients/profile', component: ClientProfileForm, profiles: ['admin', 'cliente', 'recepcionista'] },
-  { route: '/clients/edit/:id', component: ClientEditForm, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/clients/edit/:id', component: ClientEditForm, profiles: ['admin', 'cliente'] },
   { route: '/clients/viewpackage/:id', component: ClientViewPackage, profiles: ['admin', 'cliente', 'recepcionista'] },
-  { route: '/clients/addpackage', component: ClientAddPackage, profiles: ['admin', 'cliente', 'recepcionista'] },
-  { route: '/packages/create', component: PackageAddForm, profiles: ['admin', 'cliente', 'recepcionista'] },
-  { route: '/packages/admincreate', component: PackageAdminAddForm, profiles: ['admin', 'cliente', 'recepcionista'] },
-  { route: '/packages/adminupdate/:id', component: PackageAdminEditForm, profiles: ['admin', 'cliente', 'recepcionista'] },
-  { route: '/users', component: UsersPage, profiles: ['admin', 'cliente', 'recepcionista'] },
-  { route: '/users/create', component: UsersAddForm, profiles: ['admin', 'cliente', 'recepcionista'] },
-  { route: '/users/profile', component: UsersProfileForm, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/clients/addpackage', component: ClientAddPackage, profiles: ['cliente'] },
+  { route: '/packages/create', component: PackageAddForm, profiles: ['admin'] },
+  { route: '/packages/admincreate', component: PackageAdminAddForm, profiles: ['admin'] },
+  { route: '/packages/adminupdate/:id', component: PackageAdminEditForm, profiles: ['admin'] },
+  { route: '/users', component: UsersPage, profiles: ['admin'] },
+  { route: '/users/create', component: UsersAddForm, profiles: ['admin'] },
+  { route: '/users/profile', component: UsersProfileForm, profiles: ['admin'] },
   { route: '/users/edit/:id', component: UsersEditForm, profiles: ['admin'] },
   { route: '/login', component: LoginPage, profiles: ['admin', 'cliente', 'recepcionista'] }
 ]
@@ -143,7 +143,7 @@ class Router extends Component {
       getWord
     } = this.props.userDefaults;
 
-    let filterRoutes =routes //this.getFilterRoutes();
+    let filterRoutes = this.getFilterRoutes();
 
     return (
       <div>
@@ -236,10 +236,10 @@ class Router extends Component {
                     <UISpinner />
                   ) : (
                     <Switch>
-                      {routes.map((r, i) => (
+                      {filterRoutes.map((r, i) => (
                         <Route exact key={i} path={r.route} component={r.component} />
                       ))}
-                      <Redirect to={routes && routes.length > 0 ? routes[0].route : '/'} />
+                      <Redirect to={filterRoutes && filterRoutes.length > 0 ? filterRoutes[0].route : '/'} />
                     </Switch>
                   )}
                 </div>
