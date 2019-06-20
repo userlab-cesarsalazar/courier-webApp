@@ -144,6 +144,7 @@ class UsersAddForm extends React.Component {
                         label="Email" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                           <Input
                             name="email"
+                            placeholder="Email"
                             onChange={this.handleChange}
                             value={this.state.email}
                             disabled={loading}
@@ -155,6 +156,7 @@ class UsersAddForm extends React.Component {
                         help={errors.name}
                         label="Nombre" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                           <Input
+                            placeholder="Nombre"
                             name="name"
                             onChange={this.handleChange}
                             value={this.state.name}
@@ -167,6 +169,7 @@ class UsersAddForm extends React.Component {
                         help={errors.password}
                         label="Contraseña Temporal" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                           <Input.Password
+                            placeholder="Contraseña Temporal"
                             name="password"
                             onChange={this.handleChange}
                             value={this.state.password}

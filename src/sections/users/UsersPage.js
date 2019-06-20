@@ -38,7 +38,7 @@ class UsersPage extends Component {
       errors: {},
       email:'',
       name:'',
-      type:''
+      type: undefined
     }
   }
 

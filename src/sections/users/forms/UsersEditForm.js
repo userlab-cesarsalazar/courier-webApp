@@ -120,6 +120,7 @@ class UsersEditForm extends React.Component {
 							help={errors.name}
 							label='Nombre' labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
 							<Input
+								placeholder="Nombre"
 								name='name'
 								onChange={this.handleChange}
 								value={name}

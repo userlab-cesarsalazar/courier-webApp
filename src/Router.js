@@ -50,23 +50,23 @@ const SubMenu = Menu.SubMenu
 //Const
 
 const routes = [
-  { route: '/dashboard', component: DashboardPage },
-  { route: '/reports', component: ReportsPage },
-  { route: '/clients', component: ClientsPage },
-  { route: '/packages', component: PackagesPage },
-  { route: '/clients/create', component: ClientsAddForm },
-  { route: '/clients/profile', component: ClientProfileForm },
-  { route: '/clients/edit/:id', component: ClientEditForm },
-  { route: '/clients/viewpackage/:id', component: ClientViewPackage },
-  { route: '/clients/addpackage', component: ClientAddPackage },
-  { route: '/packages/create', component: PackageAddForm },
-  { route: '/packages/admincreate', component: PackageAdminAddForm },
-  { route: '/packages/adminupdate/:id', component: PackageAdminEditForm },
-  { route: '/users', component: UsersPage },
-  { route: '/users/create', component: UsersAddForm },
-  { route: '/users/profile', component: UsersProfileForm },
-  { route: '/users/edit/:id', component: UsersEditForm },
-  { route: '/login', component: LoginPage }
+  { route: '/dashboard', component: DashboardPage, profiles: ['admin'] },
+  { route: '/reports', component: ReportsPage, profiles: ['admin'] },
+  { route: '/clients', component: ClientsPage, profiles: ['admin', 'recepcionista'] },
+  { route: '/packages', component: PackagesPage, profiles: ['admin',  'recepcionista'] },
+  { route: '/clients/create', component: ClientsAddForm, profiles: ['admin', 'recepcionista'] },
+  { route: '/clients/profile', component: ClientProfileForm, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/clients/edit/:id', component: ClientEditForm, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/clients/viewpackage/:id', component: ClientViewPackage, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/clients/addpackage', component: ClientAddPackage, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/packages/create', component: PackageAddForm, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/packages/admincreate', component: PackageAdminAddForm, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/packages/adminupdate/:id', component: PackageAdminEditForm, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/users', component: UsersPage, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/users/create', component: UsersAddForm, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/users/profile', component: UsersProfileForm, profiles: ['admin', 'cliente', 'recepcionista'] },
+  { route: '/users/edit/:id', component: UsersEditForm, profiles: ['admin'] },
+  { route: '/login', component: LoginPage, profiles: ['admin', 'cliente', 'recepcionista'] }
 ]
 
 class Router extends Component {
@@ -129,11 +129,22 @@ class Router extends Component {
     }
   };
 
+  getFilterRoutes = _ => {
+
+    let filterRoutes = [];
+
+    filterRoutes = routes.filter(r => r.profiles.find(p => p === Cache.getItem('userApp').profile))
+
+    return filterRoutes
+  }
+
   render() {
     const {
-      language,
       getWord
     } = this.props.userDefaults;
+
+    let filterRoutes =routes //this.getFilterRoutes();
+
     return (
       <div>
         {this.state.login ? (
@@ -208,9 +219,9 @@ class Router extends Component {
                       <Menu.Item key='myaccount' onClick={this.showProfile}>
                         Mi Cuenta
                       </Menu.Item>
-                      <Menu.Item key='language' onClick={_ => this.changeLanguage(language === 'EN' ? 'ES' : 'EN')}>
-                        {language === 'EN' ? 'Español' : 'English'}
-                      </Menu.Item>
+                      {/*<Menu.Item key='language' onClick={_ => this.changeLanguage(language === 'EN' ? 'ES' : 'EN')}>*/}
+                        {/*{language === 'EN' ? 'Español' : 'English'}*/}
+                      {/*</Menu.Item>*/}
                       <Menu.Item key='logout' onClick={this.handleSignOut}>
                         Cerrar Sesion
                       </Menu.Item>
