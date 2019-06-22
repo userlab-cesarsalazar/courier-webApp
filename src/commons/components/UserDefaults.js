@@ -30,7 +30,7 @@ export class UserDefaultsProvider extends React.Component {
 
     let language = Cache.getItem('language')
 
-    return language ? JSON.parse(language) : 'EN'
+    return language ? JSON.parse(language) : 'ES'
   }
 
   changeLanguage = async language => {
