@@ -197,6 +197,7 @@ class ClientsAddForm extends React.Component {
                                       disabled={loading}
                               >
                                   <Option value="normal">Q60 (Normal)</Option>
+                                  <Option value="normal">Q65 (Nueva Cuota)</Option>
                                   <Option value="cc">Q56 (CC)</Option>
                                   <Option value="vip">Q55 (Vip)</Option>
                                   <Option value="c">Q50 (C)</Option>

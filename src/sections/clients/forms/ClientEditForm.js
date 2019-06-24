@@ -91,7 +91,8 @@ class ClientsEditForm extends React.Component {
 				phone: this.state.phone,
 				main_address: this.state.main_address,
 				entrega: this.state.entrega,
-				message_user: this.state.message_user
+				message_user: this.state.message_user,
+				cuota: this.state.cuota
 			};
 			await ClientsSrc.update(_users,this.state.user_id);
 			message.success('Registro actualizado');
@@ -250,8 +251,8 @@ class ClientsEditForm extends React.Component {
 							<FormItem label="Tarifa Q" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
 								<Input
 										name="cuota"
+                    onChange={this.handleChange}
 										value={cuota}
-										disabled
 								/>
 							</FormItem>
 						 </div>
