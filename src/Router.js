@@ -133,6 +133,7 @@ class Router extends Component {
 
     let filterRoutes = [];
 
+    if (Cache.getItem('userApp'))
     filterRoutes = routes.filter(r => r.profiles.find(p => p === Cache.getItem('userApp').profile))
 
     return filterRoutes
