@@ -128,7 +128,7 @@ class ClientViewPackage extends React.Component {
         <Table loading={this.props.loading} columns={this.getColumns()} dataSource={this.getData(this.state.deliveredPackages)} pagination={false}/>
 			  <br/>
         <h4>Total Libras Entregadas: {this.state.deliveredPackages && this.state.deliveredPackages.length > 0 ? this.state.deliveredPackages.map(p => p.weight).reduce((a, b) => a + b) : 0}</h4>
-        <h4>Monto Total Entregado: {Accounting.formatMoney(this.state.deliveredPackages && this.state.deliveredPackages.length > 0 ? this.state.deliveredPackages.map(p => p.total_a_pagar - p.anticipo).reduce((a, b) => a + b) : 0, 'Q')}</h4>
+        <h4>Monto Total Entregado: {Accounting.formatMoney(this.state.deliveredPackages && this.state.deliveredPackages.length > 0 ? this.state.deliveredPackages.map(p => Number(p.total_a_pagar)).reduce((a, b) => a + b) : 0, 'Q')}</h4>
       </div>
 		);
 	}
