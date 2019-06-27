@@ -45,8 +45,8 @@ class ClientViewPackage extends React.Component {
             }
           });
           this.setState({
-            notDeliveredPackages: packages.packages.filter(p => p.status !== 'Entregado'),
-            deliveredPackages: packages.packages.filter(p => p.status === 'Entregado')
+            notDeliveredPackages: packages.packages.filter(p => p.status !== 'Entregado' && p.status !== 'Entregado.'),
+            deliveredPackages: packages.packages.filter(p => p.status === 'Entregado' || p.status === 'Entregado.')
           });
 					}
 			)
