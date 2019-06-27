@@ -28,7 +28,8 @@ const initialState = {
   errors: {},
   loading: false,
   client_id: null,
-  client_date: null,
+  client: undefined,
+  client_data: null,
   weight: null,
   tracking_number: '',
   description: 'Paquete'
@@ -112,7 +113,7 @@ class PackageAdminAddForm extends React.Component {
       }
 
       if(!this.state.description) {
-        errors.description = 'La descripcion es requerida'
+        errors.description = 'La descripción es requerida'
       }
 
       if(!this.state.weight) {
