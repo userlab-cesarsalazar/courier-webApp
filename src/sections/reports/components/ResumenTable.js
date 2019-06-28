@@ -62,6 +62,7 @@ class ResumenTable extends React.Component {
           loading={this.props.loading}
           columns={this.getColumns()}
           dataSource={this.getData(this.props.packages)}
+          pagination={{ pageSize: 100 }}
         />
       </div>
     );
