@@ -54,13 +54,18 @@ class ReportsPage extends Component {
       this.setState({ loading: true });
       let params = {
         total: false,
-        date: this.state.date.format('YYYY-MM-DD')
+        date: this.state.date ? this.state.date.format('YYYY-MM-DD') : null
       }
       console.log(params, 'parasm')
       let counts;
       let data;
       
       switch (this.state.type){
+        case 'BODEGA':
+          params.total = true;
+          counts = await ReportSrc.warehouseTotal(params)
+          data = await ReportSrc.warehouseDetails()
+          break;
         case 'CIERRE':
           params.total = true
             counts = await ReportSrc.totals(params)
@@ -70,6 +75,11 @@ class ReportsPage extends Component {
           params.total = true;
           counts = await ReportSrc.entriesTotal(params)
           data = await ReportSrc.entriesDetails(params)
+          break;
+        case 'RUTA':
+          params.total = true;
+          counts = await ReportSrc.routeTotal(params)
+          data = await ReportSrc.routeDetails()
           break;
         default:
           console.log('no actions')
@@ -89,7 +99,7 @@ class ReportsPage extends Component {
   validateFields = async() => {
     try {
       let errors = {}
-      if(!this.state.date) {
+      if((this.state.type === 'RUTA' || this.state.type === 'BODEGA') && this.state.date) {
         errors.date = 'La fecha es requerida'
       }
 
@@ -154,8 +164,10 @@ class ReportsPage extends Component {
                     defaultValue={type}
                   >
                     <Option value='GENERAL'>General</Option>
+                    <Option value='BODEGA'>Bodega</Option>
                     <Option value='ENTRADA'>Entradas</Option>
                     <Option value='CIERRE'>Cierre</Option>
+                    <Option value='RUTA'>Ruta</Option>
                   </Select>
                 </FormItem>
               </Col>
@@ -257,7 +269,7 @@ class ReportsPage extends Component {
                 <Statistic title='Total de Libras' value={ counters.total_libras || 0 } />
               </Col>
               <Col span={8}>
-                <Statistic title='Total de Cobrado' value={Accounting.formatMoney(counters.total_cobrado || 0, 'Q')} />
+                <Statistic title={`Total ${this.state.type !== 'CIERRE' && this.state.type !== 'ENTRADA' ?  'por Cobrar' : 'Cobrado'}`} value={Accounting.formatMoney(counters.total_cobrado || counters.total_por_cobrar || 0, 'Q')} />
               </Col>
             </Row>
             <ResumeTable
