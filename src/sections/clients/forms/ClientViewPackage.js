@@ -37,7 +37,7 @@ class ClientViewPackage extends React.Component {
 		try{
 			this.setState({ loading: true })
 			await ClientsSrc.getPackage(this.props.match.params.id).then(
-        packages => {
+        packages => { console.log(packages, 'pro')
           this.setState({data: packages.profile}, _ => {
             if(packages.profile === 'cliente'){
               let profile = packages.profile
@@ -115,7 +115,18 @@ class ClientViewPackage extends React.Component {
 						<Col span={12}>
 							<DescriptionItem title='Dirección' content={this.state.data.main_address} />
 						</Col>
+            <Col span={12}>
+              <DescriptionItem title='Nit' content={this.state.data.nit} />
+            </Col>
 					</Row>
+          <Row>
+            <Col span={12}>
+              <DescriptionItem title='Cuota' content={this.state.data.cuota} />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem title='Preferencia de entrega' content={this.state.data.entrega} />
+            </Col>
+          </Row>
 				</Card>
 				<Divider/>
         <h3>Paquetes Pendientes</h3>
