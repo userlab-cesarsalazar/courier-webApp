@@ -92,7 +92,7 @@ class Router extends Component {
   componentDidMount() {
     Auth.currentSession()
       .then(data => {
-        this.setState({ login: true, loading:false })
+        this.setState({ login: true, loading: false })
       })
       .catch(err => console.log(err))
   }
