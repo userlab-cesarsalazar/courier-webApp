@@ -6,7 +6,9 @@ import { withUserDefaults } from '../../commons/components/UserDefaults';
 //Api
 
 //Components
-
+import {
+  Button
+} from 'antd'
 
 
 //Styles
@@ -26,10 +28,12 @@ class DashboardPage extends Component {
     const {
       getWord
     } = this.props.userDefaults;
+
     return (
       <div>
         <h2>{getWord('DASHBOARD')}</h2>
-
+        <br/>
+        <Button type='dashed' icon='bar-chart' onClick={_ => window.open('http://traestodo-env.4nfn6h3d8e.us-east-1.elasticbeanstalk.com')}>Ir a metabase</Button>
       </div>
     );
   }
