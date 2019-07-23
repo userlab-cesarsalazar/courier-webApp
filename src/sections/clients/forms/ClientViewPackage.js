@@ -45,8 +45,8 @@ class ClientViewPackage extends React.Component {
             }
           });
           this.setState({
-            notDeliveredPackages: packages.packages.filter(p => p.status !== 'Entregado'),
-            deliveredPackages: packages.packages.filter(p => p.status === 'Entregado')
+            notDeliveredPackages: packages.packages.filter(p => p.status !== 'Entregado' && p.status !== 'Entregado.'),
+            deliveredPackages: packages.packages.filter(p => p.status === 'Entregado' || p.status === 'Entregado.')
           });
 					}
 			)
@@ -115,7 +115,18 @@ class ClientViewPackage extends React.Component {
 						<Col span={12}>
 							<DescriptionItem title='Dirección' content={this.state.data.main_address} />
 						</Col>
+            <Col span={12}>
+              <DescriptionItem title='Nit' content={this.state.data.nit} />
+            </Col>
 					</Row>
+          <Row>
+            <Col span={12}>
+              <DescriptionItem title='Cuota' content={this.state.data.cuota} />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem title='Preferencia de entrega' content={this.state.data.entrega} />
+            </Col>
+          </Row>
 				</Card>
 				<Divider/>
         <h3>Paquetes Pendientes</h3>
@@ -128,7 +139,7 @@ class ClientViewPackage extends React.Component {
         <Table loading={this.props.loading} columns={this.getColumns()} dataSource={this.getData(this.state.deliveredPackages)} pagination={false}/>
 			  <br/>
         <h4>Total Libras Entregadas: {this.state.deliveredPackages && this.state.deliveredPackages.length > 0 ? this.state.deliveredPackages.map(p => p.weight).reduce((a, b) => a + b) : 0}</h4>
-        <h4>Monto Total Entregado: {Accounting.formatMoney(this.state.deliveredPackages && this.state.deliveredPackages.length > 0 ? this.state.deliveredPackages.map(p => p.total_a_pagar - p.anticipo).reduce((a, b) => a + b) : 0, 'Q')}</h4>
+        <h4>Monto Total Entregado: {Accounting.formatMoney(this.state.deliveredPackages && this.state.deliveredPackages.length > 0 ? this.state.deliveredPackages.map(p => Number(p.total_a_pagar)).reduce((a, b) => a + b) : 0, 'Q')}</h4>
       </div>
 		);
 	}
