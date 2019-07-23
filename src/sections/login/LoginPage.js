@@ -56,7 +56,7 @@ class LoginPage extends Component {
       Auth.signIn(this.state.username, this.state.password)
         .then(user => {
           profile.token = user.signInUserSession.idToken.jwtToken;
-          profile.profile = user.attributes.profile;
+          profile.profile = user.attributes.profile || 'cliente';
           profile.attributes = JSON.stringify(user.attributes);
           Cache.setItem('userApp',profile);
           this.setState({ loading: false});
@@ -66,12 +66,14 @@ class LoginPage extends Component {
            if(values){
              let client_id = 0;
              if(profile.profile === 'cliente'){
-                ClientsSrc.getProfile().then(cliente => {
+               ClientsSrc.getProfile()
+                 .then(cliente => {
                    client_id = cliente[0].client_id;
                    profile.client_id = client_id;
                    Cache.setItem('userApp',profile);
                    this.props.history.push(`/${values}${client_id}`)
-                 }).catch(e => {
+                 })
+                 .catch(e => {
                    if (e && e.message) {
                      message.error(e.message);
                    }

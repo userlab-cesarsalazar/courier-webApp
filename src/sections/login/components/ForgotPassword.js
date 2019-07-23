@@ -13,7 +13,7 @@ import { Auth } from 'aws-amplify';
 const FormItem = Form.Item;
 
 class ForgotPassword extends Component {
-  
+
   constructor(props){
     super(props);
     this.state = {
@@ -21,21 +21,21 @@ class ForgotPassword extends Component {
     }
     this.onRecovery = this.onRecovery.bind(this);
   }
-  
+
   handleChange = async event => {
     const { target } = event
     const value = target.type === 'checkbox' ? target.checked : target.value
     const { name } = target
     await this.setState({ [name]: value })
   }
-  
+
   onRecovery = (e) => {
     e.preventDefault()
     this.setState({ loading: true })
     Auth.forgotPassword(this.state.email)
       .then(data =>{
         console.log(data)
-        
+
         this.setState({ loading: false, recovery: false })
       } )
       .catch(err => {
@@ -43,7 +43,7 @@ class ForgotPassword extends Component {
         this.setState({ loading: false })
       });
   };
-  
+
   onConfirmPawd = (e)=>{
     e.preventDefault()
     this.setState({ loading: true })
@@ -62,7 +62,7 @@ class ForgotPassword extends Component {
         this.setState({ loading: false })
       });
   }
-  
+
   render() {
     const { email, password, code, loading } = this.state;
     return (
@@ -82,7 +82,7 @@ class ForgotPassword extends Component {
               </Form>
             </div>
           }
-          
+
           { !this.state.recovery &&
             <div>
               <Form className="login-form">
