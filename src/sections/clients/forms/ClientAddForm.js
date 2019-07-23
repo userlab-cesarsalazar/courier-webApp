@@ -21,13 +21,13 @@ class ClientsAddForm extends React.Component {
     };
     this.onSave = this.onSave.bind(this);
   }
-  
+
   onSave = async(e) => {
     try {
       e.preventDefault()
       //this.setState({ loading: true })
       await this.validateFields()
-      
+
       let _users = {
         type: 'cliente',
         name: this.state.name,
@@ -40,12 +40,12 @@ class ClientsAddForm extends React.Component {
         message_user: this.state.message_user,
         cuota: this.state.cuota
       };
-      
-      
+
+
       await ClientsSrc.create(_users);
       message.success('Creado satisfactoriamente');
       return this.setState({ loading: false });
-      
+
     } catch (e) {
       console.log(e)
       if (e && e.message) {
@@ -54,7 +54,7 @@ class ClientsAddForm extends React.Component {
       this.setState({ loading: false })
     }
   };
-  
+
   validateFields = async() => {
     try {
       let errors = {}
@@ -74,41 +74,41 @@ class ClientsAddForm extends React.Component {
       this.setState({ errors });
       if (Object.keys(errors).length > 0)
         throw errors
-      
+
       return false
-      
+
     } catch (errors) {
       throw errors
     }
   };
-  
+
   onBack = () => {
     this.props.history.push('/clients');
   };
-  
+
   handleChange = event => {
     utilChange(event, (name, value) => {
       this.setState({ [name]: value }, this.validate)
     });
   };
-  
-  
+
+
   handleSelectChange = (value) => {
     this.setState({type: value });
   };
-  
+
   handleSelectTarifaChange = (value) => {
     this.setState({cuota: value });
   };
-  
+
   onPreferencesChanged = (e) => {
     this.setState({entrega: e.target.value });
   };
-  
+
   onActivoChanged = (value) => {
     this.setState({activo: value });
   };
-  
+
   render() {
     const { errors, loading } = this.state;
     return (
@@ -173,7 +173,7 @@ class ClientsAddForm extends React.Component {
                           </ul>
                         </span>
             </FormItem>
-            
+
             <div className={this.state.type !== 'cliente' ? 'hidden' : ''}>
               <FormItem label="Numero de telefono" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                 <Input
@@ -237,7 +237,7 @@ class ClientsAddForm extends React.Component {
                 />
               </FormItem>
             </div>
-            
+
             <FormItem label="Activo" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
               <Switch
                 name="activo"
@@ -246,7 +246,7 @@ class ClientsAddForm extends React.Component {
                 disabled={loading}
               />
             </FormItem>
-            
+
             <FormItem wrapperCol={{ span: 6, offset: 9 }}>
               <Button type="primary" loading={loading} onClick={this.onSave}>Guardar</Button>
               <Button type="danger" className="btn-separator" onClick={this.onBack}>Regresar</Button>

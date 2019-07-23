@@ -45,8 +45,14 @@ class ClientsEditForm extends React.Component {
   
   loadClients = async() => {
     this.setState({ loading: true });
-    
-    ClientsSrc.getByClientId(this.props.match.params.id).then(
+
+    let client_id = this.props.match.params.id
+
+		if (Cache.getItem('userApp').profile === 'cliente') {
+    	client_id = Cache.getItem('userApp').client_id
+		}
+
+    ClientsSrc.getByClientId(client_id).then(
       profile => { console.log(profile[0]);
         this.setState({
           user_id:profile[0].id,
