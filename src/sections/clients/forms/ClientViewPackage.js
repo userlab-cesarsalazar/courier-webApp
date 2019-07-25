@@ -104,27 +104,32 @@ class ClientViewPackage extends React.Component {
 			<div>
 				<Card loading={loading} title={`Código: ${this.state.data.client_id } - ${this.state.data.name}`} style={{ width: '100%' }}  extra={ (Cache.getItem('userApp').profile === 'cliente') ? <Button type='primary' icon='file-add' title='Registrar paquete' onClick={this.onAddPackage}>Registrar Paquete</Button> : ''} >
 					<Row>
-						<Col span={12}>
+						<Col span={17}>
 							<DescriptionItem title='Email' content={this.state.data.email} />
 						</Col>
-						<Col span={12}>
+						<Col span={7}>
 							<DescriptionItem title='Teléfono' content={this.state.data.phone} />
 						</Col>
 					</Row>
 					<Row>
-						<Col span={12}>
+						<Col span={17}>
 							<DescriptionItem title='Dirección' content={this.state.data.main_address} />
 						</Col>
-            <Col span={12}>
+            <Col span={7}>
               <DescriptionItem title='Nit' content={this.state.data.nit} />
             </Col>
 					</Row>
           <Row>
-            <Col span={12}>
+            <Col span={17}>
               <DescriptionItem title='Cuota' content={this.state.data.cuota} />
             </Col>
-            <Col span={12}>
+            <Col span={7}>
               <DescriptionItem title='Preferencia de entrega' content={this.state.data.entrega} />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <DescriptionItem title='Observaciones' content={this.state.data.message_user} />
             </Col>
           </Row>
 				</Card>
