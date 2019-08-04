@@ -18,14 +18,15 @@ import {
   Col,
   Row,
   Divider,
-  Card
+  Card,
+  Select
 } from 'antd';
 
 //Styles
 
 //const
 const FormItem = Form.Item;
-
+const Option = Select.Option;
 
 class PackagesPage extends Component {
 
@@ -36,7 +37,8 @@ class PackagesPage extends Component {
       packages: [],
       role:'cliente',
       tracking: '',
-      client: undefined
+      client: undefined,
+      type:'tracking'
     }
     
     this.onSearch = this.onSearch.bind(this)
@@ -95,10 +97,13 @@ class PackagesPage extends Component {
   onSearch = () => {
     let params = '';
     if(this.state.tracking && this.state.tracking !== ''){
-      params = `tracking=${this.state.tracking}`
+      params = `type=tracking&id=${this.state.tracking}`
     }else {
-      params = `client_id=${this.state.client_id ? this.state.client_id : this.state.client}`
-      
+      params = `type=client_id&id=${this.state.client_id ? this.state.client_id : this.state.client}`
+    }
+  
+    if(this.state.package_id && this.state.package_id !== ''){
+      params = `type=package_id&id=${this.state.package_id}`
     }
 
     this.setState({loading : true})
@@ -121,20 +126,39 @@ class PackagesPage extends Component {
       role,
       tracking,
       client_id,
-      client
+      client,
+      type,
+      package_id
     } = this.state;
 
     return (
       <div>
         <div className={'table-action-bar'}>
           <h2>{getWord('PACKAGES')}</h2>
-          {role === 'admin' ? <Button type='primary' onClick={this.onAdminAdd}>Ingresar</Button> : ''}
+          {role === 'admin' || role === 'warehouse' ? <Button type='primary' onClick={this.onAdminAdd}>Ingresar</Button> : ''}
           {role === 'cliente' ? <Button type='primary' onClick={this.onAdd}>Nuevo</Button> : ''}
         </div>
         <Form autoComplete='off'>
           <Card>
-            <Row gutter={16}>
-              <Col className='gutter-row' span={8}>
+            <Row gutter={24}>
+              <Col className='gutter-row' span={12}>
+                <FormItem label='Seleccione Filtro' >
+                  <Select
+                    placeholder='Seleccione'
+                    onChange={value => this.handleChange('type', value)}
+                    value={type}
+                    defaultValue={type}
+                  >
+                    <Option value='tracking'>Tracking</Option>
+                    <Option value='client_id'>Cod. Cliente</Option>
+                    <Option value='client'>Nombre Cliente</Option>
+                    <Option value='package'>Paquete</Option>
+                  </Select>
+                </FormItem>
+              </Col>
+              <Col className='gutter-row' span={12}>
+                {this.state.type === 'tracking' &&
+
                 <FormItem label='Nro. Tracking' >
                   <Input
                     placeholder={'Nro. Tracking'}
@@ -143,16 +167,17 @@ class PackagesPage extends Component {
                     name='tracking'
                   />
                 </FormItem>
-                </Col>
-              <Col className='gutter-row' span={8}>
-                <FormItem label='Nombre Cliente'>
-                  <ClientSearchSelect
-                    value={client}
-                    onChange={value => this.handleChange('client', value)}
-                  />
-                </FormItem>
-              </Col>
-              <Col className='gutter-row' span={8}>
+                }
+                {this.state.type === 'client' &&
+                  <FormItem label='Nombre Cliente'>
+                    <ClientSearchSelect
+                      value={client}
+                      onChange={value => this.handleChange('client', value)}
+                    />
+                  </FormItem>
+                }
+  
+                {this.state.type === 'client_id' &&
                 <FormItem label='Codigo Cliente' >
                   <Input
                     placeholder={'Codigo de cliente'}
@@ -161,6 +186,18 @@ class PackagesPage extends Component {
                     name='client_id'
                   />
                 </FormItem>
+                }
+  
+                {this.state.type === 'package' &&
+                <FormItem label='Cod. Paquete' >
+                  <Input
+                    placeholder={'Cod. Paquete'}
+                    onChange={e => this.handleChange('package_id', e.target.value)}
+                    value={package_id}
+                    name='package_id'
+                  />
+                </FormItem>
+                }
               </Col>
             </Row>
           </Card>

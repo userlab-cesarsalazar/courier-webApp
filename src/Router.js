@@ -53,20 +53,20 @@ const routes = [
   { route: '/dashboard', component: DashboardPage, profiles: ['admin'] },
   { route: '/reports', component: ReportsPage, profiles: ['admin'] },
   { route: '/clients', component: ClientsPage, profiles: ['admin', 'recepcionista'] },
-  { route: '/packages', component: PackagesPage, profiles: ['admin'] },
+  { route: '/packages', component: PackagesPage, profiles: ['admin','warehouse'] },
   { route: '/clients/create', component: ClientsAddForm, profiles: ['admin'] },
   { route: '/clients/profile', component: ClientProfileForm, profiles: ['admin', 'cliente', 'recepcionista'] },
   { route: '/clients/edit/:id', component: ClientEditForm, profiles: ['admin', 'cliente'] },
   { route: '/clients/viewpackage/:id', component: ClientViewPackage, profiles: ['admin', 'cliente', 'recepcionista'] },
   { route: '/clients/addpackage', component: ClientAddPackage, profiles: ['cliente'] },
-  { route: '/packages/create', component: PackageAddForm, profiles: ['admin'] },
-  { route: '/packages/admincreate', component: PackageAdminAddForm, profiles: ['admin'] },
+  { route: '/packages/create', component: PackageAddForm, profiles: ['admin','warehouse'] },
+  { route: '/packages/admincreate', component: PackageAdminAddForm, profiles: ['admin','warehouse'] },
   { route: '/packages/adminupdate/:id', component: PackageAdminEditForm, profiles: ['admin'] },
   { route: '/users', component: UsersPage, profiles: ['admin'] },
   { route: '/users/create', component: UsersAddForm, profiles: ['admin'] },
   { route: '/users/profile', component: UsersProfileForm, profiles: ['admin'] },
   { route: '/users/edit/:id', component: UsersEditForm, profiles: ['admin'] },
-  { route: '/login', component: LoginPage, profiles: ['admin', 'cliente', 'recepcionista'] }
+  { route: '/login', component: LoginPage, profiles: ['admin', 'cliente', 'recepcionista','warehouse'] }
 ]
 
 class Router extends Component {
@@ -157,7 +157,7 @@ class Router extends Component {
                   shape={'square'}
                   size={this.state.collapsed ? 40 : 80}
                 />
-                {!this.state.collapsed && <h2 className='App-version'>v0.0.7</h2>}
+                {!this.state.collapsed && <h2 className='App-version'>v1.0.0</h2>}
               </header>
 
               <br />

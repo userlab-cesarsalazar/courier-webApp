@@ -28,7 +28,7 @@ const menuOptions = [{
   icon: 'gift',
   route: '/packages',
   possiblePermissions: [ 'read', 'add', 'edit', 'delete' ],
-  profilePermissions: ['admin']
+  profilePermissions: ['admin','warehouse']
 }, {
   name: 'PACKAGES',
   key: 'packages',

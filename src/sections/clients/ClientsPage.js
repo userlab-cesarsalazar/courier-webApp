@@ -18,11 +18,13 @@ import {
   Form,
   Input,
   Row,
-  message
+  message,
+  Select
 } from 'antd';
 
 
 const FormItem = Form.Item;
+const Option = Select.Option;
 //Styles
 
 //const
@@ -41,7 +43,8 @@ class ClientsPage extends Component {
       errors: {},
       client_id:'',
       name:'',
-      email:''
+      email:'',
+      type:'client_id'
     }
   }
   
@@ -104,6 +107,14 @@ class ClientsPage extends Component {
 
     if(this.state.email) {
       params += '&email='+this.state.email;
+    }
+  
+    if(this.state.tracking) {
+      params += '&tracking='+this.state.tracking;
+    }
+  
+    if(this.state.package_id) {
+      params += '&package_id='+this.state.package_id;
     }
 
     if(page) {
@@ -189,7 +200,10 @@ class ClientsPage extends Component {
       name,
       client_id,
       email,
-      errors
+      errors,
+      type,
+      tracking,
+      package_id
     } = this.state;
 
     return (
@@ -205,36 +219,55 @@ class ClientsPage extends Component {
         </div>
         <Form autoComplete='NOPE'>
           <Card>
-            <Row gutter={16}>
-              <Col className='gutter-row' span={8}>
-                <FormItem
-                  label='Codigo'
-                  validateStatus={errors.client_id && 'error'}
-                  help={errors.client_id}
-                >
-                  <UIIntegerInput
-                    placeholder={'Codigo'}
-                    name='client_id'
-                    onChange={ e => this.handleChange('client_id', e.target.value)}
-                    value={client_id}
-                  />
+            <Row gutter={24}>
+              <Col className='gutter-row' span={12}>
+                <FormItem label='Seleccione Filtro' >
+                  <Select
+                    placeholder='Seleccione'
+                    onChange={value => this.handleChange('type', value)}
+                    value={type}
+                    defaultValue={type}
+                  >
+                    <Option value='client_id'>Cod. Cliente</Option>
+                    <Option value='name'>Nombre Cliente</Option>
+                    <Option value='email'>Email</Option>
+                    <Option value='tracking'>Tracking</Option>
+                    <Option value='package_id'>Cod. Paquete</Option>
+                  </Select>
                 </FormItem>
               </Col>
-              <Col className='gutter-row' span={8}>
-                <FormItem
-                  label='Nombre'
-                  validateStatus={errors.name && 'error'}
-                  help={errors.name}
-                >
-                  <Input
-                    placeholder={'Nombre'}
-                    name='name'
-                    onChange={ e => this.handleChange('name', e.target.value)}
-                    value={name}
-                  />
-                </FormItem>
-              </Col>
-              <Col className='gutter-row' span={8}>
+              <Col className='gutter-row' span={12}>
+                {
+                  type === 'client_id' &&
+                  <FormItem
+                    label='Codigo'
+                    validateStatus={errors.client_id && 'error'}
+                    help={errors.client_id}
+                  >
+                    <UIIntegerInput
+                      placeholder={'Codigo'}
+                      name='client_id'
+                      onChange={ e => this.handleChange('client_id', e.target.value)}
+                      value={client_id}
+                    />
+                  </FormItem>
+                }
+                {
+                  type === 'name' &&
+                  <FormItem
+                    label='Nombre'
+                    validateStatus={errors.name && 'error'}
+                    help={errors.name}
+                  >
+                    <Input
+                      placeholder={'Nombre'}
+                      name='name'
+                      onChange={ e => this.handleChange('name', e.target.value)}
+                      value={name}
+                    />
+                  </FormItem>
+                }
+                {type === 'email' &&
                 <FormItem
                   label='Email'
                   validateStatus={errors.email && 'error'}
@@ -247,6 +280,35 @@ class ClientsPage extends Component {
                     value={email}
                   />
                 </FormItem>
+                }
+                {type === 'tracking' &&
+                <FormItem
+                  label='Tracking'
+                  validateStatus={errors.tracking && 'error'}
+                  help={errors.tracking}
+                >
+                  <Input
+                    placeholder={'Tracking'}
+                    name='tracking'
+                    onChange={ e => this.handleChange('tracking', e.target.value)}
+                    value={tracking}
+                  />
+                </FormItem>
+                }
+                {type === 'package_id' &&
+                <FormItem
+                  label='Cod. Paquete'
+                  validateStatus={errors.package_id && 'error'}
+                  help={errors.package_id}
+                >
+                  <Input
+                    placeholder={'Cod. Paquete'}
+                    name='package_id'
+                    onChange={ e => this.handleChange('package_id', e.target.value)}
+                    value={package_id}
+                  />
+                </FormItem>
+                }
               </Col>
             </Row>
           </Card>
