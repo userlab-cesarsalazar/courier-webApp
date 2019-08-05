@@ -90,8 +90,16 @@ class Router extends Component {
   }
 
   componentDidMount() {
-    Auth.currentSession()
-      .then(data => {
+    Auth.currentAuthenticatedUser()
+      .then(user => {
+        let profile = {};
+        if(!Cache.getItem('userApp')) {
+          profile.token = user.signInUserSession.idToken.jwtToken;
+          profile.profile = user.attributes.profile || 'cliente';
+          profile.attributes = JSON.stringify(user.attributes);
+          Cache.setItem('userApp', profile);
+        }
+
         this.setState({ login: true, loading: false })
       })
       .catch(err => console.log(err))
@@ -143,7 +151,6 @@ class Router extends Component {
     const {
       getWord
     } = this.props.userDefaults;
-
     let filterRoutes = this.getFilterRoutes();
 
     return (
