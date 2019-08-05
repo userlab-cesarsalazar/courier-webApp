@@ -127,7 +127,7 @@ class ClientsPage extends Component {
   validateFields = async() => {
     try {
       let errors = {}
-      if(!this.state.name && !this.state.client_id && !this.state.email) {
+      if(!this.state.name && !this.state.client_id && !this.state.email && !this.state.tracking && !this.state.package_id) {
         errors.client_id = 'Debe ingresar un campo de busqueda'
         errors.name = 'Debe ingresar un campo de busqueda'
         errors.email = 'Debe ingresar un campo de busqueda'
@@ -149,19 +149,41 @@ class ClientsPage extends Component {
         case 'name':
           otherState = {
             client_id: undefined,
-            email:undefined
+            email:undefined,
+            package_id:undefined,
+            tracking:undefined
           }
           break;
         case 'client_id':
           otherState = {
             name: undefined,
-            email:undefined
+            email:undefined,
+            tracking:undefined,
+            package_id:undefined,
+          }
+          break;
+        case 'package_id':
+          otherState = {
+            name: undefined,
+            email:undefined,
+            client_id: undefined,
+            tracking:undefined
+          }
+          break;
+        case 'tracking':
+          otherState = {
+            name: undefined,
+            email:undefined,
+            client_id: undefined,
+            package_id:undefined
           }
           break;
         default:
           otherState = {
             name: undefined,
-            client_id:undefined
+            client_id:undefined,
+            package_id: undefined,
+            tracking: undefined
           }
       }
       this.setState({ [name]: value , ...otherState})
