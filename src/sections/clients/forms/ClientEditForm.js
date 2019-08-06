@@ -49,7 +49,8 @@ class ClientsEditForm extends React.Component {
     let client_id = this.props.match.params.id
 
 		if (Cache.getItem('userApp').profile === 'cliente') {
-    	client_id = Cache.getItem('userApp').client_id
+    		client_id = Cache.getItem('userApp').client_id
+				this.setState({ disable: 'disable'})
 		}
 
     ClientsSrc.getByClientId(client_id).then(
@@ -167,7 +168,7 @@ class ClientsEditForm extends React.Component {
 
 	render() {
 
-		const { errors, loading, client_id, email, name, phone, nit, entrega, main_address, message_user, cuota, type } = this.state;
+		const { errors, loading, client_id, email, name, phone, nit, entrega, main_address, message_user, cuota, type, disable } = this.state;
 		return (
 			<div>
 				<Card title="Editar" style={{ width: '100%' }} loading={loading}>
@@ -259,6 +260,7 @@ class ClientsEditForm extends React.Component {
 										name="cuota"
                     onChange={this.handleChange}
 										value={cuota}
+										disabled={disable}
 								/>
 							</FormItem>
 						 </div>

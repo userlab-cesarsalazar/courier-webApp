@@ -157,7 +157,7 @@ class Router extends Component {
                   shape={'square'}
                   size={this.state.collapsed ? 40 : 80}
                 />
-                {!this.state.collapsed && <h2 className='App-version'>v1.0.0</h2>}
+                {!this.state.collapsed && <h2 className='App-version'>v1.0.1</h2>}
               </header>
 
               <br />
