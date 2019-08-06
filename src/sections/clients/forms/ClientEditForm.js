@@ -51,6 +51,7 @@ class ClientsEditForm extends React.Component {
 		if (Cache.getItem('userApp').profile === 'cliente') {
     		client_id = Cache.getItem('userApp').client_id
 				this.setState({ disable: 'disable'})
+			
 		}
 
     ClientsSrc.getByClientId(client_id).then(
