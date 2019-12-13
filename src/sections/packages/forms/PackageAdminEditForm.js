@@ -53,7 +53,8 @@ class PackageAdminEditForm extends React.Component {
             tracking_number: _package[0].tracking,
             description: _package[0].description,
             weight: _package[0].weight || 1,
-            status:_package[0].status
+            status:_package[0].status,
+            package_id: _package[0].package_id
           })
           return _package[0]
         })
@@ -195,7 +196,8 @@ class PackageAdminEditForm extends React.Component {
       client,
       client_data,
       main_address,
-      status
+      status,
+      package_id
     } = this.state;
 
     return (
@@ -279,6 +281,14 @@ class PackageAdminEditForm extends React.Component {
                 wrapperCol={{ span: 12 }}
               >
                 {Accounting.formatMoney(client_data.cuota, 'Q')}
+              </Form.Item>
+  
+              <Form.Item
+                label='No. de Paquete'
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 12 }}
+              >
+                {package_id}
               </Form.Item>
 
             </div>
