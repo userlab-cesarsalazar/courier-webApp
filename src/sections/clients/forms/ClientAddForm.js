@@ -152,7 +152,7 @@ class ClientsAddForm extends React.Component {
                 value={this.state.name}
                 disabled={loading}
               />
-            </FormItem>
+            </FormItem>x
             <FormItem
               required
               validateStatus={errors.password && 'error'}

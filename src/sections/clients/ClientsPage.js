@@ -116,6 +116,10 @@ class ClientsPage extends Component {
     if(this.state.package_id) {
       params += '&package_id='+this.state.package_id;
     }
+  
+    if(this.state.phone) {
+      params += '&phone='+this.state.phone;
+    }
 
     if(page) {
       params += '&page='+page;
@@ -151,7 +155,8 @@ class ClientsPage extends Component {
             client_id: undefined,
             email:undefined,
             package_id:undefined,
-            tracking:undefined
+            tracking:undefined,
+            phone:undefined
           }
           break;
         case 'client_id':
@@ -160,6 +165,7 @@ class ClientsPage extends Component {
             email:undefined,
             tracking:undefined,
             package_id:undefined,
+            phone:undefined
           }
           break;
         case 'package_id':
@@ -167,10 +173,20 @@ class ClientsPage extends Component {
             name: undefined,
             email:undefined,
             client_id: undefined,
-            tracking:undefined
+            tracking:undefined,
+            phone:undefined
           }
           break;
         case 'tracking':
+          otherState = {
+            name: undefined,
+            email:undefined,
+            client_id: undefined,
+            package_id:undefined,
+            phone:undefined
+          }
+          break;
+        case 'phone':
           otherState = {
             name: undefined,
             email:undefined,
@@ -183,7 +199,8 @@ class ClientsPage extends Component {
             name: undefined,
             client_id:undefined,
             package_id: undefined,
-            tracking: undefined
+            tracking: undefined,
+            phone:undefined
           }
       }
       this.setState({ [name]: value , ...otherState})
@@ -225,7 +242,8 @@ class ClientsPage extends Component {
       errors,
       type,
       tracking,
-      package_id
+      package_id,
+      phone
     } = this.state;
 
     return (
@@ -255,6 +273,7 @@ class ClientsPage extends Component {
                     <Option value='email'>Email</Option>
                     <Option value='tracking'>Tracking</Option>
                     <Option value='package_id'>Cod. Paquete</Option>
+                    <Option value='phone'>Telefono</Option>
                   </Select>
                 </FormItem>
               </Col>
@@ -328,6 +347,20 @@ class ClientsPage extends Component {
                     name='package_id'
                     onChange={ e => this.handleChange('package_id', e.target.value)}
                     value={package_id}
+                  />
+                </FormItem>
+                }
+                {type === 'phone' &&
+                <FormItem
+                  label='Telefono'
+                  validateStatus={errors.phone && 'error'}
+                  help={errors.phone}
+                >
+                  <Input
+                    placeholder={'Telefono'}
+                    name='phone'
+                    onChange={ e => this.handleChange('phone', e.target.value)}
+                    value={phone}
                   />
                 </FormItem>
                 }

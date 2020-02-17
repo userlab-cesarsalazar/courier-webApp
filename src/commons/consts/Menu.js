@@ -35,6 +35,12 @@ const menuOptions = [{
   icon: 'gift',
   route: 'clients/viewpackage',
   profilePermissions: ['cliente']
+},{
+  name: 'TRANSFERS',
+  key: 'transfers',
+  icon: 'gift',
+  route: '/transfers',
+  profilePermissions: ['admin']
 }, {
   name: 'REPORTS',
   key: 'reports',

@@ -38,7 +38,8 @@ class PackagesPage extends Component {
       role:'cliente',
       tracking: '',
       client: undefined,
-      type:'tracking'
+      type:'tracking',
+      phone:''
     }
     
     this.onSearch = this.onSearch.bind(this)
@@ -105,6 +106,10 @@ class PackagesPage extends Component {
     if(this.state.package_id && this.state.package_id !== ''){
       params = `type=package_id&id=${this.state.package_id}`
     }
+  
+    if(this.state.phone && this.state.phone !== ''){
+      params = `type=phone&id=${this.state.phone}`
+    }
 
     this.setState({loading : true})
     PackagesSrc.getByFilter(params)
@@ -113,7 +118,17 @@ class PackagesPage extends Component {
         this.setState({ loading: false });
       })
   }
-
+  
+  handleOnDownload = (record) => {
+    
+    this.setState({ loading: true})
+    PackagesSrc.downloadFast(record.key, record)
+      .then( response => this.onSearch())
+      .catch( e => { message.error('Error en la descarga')
+      this.setState({ loading: false})
+    })
+    
+  };
 
   render() {
     const {
@@ -128,7 +143,8 @@ class PackagesPage extends Component {
       client_id,
       client,
       type,
-      package_id
+      package_id,
+      phone
     } = this.state;
 
     return (
@@ -153,6 +169,7 @@ class PackagesPage extends Component {
                     <Option value='client_id'>Cod. Cliente</Option>
                     <Option value='client'>Nombre Cliente</Option>
                     <Option value='package'>Paquete</Option>
+                    <Option value='phone'>Telefono</Option>
                   </Select>
                 </FormItem>
               </Col>
@@ -198,6 +215,17 @@ class PackagesPage extends Component {
                   />
                 </FormItem>
                 }
+  
+                {this.state.type === 'phone' &&
+                <FormItem label='Nro. Telefono' >
+                  <Input
+                    placeholder={'Telefono'}
+                    onChange={e => this.handleChange('phone', e.target.value)}
+                    value={phone}
+                    name='phone'
+                  />
+                </FormItem>
+                }
               </Col>
             </Row>
           </Card>
@@ -220,6 +248,7 @@ class PackagesPage extends Component {
         <PackagesTable
           loading={loading}
           packages={packages}
+          download ={ this.handleOnDownload}
         />
       </div>
     );

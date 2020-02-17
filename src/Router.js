@@ -38,6 +38,9 @@ import PackageAdminEditForm from './sections/packages/forms/PackageAdminEditForm
 //Reports
 import ReportsPage from './sections/reports/ReportsPage'
 
+//Transfer
+import TransferPage from './sections/transfer/TransferPage'
+
 //Components
 import UISpinner from './commons/components/UISpinner'
 
@@ -48,7 +51,6 @@ const { Header, Content, Footer, Sider } = Layout
 const SubMenu = Menu.SubMenu
 
 //Const
-
 const routes = [
   { route: '/dashboard', component: DashboardPage, profiles: ['admin'] },
   { route: '/reports', component: ReportsPage, profiles: ['admin'] },
@@ -66,7 +68,8 @@ const routes = [
   { route: '/users/create', component: UsersAddForm, profiles: ['admin'] },
   { route: '/users/profile', component: UsersProfileForm, profiles: ['admin'] },
   { route: '/users/edit/:id', component: UsersEditForm, profiles: ['admin'] },
-  { route: '/login', component: LoginPage, profiles: ['admin', 'cliente', 'recepcionista','warehouse'] }
+  { route: '/login', component: LoginPage, profiles: ['admin', 'cliente', 'recepcionista','warehouse'] },
+  { route: '/transfers', component: TransferPage, profiles: ['admin'] }
 ]
 
 class Router extends Component {
@@ -164,7 +167,7 @@ class Router extends Component {
                   shape={'square'}
                   size={this.state.collapsed ? 40 : 80}
                 />
-                {!this.state.collapsed && <h2 className='App-version'>v1.0.3</h2>}
+                {!this.state.collapsed && <h2 className='App-version'>vv{process.env.REACT_APP_VERSION}</h2>}
               </header>
 
               <br />

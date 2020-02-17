@@ -17,6 +17,10 @@ const dictionary = {
     'EN': 'Packages',
     'ES': 'Paquetes'
   },
+  'TRANSFERS': {
+    'EN': 'Transfers',
+    'ES': 'Transferencia'
+  },
   'REPORTS': {
     'EN': 'Reports',
     'ES': 'Reportes'

@@ -33,6 +33,7 @@ class ClientsTable extends React.Component {
         { title: 'Codigo', dataIndex: 'client_id', key: 'client_id' },
         { title: 'Nombre', dataIndex: 'name', key: 'name' },
         { title: 'Email', dataIndex: 'email', key: 'email' },
+        { title: 'Telefono', dataIndex: 'phone', key: 'phone' },
         { title: 'Activo', dataIndex: 'activo', key: 'activo' },
         {
           title: 'Accion',
@@ -57,6 +58,7 @@ class ClientsTable extends React.Component {
         name:  d.name,
         email: d.email,
         client_id: d.client_id,
+        phone: d.phone,
         activo: d.activo === 'Y' ? 'Si' : 'No'
       }));
     };

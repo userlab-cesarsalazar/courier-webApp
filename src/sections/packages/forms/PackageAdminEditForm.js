@@ -15,7 +15,6 @@ import PackageStatusSelect from '../components/PackageStatusSelect';
 import {
   Button,
   Card,
-  Checkbox,
   Col,
   Form,
   Input,
@@ -33,7 +32,10 @@ const initialState = {
   client_data: null,
   weight: null,
   tracking_number: '',
-  description: 'Paquete'
+  description: 'Paquete',
+  abono:0,
+  anticipo:0,
+  pendiente: 0
 }
 
 class PackageAdminEditForm extends React.Component {
@@ -42,6 +44,7 @@ class PackageAdminEditForm extends React.Component {
     this.state = {
       ...initialState
     }
+    this.pendint_calculate = this.pendint_calculate.bind(this)
   }
 
   componentDidMount() {
@@ -54,8 +57,13 @@ class PackageAdminEditForm extends React.Component {
             description: _package[0].description,
             weight: _package[0].weight || 1,
             status:_package[0].status,
-            package_id: _package[0].package_id
+            package_id: _package[0].package_id,
+            anticipo: _package[0].anticipo,
+            pendiente: _package[0].pending_amount ? _package[0].pending_amount : 0,
+            total : _package[0].total_a_pagar ? _package[0].total_a_pagar : 0
           })
+          this.pendint_calculate(false)
+          console.log(_package[0],'tt')
           return _package[0]
         })
         .then(_package => this.searchClient(_package.client_id))
@@ -83,7 +91,17 @@ class PackageAdminEditForm extends React.Component {
         client_data: undefined
       }
     }
-
+    
+    if(name === 'status'){
+      if(value === 'Entregado con saldo pendiente' ){
+       this.setState({pendiente: parseInt(this.state.total) })
+      }
+    }
+  /*
+    if(name === 'abono' && isNaN(value)) {
+     this.setState({pendiente: parseInt(this.state.total) - parseInt(this.state.anticipo)})
+    }
+*/
     this.setState({ [name]: value, ...otherState })
   }
 
@@ -103,9 +121,18 @@ class PackageAdminEditForm extends React.Component {
         category_id: 1,
         cuota: this.state.client_data.cuota,
         entrega: this.state.client_data.entrega,
-        status: this.state.status
+        status: this.state.status,
+        anticipo: parseInt(this.state.anticipo) + parseInt(this.state.abono),
+        pendiente: this.state.pendiente,
+        package_id: this.state.package_id
       }
-
+      
+      if(_package.pendiente === 0){
+        _package.status = 'Entregado'
+      }
+  
+      console.log(_package, 'pp')
+      
       await PackagesSrc.update(this.props.match.params.id, _package);
 
       message.success('Actualizado satisfactoriamente');
@@ -149,7 +176,15 @@ class PackageAdminEditForm extends React.Component {
       if(!this.state.status) {
         errors.status = 'El estado es requerido'
       }
-
+      
+      if(parseInt(this.state.abono) < 0){
+        errors.abono = 'El monto de anticipo no puede ser menor a 0'
+      }
+      
+      if((parseInt(this.state.abono) + parseInt(this.state.pendiente)) > parseInt(this.state.total)){
+        errors.pendiente = 'El monto de anticipo no puede ser mayor al total'
+      }
+      
       this.setState({ errors })
 
       if (Object.keys(errors).length > 0)
@@ -164,6 +199,25 @@ class PackageAdminEditForm extends React.Component {
 
   handleBlur = () => {
     this.validateFields()
+  }
+  
+  pendint_calculate  = (value) =>{
+  console.log(value,'value')
+  let tmp = 0
+    
+    if(!value || isNaN(value) || value === ''){ console.log('1')
+      if(parseInt(this.state.total) && !isNaN(parseInt(this.state.anticipo))) {
+        tmp = (parseInt(this.state.total ) - parseInt(this.state.anticipo))
+      }
+    }else {console.log('2')
+      
+      tmp = 0;
+      tmp = this.state.anticipo > 0 ? parseInt(this.state.pendiente) - value : parseInt(this.state.total) - value
+    }
+    
+    this.setState({pendiente: tmp}, _=> console.log(this.state.pendiente,'pendiente'))
+    
+    return tmp
   }
 
   searchClient = async client_id => {
@@ -197,7 +251,8 @@ class PackageAdminEditForm extends React.Component {
       client_data,
       main_address,
       status,
-      package_id
+      package_id,
+      abono
     } = this.state;
 
     return (
@@ -370,7 +425,34 @@ class PackageAdminEditForm extends React.Component {
                 placeholder={'Estado'}
               />
             </Form.Item>
-
+            { this.state.status === 'Entregado con saldo pendiente' &&
+              <div>
+                <Form.Item
+                  validateStatus={errors.abono && 'error'}
+                  help={errors.abono}
+                  label={'Anticipo'}
+                  labelCol={{ span: 5 }}
+                  wrapperCol={{ span: 12 }}
+                >
+                  <Input
+                    onBlur={e => this.pendint_calculate(e.target.value)}
+                    placeholder={'0.00'}
+                    value={abono}
+                    onChange={e => this.handleChange('abono', e.target.value)}
+                  />
+                </Form.Item>
+                <Form.Item
+                  validateStatus={errors.pendiente && 'error'}
+                  help={errors.pendiente}
+                  label={'Saldo pendiente'}
+                  labelCol={{ span: 5 }}
+                  wrapperCol={{ span: 12 }}
+                >
+                  {this.state.pendiente}
+                  
+                </Form.Item>
+              </div>
+            }
             <Form.Item
               label='Total a Pagar'
               labelCol={{ span: 5 }}
@@ -378,26 +460,7 @@ class PackageAdminEditForm extends React.Component {
             >
               {client_data && !isNaN(weight) ? Accounting.formatMoney(client_data.cuota * weight, 'Q') : 'Q0'}
             </Form.Item>
-
-            <Form.Item labelCol={{ span: 5 }} wrapperCol={{offset: 6, span: 12 }}>
-              <Checkbox.Group style={{ width: '100%' }}>
-                <Row>
-                  <Col span={6}>
-                    <Checkbox value='VIP' disabled>VIP</Checkbox>
-                  </Col>
-                  <Col span={6}>
-                    <Checkbox value='DOMICILIO' disabled>Domicilio</Checkbox>
-                  </Col>
-                  <Col span={6}>
-                    <Checkbox value='ENTREGADO' disabled>Entregado</Checkbox>
-                  </Col>
-                  <Col span={6}>
-                    <Checkbox value='CANCELADO' disabled>Cancelado</Checkbox>
-                  </Col>
-                </Row>
-              </Checkbox.Group>
-            </Form.Item>
-
+            
             <FormItem wrapperCol={{ span: 6, offset: 9 }}>
               <Button type='primary' onClick={this.onSave} loading={loading}>Actualizar</Button>
               <Button type='danger' className='btn-separator' onClick={this.onBack} loading={loading}>Regresar</Button>

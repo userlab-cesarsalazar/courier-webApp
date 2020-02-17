@@ -198,12 +198,14 @@ class ClientViewPackage extends React.Component {
         <h3>Paquetes Pendientes</h3>
         <Table loading={this.props.loading} columns={this.getColumns()} dataSource={this.getData(this.state.notDeliveredPackages)} pagination={false}/>
         <br/>
+				<h4>Total de Paquetes Pendientes: {this.state.notDeliveredPackages && this.state.notDeliveredPackages.length > 0 ? this.state.notDeliveredPackages.length : 0}</h4>
         <h4>Total Libras Pendientes: {this.state.notDeliveredPackages && this.state.notDeliveredPackages.length > 0 ? this.state.notDeliveredPackages.map(p => p.weight).reduce((a, b) => a + b) : 0}</h4>
         <h4>Monto Total Pendiente: {Accounting.formatMoney(this.state.notDeliveredPackages && this.state.notDeliveredPackages.length > 0 ? this.state.notDeliveredPackages.map(p => p.total_a_pagar - p.anticipo).reduce((a, b) => a + b) : 0, 'Q')}</h4>
         <Divider/>
         <h3>Paquetes Entregados</h3>
         <Table loading={this.props.loading} columns={this.getColumns()} dataSource={this.getData(this.state.deliveredPackages)} pagination={false}/>
 			  <br/>
+				<h4>Total de Paquetes Entregados: {this.state.deliveredPackages && this.state.deliveredPackages.length > 0 ? this.state.deliveredPackages.length : 0}</h4>
         <h4>Total Libras Entregadas: {this.state.deliveredPackages && this.state.deliveredPackages.length > 0 ? this.state.deliveredPackages.map(p => p.weight).reduce((a, b) => a + b) : 0}</h4>
         <h4>Monto Total Entregado: {Accounting.formatMoney(this.state.deliveredPackages && this.state.deliveredPackages.length > 0 ? this.state.deliveredPackages.map(p => Number(p.total_a_pagar)).reduce((a, b) => a + b) : 0, 'Q')}</h4>
       </div>

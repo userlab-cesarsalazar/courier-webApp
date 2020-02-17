@@ -13,10 +13,13 @@ const update = (package_id, _package) => api.put(url+'/'+package_id, _package);
 
 const getByFilter = pararms => api.get(`${url}?${pararms}`);
 
+const  downloadFast = (package_id, _package) => api.put(url+'/'+package_id+'?download=true', _package);
+
 export default {
   create,
   get,
   list,
   update,
-  getByFilter
+  getByFilter,
+  downloadFast
 }

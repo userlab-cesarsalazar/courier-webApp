@@ -6,10 +6,9 @@ import Accounting from 'accounting';
 //Components
 import {
   Table,
-  Button, Divider
 } from 'antd';
 
-class PackagesTable extends React.Component {
+class ResumenTable extends React.Component {
 
   constructor(props){
     super(props);
@@ -21,7 +20,7 @@ class PackagesTable extends React.Component {
       data: [],
       isPageTween: false,
       loading: false,
-      hasMore: true
+      hasMore: true,
     };
   }
 
@@ -29,26 +28,14 @@ class PackagesTable extends React.Component {
     let columns = [
       { title: '#', dataIndex: 'package_id', key: 'package_id' },
       { title: 'Codigo', dataIndex: 'client_id', key: 'client_id' },
-      { title: 'Usuario', dataIndex: 'contact_name', key: 'contact_name' },
+      //{ title: 'Usuario', dataIndex: 'contact_name', key: 'contact_name' },
       { title: 'Descripcion', dataIndex: 'description', key: 'description' },
       { title: 'Tracking', dataIndex: 'tracking', key: 'tracking' },
+      { title: 'Peso', dataIndex: 'weight', key: 'weight' },
       { title: 'Total', dataIndex: 'total', key: 'total' },
       { title: 'Fecha Registro', dataIndex: 'ing_date', key: 'ing_date' },
       { title: 'Estado', dataIndex: 'status', key: 'status' },
-      {
-        title: 'Accion',
-        dataIndex: 'action',
-        key: 'action',
-        render: (text, record) => (
-          <div>
-              <Button style={{marginLeft:'-20px'}} type='default' icon='edit' onClick={e => { this.onEdit(record.key, e); }}/>
-              <Divider type={'vertical'} />
-            
-            <Button type='primary' icon='download' onClick={e => { this.onDownload(record, e); }} loading={this.state.loading} disabled={ record.status === 'Entregado' || record.status ===  'Entregado.' ? true: false}/>
-          </div>
-          
-        ),
-      }
+      
     ];
 
     return columns
@@ -59,31 +46,15 @@ class PackagesTable extends React.Component {
     key: d.package_id,
     package_id: d.package_id,
     client_id: d.client_id,
-    contact_name: d.contact_name,
+    //contact_name: d.contact_name,
     description: d.description,
     total: Accounting.formatMoney(d.total_a_pagar, 'Q'),
     tracking: d.tracking,
     ing_date: d.ing_date,
-    status: d.status
+    status: d.status,
+    weight: d.weight
   }));
-
-  onDelete = (key, e) => {
-    e.preventDefault();
-    const data = this.state.data.filter(item => item.key !== key);
-    this.setState({ data, isPageTween: false });
-  };
-
-  onEdit = (package_id, e) => {
-    e.preventDefault();
-    this.props.history.push('/packages/adminupdate/'+package_id);
-  };
   
-  onDownload = (record, e) => {
-    e.preventDefault();
-    this.props.download(record)
-  };
-  
-
   render() {
     return (
       <div>
@@ -91,10 +62,11 @@ class PackagesTable extends React.Component {
           loading={this.props.loading}
           columns={this.getColumns()}
           dataSource={this.getData(this.props.packages)}
+          pagination={{ pageSize: 100 }}
         />
       </div>
     );
   }
 }
 
-export default withRouter(PackagesTable)
+export default withRouter(ResumenTable)

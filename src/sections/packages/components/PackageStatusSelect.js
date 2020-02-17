@@ -9,8 +9,8 @@ import {
 const options = [
   { value: 'En Transito', label: 'En Transito' },
   { value: 'Listo para Entrega en Domicilio', label: 'Listo para Entrega en Domicilio' },
+  { value: 'Entregado con saldo pendiente', label: 'Entregado con saldo pendiente' },
   { value: 'Entregado', label: 'Entregado' },
-  { value: 'Entregado con saldo pendiente', label: 'Entregado con saldo pendiente' }
 ]
 
 class PackageStatusSelect extends React.Component {

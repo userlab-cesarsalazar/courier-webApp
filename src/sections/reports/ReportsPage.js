@@ -11,6 +11,7 @@ import UIDateSelect from '../../commons/components/UIDateSelect';
 import UIIntegerInput from '../../commons/components/UIIntegerInput';
 import ClientSearchSelect from '../clients/components/ClientSearchSelect';
 import ResumeTable from './components/ResumenTable';
+import AccountTable from './components/AccountTable';
 import {
   Form,
   DatePicker,
@@ -39,12 +40,15 @@ class ReportsPage extends Component {
       radioValue: 'today',
       dateRange: null,
       type: 'CIERRE',
+      accounting: 'general',
+      code: null,
       data:[],
       loading: false,
       errors: {}
     }
 
     this.onSearch = this.onSearch.bind(this)
+    this.handleChange = this.handleChange.bind(this)
   }
 
   onSearch = async () => {
@@ -56,7 +60,7 @@ class ReportsPage extends Component {
         total: false,
         date: this.state.date ? this.state.date.format('YYYY-MM-DD') : null
       }
-      console.log(params, 'parasm')
+      
       let counts;
       let data;
       
@@ -81,11 +85,24 @@ class ReportsPage extends Component {
           counts = await ReportSrc.routeTotal(params)
           data = await ReportSrc.routeDetails()
           break;
+        case 'CUENTAS':
+          
+          if(this.state.accounting === 'client_id'){
+            data = await ReportSrc.state_account(`?client_id=${this.state.codigo}`)
+          }
+          if(this.state.accounting === 'package_id'){
+            data = await ReportSrc.state_account(`?package_id=${this.state.codigo}`)
+          }else if(this.state.accounting === 'general') {
+            data = await ReportSrc.state_account(null)
+          }
+          
+          console.log(data, 'data')
+          break;
         default:
           console.log('no actions')
       }
       
-      this.setState({ counters: counts[0], data: data, loading: false })
+      this.setState({ counters: counts ? counts[0] : false, data: data, loading: false })
 
     } catch (e) {
       console.log(e);
@@ -144,7 +161,9 @@ class ReportsPage extends Component {
       counters,
       data,
       loading,
-      errors
+      accounting,
+      errors,
+      codigo
     } = this.state;
 
     return (
@@ -168,6 +187,7 @@ class ReportsPage extends Component {
                     <Option value='ENTRADA'>Entradas</Option>
                     <Option value='CIERRE'>Cierre</Option>
                     <Option value='RUTA'>Ruta</Option>
+                    <Option value='CUENTAS'>Estado de Cuentas</Option>
                   </Select>
                 </FormItem>
               </Col>
@@ -242,6 +262,38 @@ class ReportsPage extends Component {
                   </FormItem>
                 </Col>
               }
+  
+              {(this.state.type === 'CUENTAS' ) &&
+              <Col span={6}>
+                <FormItem label='Estado' labelCol={{ span: 6 }} wrapperCol={{ span: 12 }}>
+                <Select
+                  placeholder='Seleccione'
+                  onChange={value => this.handleChange('accounting', value)}
+                  value={accounting}
+                  defaultValue={accounting}>
+                  <Option value='general'>General</Option>
+                  <Option value='client_id'>Por Cliente</Option>
+                  <Option value='package_id'>Por Paquete</Option>
+                </Select>
+                </FormItem>
+              </Col>
+              }
+  
+              {(this.state.accounting === 'client_id' ||  this.state.accounting === 'package_id') &&
+              <Col span={6}>
+                <FormItem
+                  required
+                  validateStatus={errors.codigo && 'error'}
+                  help={errors.codigo}
+                  label="codigo" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
+                  <UIIntegerInput
+                    onChange={e => this.handleChange('codigo', e.target.value)}
+                    value={codigo}
+                    placeholder='codigo'
+                  />
+                </FormItem>
+              </Col>
+              }
             </Row>
           </Card>
 
@@ -277,6 +329,13 @@ class ReportsPage extends Component {
               packages={data}
             />
           </div>
+        }
+        
+        { (this.state.type === 'CUENTAS' && data.length > 0 ) &&
+          <AccountTable
+            loading={this.state.loading}
+            packages={data}
+            />
         }
       </div>
     )
