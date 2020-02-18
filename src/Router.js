@@ -128,9 +128,9 @@ class Router extends Component {
     this.props.history.push('/clients/profile')
   }
 
-  /*changeLanguage = language => {
-    this.props.userDefaults.changeLanguage(language);
-  };*/
+  changeLanguage = language => {
+    this.props.userDefaults.changeLanguage(language)
+  }
 
   loadPage = page => {
     if (Cache.getItem('userApp').profile === 'cliente') {
