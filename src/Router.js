@@ -3,8 +3,8 @@ import React, { Component } from 'react'
 import { Switch, Route, Link, Redirect } from 'react-router-dom'
 import { menuOptions } from './commons/consts/Menu'
 import moment from 'moment'
-import { Auth ,Cache} from 'aws-amplify'
-import { withUserDefaults } from './commons/components/UserDefaults';
+import { Auth, Cache } from 'aws-amplify'
+import { withUserDefaults } from './commons/components/UserDefaults'
 
 //Services
 
@@ -55,21 +55,21 @@ const routes = [
   { route: '/dashboard', component: DashboardPage, profiles: ['admin'] },
   { route: '/reports', component: ReportsPage, profiles: ['admin'] },
   { route: '/clients', component: ClientsPage, profiles: ['admin', 'recepcionista'] },
-  { route: '/packages', component: PackagesPage, profiles: ['admin','warehouse'] },
+  { route: '/packages', component: PackagesPage, profiles: ['admin', 'warehouse'] },
   { route: '/clients/create', component: ClientsAddForm, profiles: ['admin'] },
   { route: '/clients/profile', component: ClientProfileForm, profiles: ['admin', 'cliente', 'recepcionista'] },
   { route: '/clients/edit/:id', component: ClientEditForm, profiles: ['admin', 'cliente'] },
   { route: '/clients/viewpackage/:id', component: ClientViewPackage, profiles: ['admin', 'cliente', 'recepcionista'] },
   { route: '/clients/addpackage', component: ClientAddPackage, profiles: ['cliente'] },
-  { route: '/packages/create', component: PackageAddForm, profiles: ['admin','warehouse'] },
-  { route: '/packages/admincreate', component: PackageAdminAddForm, profiles: ['admin','warehouse'] },
+  { route: '/packages/create', component: PackageAddForm, profiles: ['admin', 'warehouse'] },
+  { route: '/packages/admincreate', component: PackageAdminAddForm, profiles: ['admin', 'warehouse'] },
   { route: '/packages/adminupdate/:id', component: PackageAdminEditForm, profiles: ['admin'] },
   { route: '/users', component: UsersPage, profiles: ['admin'] },
   { route: '/users/create', component: UsersAddForm, profiles: ['admin'] },
   { route: '/users/profile', component: UsersProfileForm, profiles: ['admin'] },
   { route: '/users/edit/:id', component: UsersEditForm, profiles: ['admin'] },
-  { route: '/login', component: LoginPage, profiles: ['admin', 'cliente', 'recepcionista','warehouse'] },
-  { route: '/transfers', component: TransferPage, profiles: ['admin'] }
+  { route: '/login', component: LoginPage, profiles: ['admin', 'cliente', 'recepcionista', 'warehouse'] },
+  { route: '/transfers', component: TransferPage, profiles: ['admin'] },
 ]
 
 class Router extends Component {
@@ -86,7 +86,7 @@ class Router extends Component {
       menuOptions: null,
       routes: [],
       year: moment().format('YYYY'),
-      visible: false
+      visible: false,
     }
     this.handleSignOut = this.handleSignOut.bind(this)
     this.loadPage = this.loadPage.bind(this)
@@ -95,12 +95,12 @@ class Router extends Component {
   componentDidMount() {
     Auth.currentAuthenticatedUser()
       .then(user => {
-        let profile = {};
-        if(!Cache.getItem('userApp')) {
-          profile.token = user.signInUserSession.idToken.jwtToken;
-          profile.profile = user.attributes.profile || 'cliente';
-          profile.attributes = JSON.stringify(user.attributes);
-          Cache.setItem('userApp', profile);
+        let profile = {}
+        if (!Cache.getItem('userApp')) {
+          profile.token = user.signInUserSession.idToken.jwtToken
+          profile.profile = user.attributes.profile || 'cliente'
+          profile.attributes = JSON.stringify(user.attributes)
+          Cache.setItem('userApp', profile)
         }
 
         this.setState({ login: true, loading: false })
@@ -113,48 +113,45 @@ class Router extends Component {
   }
 
   handleSignOut = e => {
-    this.setState({ loading: true });
+    this.setState({ loading: true })
     Auth.signOut()
-        .then(() => {
-          this.props.history.push('/')
-          setTimeout(function() {
-            window.location.reload()
-          }, 2000)
-        })
-        .catch(err => console.log(err))
-  };
+      .then(() => {
+        this.props.history.push('/')
+        setTimeout(function() {
+          window.location.reload()
+        }, 2000)
+      })
+      .catch(err => console.log(err))
+  }
 
   showProfile = () => {
-    this.props.history.push('/clients/profile');
-  };
+    this.props.history.push('/clients/profile')
+  }
 
-  changeLanguage = language => {
+  /*changeLanguage = language => {
     this.props.userDefaults.changeLanguage(language);
-  };
+  };*/
 
-  loadPage = (page) => {
-    if(Cache.getItem('userApp').profile === 'cliente'){
-      return `/${page}/${Cache.getItem('userApp').client_id}`;
-    }else{
-      return page;
+  loadPage = page => {
+    if (Cache.getItem('userApp').profile === 'cliente') {
+      return `/${page}/${Cache.getItem('userApp').client_id}`
+    } else {
+      return page
     }
-  };
+  }
 
   getFilterRoutes = _ => {
-
-    let filterRoutes = [];
+    let filterRoutes = []
 
     if (Cache.getItem('userApp'))
-    filterRoutes = routes.filter(r => r.profiles.find(p => p === Cache.getItem('userApp').profile))
+      filterRoutes = routes.filter(r => r.profiles.find(p => p === Cache.getItem('userApp').profile))
 
     return filterRoutes
   }
 
   render() {
-    const {
-      getWord
-    } = this.props.userDefaults;
-    let filterRoutes = this.getFilterRoutes();
+    const { getWord } = this.props.userDefaults
+    let filterRoutes = this.getFilterRoutes()
 
     return (
       <div>
@@ -202,14 +199,21 @@ class Router extends Component {
                             )
                           })}
                       </SubMenu>
-                    ) : [(option.profilePermissions.indexOf(Cache.getItem('userApp').profile) > -1 ?
-                      <Menu.Item key={option.route}>
-                        <Link to={this.loadPage(option.route)}>
-                          <Icon type={option.icon} />
-                          <span>{getWord(option.name)}</span>
-                        </Link>
-                      </Menu.Item>
-                    :''),'']
+                    ) : (
+                      [
+                        option.profilePermissions.indexOf(Cache.getItem('userApp').profile) > -1 ? (
+                          <Menu.Item key={option.route}>
+                            <Link to={this.loadPage(option.route)}>
+                              <Icon type={option.icon} />
+                              <span>{getWord(option.name)}</span>
+                            </Link>
+                          </Menu.Item>
+                        ) : (
+                          ''
+                        ),
+                        '',
+                      ]
+                    )
                   )}
               </Menu>
             </Sider>
@@ -231,7 +235,7 @@ class Router extends Component {
                         Mi Cuenta
                       </Menu.Item>
                       {/*<Menu.Item key='language' onClick={_ => this.changeLanguage(language === 'EN' ? 'ES' : 'EN')}>*/}
-                        {/*{language === 'EN' ? 'Español' : 'English'}*/}
+                      {/*{language === 'EN' ? 'Español' : 'English'}*/}
                       {/*</Menu.Item>*/}
                       <Menu.Item key='logout' onClick={this.handleSignOut}>
                         Cerrar Sesion
