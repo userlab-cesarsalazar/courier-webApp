@@ -249,6 +249,7 @@ class PackagesPage extends Component {
           loading={loading}
           packages={packages}
           download ={ this.handleOnDownload}
+          profile={this.state.role}
         />
       </div>
     );
