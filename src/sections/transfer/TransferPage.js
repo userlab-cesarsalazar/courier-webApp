@@ -1,6 +1,7 @@
 //Libs
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
+import moment from 'moment'
 
 //Api
 import PackagesSrc from '../packages/PackagesSrc';
@@ -12,9 +13,11 @@ import UIIntegerInput from '../../commons/components/UIIntegerInput';
 import {
   Form,
   Row,
-  Card, Col, Button, message, Divider
-} from 'antd';
+  Card, Col, Button, message, Divider, DatePicker,
+} from 'antd'
 const FormItem = Form.Item;
+
+const dateFormat = 'YYYY/MM/DD';
 
 class TransferPage extends Component {
   constructor(props) {
@@ -23,8 +26,9 @@ class TransferPage extends Component {
       errors:{},
       loading:false,
       package_id: null,
-      new_package_id: null
-    }
+      new_package_id: null,
+      date: null
+  }
     this.handleChange = this.handleChange.bind(this)
     this.searchClient = this.searchClient.bind(this)
     this.validateFields = this.validateFields.bind(this)
@@ -70,7 +74,8 @@ class TransferPage extends Component {
       
       let package_data = await PackagesSrc.get(package_id);
       let client_data = await ClientsSrc.getByClientId(this.state.client_id)
-      this.setState({ loading: false, package_data: package_data[0], client_data:client_data[0], total_a_pagar: package_data[0].total_a_pagar });
+      console.log(package_data,'data')
+      this.setState({ loading: false, package_data: package_data[0], client_data:client_data[0], total_a_pagar: package_data[0].total_a_pagar, date: package_data[0].ent_date  });
       
     } catch (e) {
       console.log(JSON.stringify(e))
@@ -83,10 +88,10 @@ class TransferPage extends Component {
     let params = {
       package_id: this.state.package_id,
       client_id: this.state.client_id,
-      total: this.state.total_a_pagar
+      total: this.state.total_a_pagar,
+      ent_date: this.state.date
     }
     
-    console.log(params)
     TransferSrc.transfer(params).then( d => {
       message.success('Actualizado')
       this.setState({package_data:null, client_data:null, package_id:null, client_id:null, total_a_pagar:null})
@@ -99,7 +104,8 @@ class TransferPage extends Component {
       client_id,
       errors,
       package_data,
-      client_data
+      client_data,
+      date,
     } = this.state;
     return (
       <div>
@@ -160,7 +166,22 @@ class TransferPage extends Component {
               <Form.Item  validateStatus={errors.total_a_pagar && 'error'}  help={errors.total_a_pagar} label={'Total a pagar: '}>
                             <UIIntegerInput   onChange={e => this.handleChange('total_a_pagar', e.target.value)}
                 value={this.state.total_a_pagar}
-                placeholder='' /> </Form.Item><br />
+                placeholder='' />
+              </Form.Item>
+              <FormItem
+                label='Modificar la fecha de baja'
+                validateStatus={errors.date && 'error'}
+                help={errors.date}
+              >
+                <DatePicker
+                  placeholder='Seleccione una Fecha'
+                  defaultValue={ date === '0000-00-00' ? null :  moment(date, dateFormat)} format={dateFormat}
+                  onChange={value => this.handleChange('date', value)}
+                  
+                  style={{ width: '100%'}}
+                />
+              </FormItem>
+              <br />
             </Card>
           </Col>
           <Col span={12}>
