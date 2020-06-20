@@ -175,9 +175,9 @@ class TransferPage extends Component {
               >
                 <DatePicker
                   placeholder='Seleccione una Fecha'
-                  defaultValue={ date === '0000-00-00' ? null :  moment(date, dateFormat)} format={dateFormat}
                   onChange={value => this.handleChange('date', value)}
-                  
+                  value={ date === '0000-00-00' ? null :  moment(date, dateFormat)}
+                  format={dateFormat}
                   style={{ width: '100%'}}
                 />
               </FormItem>
