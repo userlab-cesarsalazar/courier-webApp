@@ -256,7 +256,7 @@ class Router extends Component {
                 </div>
               </Content>
 
-              <Footer style={{ textAlign: 'center' }}>TraesTodo ©{this.state.year}</Footer>
+              <Footer style={{ textAlign: 'center' }}>TraesTodo ©{this.state.year} - V:{process.env.REACT_APP_VERSION} </Footer>
             </Layout>
           </Layout>
         ) : (
