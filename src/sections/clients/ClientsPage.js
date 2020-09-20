@@ -251,11 +251,7 @@ class ClientsPage extends Component {
 
         <div className={'table-action-bar'}>
           <h2>Clientes</h2>
-          {Cache.getItem('userApp').profile !== 'recepcionista' ?
             <Button type='primary' onClick={this.onAdd}>Nuevo</Button>
-            :
-            ''
-          }
         </div>
         <Form autoComplete='NOPE'>
           <Card>
